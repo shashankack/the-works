@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url('../src/assets/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "Lora";
+  src: url('../src/assets/fonts/Lora-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "Hind Madurai";
+  src: url('../src/assets/fonts/HindMadurai-Regular.ttf') format('truetype');
+}
