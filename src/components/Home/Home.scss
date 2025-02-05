@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
 .hero-section {
   text-align: center;
   display: flex;
@@ -16,15 +18,16 @@
       height: 100%;
       object-fit: cover;
     }
+
     .content {
       position: absolute;
       top: 80%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-70%, -50%);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: start;
       color: #fff;
       z-index: 1;
 
@@ -40,9 +43,10 @@
         font-size: 20px;
         margin-bottom: 20px;
         font-family: "Hind Madurai";
+        text-align: start;
       }
 
-      button {
+      a {
         font-family: "Lora";
         padding: 10px 20px;
         border: none;
@@ -56,6 +60,134 @@
           color: #000;
         }
       }
+    }
+  }
+}
+
+.upcoming-events-section {
+  height: 100vh;
+  padding: 3rem;
+
+  .container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid #ACA98C;
+    border-radius: 50px;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 40px;
+    font-family: "Quicksand";
+    color: #444;
+    text-transform: uppercase;
+  }
+
+  // Tabs Styling
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    gap: 10px;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      background: #eee;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #ccc;
+      }
+
+      &.active {
+        background: #ACA98C;
+        color: white;
+      }
+    }
+  }
+
+  // Events & Classes Grid
+  .events {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .event {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    height: 600px;
+    background: #cfcba08f;
+    padding: 15px 30px;
+    border-radius: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transform: translateY(-5px);
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    img {
+      margin-top: 20px;
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    h3 {
+      text-align: center;
+      font-family: "Quicksand";
+      font-size: 24px;
+      margin-top: 30px;
+    }
+
+    p {
+      text-align: center;
+      font-family: "Montserrat";
+      font-size: 20px;
+      color: #222;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #ACA98C;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-family: "Quicksand";
+      margin-top: 20px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #444;
+      }
+    }
+  }
+
+  // Responsive Styles
+  @media (max-width: 768px) {
+    .events {
+      grid-template-columns: 1fr;
+    }
+
+    .tabs {
+      flex-direction: row;
     }
   }
 }
