@@ -11,8 +11,10 @@ import mobileCarousel1 from "../../assets/mobile-carousel-1.jpg";
 import mobileCarousel2 from "../../assets/mobile-carousel-2.jpg";
 import mobileCarousel3 from "../../assets/mobile-carousel-3.jpg";
 
+import bjjImg from "../../assets/card_bjj.jpg";
+import pilatesImg from "../../assets/card_pilates.jpg";
+import strengthTrainingImg from "../../assets/card_strengthtraining.jpg";
 import yoga from "../../assets/yoga.webp";
-import { redirect } from "react-router-dom";
 
 const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -65,21 +67,53 @@ const Home = () => {
         title: "WICK3D Jiu-Jutsu: Women's Collection",
         description:
           "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
-        image: yoga,
+        image: bjjImg,
+        redirect:
+          "https://shashankdev.dayschedule.com/wick3d-jiu-jutsu-womens-collection",
+      },
+      {
+        id: 2,
+        title: "Pilates",
+        description:
+          "Pilate is a physical fitness system developed in the early 20th century by Joseph Pilates, after whom it was named.",
+        image: pilatesImg,
+      },
+      {
+        id: 3,
+        title: "Strength Training",
+        description:
+          "Strength training is a type of physical exercise specializing in the use of resistance to induce muscular contraction which builds the strength, anaerobic endurance, and size of skeletal muscles.",
+        image: strengthTrainingImg,
+      },
+      {
+        id: 1,
+        title: "WICK3D Jiu-Jutsu: Women's Collection",
+        description:
+          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
+        image: bjjImg,
         redirect:
           "https://shashankdev.dayschedule.com/wick3d-jiu-jutsu-womens-collection",
       },
       {
         id: 2,
         title: "Advanced Jiujitsu",
-        description: "Take your jiujitsu skills to the next level.",
-        image: yoga,
+        description:
+          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
+        image: pilatesImg,
       },
       {
         id: 3,
         title: "Kickboxing Workout",
-        description: "High-energy kickboxing session to improve endurance.",
-        image: yoga,
+        description:
+          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
+        image: strengthTrainingImg,
+      },
+      {
+        id: 3,
+        title: "Kickboxing Workout",
+        description:
+          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
+        image: pilatesImg,
       },
     ],
     events: [
@@ -139,6 +173,22 @@ const Home = () => {
         </Swiper>
       </section>
 
+      <section className="about-section">
+        <div className="container">
+          <h2>About Us</h2>
+          <p>
+            Rooted in the century-old legacy of The Nilgiris 1905, The Works is
+            a space built on tradition, perseverance, and community. Evolving
+            through four generations, it is now a vibrant hub where movement,
+            creativity, and connection come together. We believe in giving back
+            creating an inclusive, inspiring space for exploration,
+            collaboration, and self-growth. Whether through fitness, artistic
+            expression, or shared experiences, The Works is a place to move,
+            create, and thrive.
+          </p>
+        </div>
+      </section>
+
       <section className="upcoming-events-section">
         <div className="container">
           <h2>Upcoming {activeTab === "classes" ? "Classes" : "Events"}</h2>
@@ -159,16 +209,60 @@ const Home = () => {
           </div>
 
           <div className="events">
-            {mockData[activeTab].map((item) => (
-              <div key={item.id} className="event">
-                <img src={item.image} alt={item.title} />
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <button onClick={() => (window.location.href = item.redirect)}>
-                  REGISTER
-                </button>
+            {activeTab === "classes" ? (
+              <div className="class-container">
+                <div className="left">Some content here.</div>
+                <div className="right">
+                  {mockData[activeTab].map((item) => (
+                    <div className="cards">
+                      <div className="card">
+                        <img src={item.image} alt="" />
+                        <h3>{item.title}</h3>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            ) : (
+              mockData[activeTab].map((item) => (
+                <div key={item.id} className="event-card">
+                  <img src={item.image} alt={item.title} />
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  <button
+                    onClick={() => (window.location.href = item.redirect)}
+                  >
+                    View Details
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="instructors-section">
+        <div className="container">
+          <h2>
+            Meet Our Instructors <hr />{" "}
+          </h2>
+
+          <div className="instructors">
+            <div className="instructor">
+              <img src={yoga} alt="Instructor" />
+              <h3>John Doe</h3>
+              <p>Yoga Instructor</p>
+            </div>
+            <div className="instructor">
+              <img src={yoga} alt="Instructor" />
+              <h3>Jane Doe</h3>
+              <p>Boxing Instructor</p>
+            </div>
+            <div className="instructor">
+              <img src={yoga} alt="Instructor" />
+              <h3>John Smith</h3>
+              <p>Jiu-Jitsu Instructor</p>
+            </div>
           </div>
         </div>
       </section>

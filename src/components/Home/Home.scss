@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
 
 .hero-section {
   text-align: center;
@@ -21,15 +21,16 @@
 
     .content {
       position: absolute;
-      top: 80%;
+      top: 60%;
       left: 50%;
-      transform: translate(-70%, -50%);
+      transform: translate(-80%, -50%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: start;
       color: #fff;
       z-index: 1;
+      border: 1px solid white;
 
       h1 {
         font-size: 50px;
@@ -64,6 +65,35 @@
   }
 }
 
+.about-section {
+  height: 100vh;
+  padding: 3rem;
+  background-color: #d6a771;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    gap: 30px;
+
+    h2 {
+      font-size: 60px;
+      font-family: "Quicksand";
+      color: #444;
+      text-transform: uppercase;
+    }
+
+    p {
+      font-size: 20px;
+      font-family: "Montserrat";
+      color: #222;
+      text-align: center;
+    }
+  }
+}
+
 .upcoming-events-section {
   height: 100vh;
   padding: 3rem;
@@ -73,7 +103,7 @@
     height: 100%;
     margin: 0 auto;
     padding: 20px;
-    border: 2px solid #ACA98C;
+    border: 2px solid #d6a771;
     border-radius: 50px;
   }
 
@@ -99,16 +129,18 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
-      background: #eee;
+      background: none;
+      border: 1px solid #d6a771;
       border-radius: 5px;
+      color: #d6a771;
       transition: all 0.3s ease;
 
       &:hover {
-        background: #ccc;
+        background: #d6a77155;
       }
 
       &.active {
-        background: #ACA98C;
+        background: #d6a771;
         color: white;
       }
     }
@@ -120,17 +152,97 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+
+    .class-container {
+      display: flex;
+      width: 100%;
+      height: 600px;
+      align-items: center;
+
+      .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+      }
+
+      .right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        gap: 20px;
+
+        &::-webkit-scrollbar {
+          width: 10px;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+          background-color: #d6a771;
+          border-radius: 10px;
+        }
+        
+        &::-webkit-scrollbar-track {
+          background-color: #ffffff00;
+        }
+
+        .card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 900px;
+          height: 200px;
+          padding: 0 30px;
+          border-radius: 50px;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          overflow: hidden;
+          position: relative;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease-out;
+
+            &:hover {
+              transform: scale(1.02);
+            }
+          }
+          h3 {
+            bottom: 20px;
+            left: 50px;
+            color: #fff;
+            text-align: center;
+            font-family: "Quicksand";
+            font-size: 24px;
+            margin-top: 30px;
+            position: absolute;
+            backdrop-filter: blur(10px);
+            background-color: rgba($color: #d6a771, $alpha: .5);
+            border-radius: 10px;
+            padding: 0 10px;
+          }
+        }
+      }
+    }
   }
 
-  .event {
+  .event-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 500px;
-    height: 600px;
-    background: #cfcba08f;
+    height: 630px;
+    background: #d6a771af;
     padding: 15px 30px;
-    border-radius: 30px;
+    border-radius: 50px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
@@ -160,27 +272,29 @@
       font-family: "Montserrat";
       font-size: 20px;
       color: #222;
-      margin-top: 20px;
+      margin: 20px 0;
     }
+
     button {
       padding: 10px 20px;
       border: none;
-      background: #ACA98C;
-      color: white;
+      background: #eee;
+      border: #d6a771;
+      color: #d6a771;
       font-size: 16px;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 50px;
       font-family: "Quicksand";
       margin-top: 20px;
       transition: all 0.3s ease;
 
       &:hover {
-        background: #444;
+        background: #d6a771af;
+        color: #fff;
       }
     }
   }
 
-  // Responsive Styles
   @media (max-width: 768px) {
     .events {
       grid-template-columns: 1fr;
@@ -188,6 +302,85 @@
 
     .tabs {
       flex-direction: row;
+    }
+  }
+}
+
+.instructors-section {
+  padding: 3rem;
+
+  .container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 50px;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 40px;
+      font-family: "Quicksand";
+      color: #444;
+      text-transform: uppercase;
+
+      hr {
+        width: 400px;
+        height: 3px;
+        background: #aca98c;
+        border: none;
+        margin: 0 auto;
+        margin-top: 3px;
+        border-radius: 5px;
+      }
+    }
+
+    .instructors {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-wrap: wrap;
+
+      .instructor {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 500px;
+        height: 100%;
+        padding: 15px 30px;
+        border-radius: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin: 20px;
+
+        &:hover {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          transform: translateY(-5px);
+        }
+
+        img {
+          margin-top: 20px;
+          width: 450px;
+          height: 450px;
+          object-fit: cover;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        h3 {
+          text-align: center;
+          font-family: "Quicksand";
+          font-size: 24px;
+          margin-top: 30px;
+        }
+
+        p {
+          text-align: center;
+          font-family: "Montserrat";
+          font-size: 20px;
+          color: #222;
+          margin-top: 20px;
+        }
+      }
     }
   }
 }

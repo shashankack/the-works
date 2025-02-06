@@ -29,7 +29,8 @@
           text-transform: uppercase;
           text-decoration: none;
           color: #fff;
-          font-size: 14px;
+          font-size: 16px;
+          font-weight: 500;
           text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
           position: relative;
           transition: color 0.3s ease;
@@ -60,11 +61,13 @@
 }
 
 .header.scrolled {
+  backdrop-filter: blur(10px);
+  background-color: #d6a771de;
   .navbar > ul > li > a {
     color: #000;
 
     &::after {
-      background-color: #000;;
+      background-color: #000;
     }
   }
 }
