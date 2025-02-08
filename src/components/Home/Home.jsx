@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Test from "../Test/Test";
+import Testimonials from "../Testimonials/Testimonials";
 
 import "./Home.scss";
 import "swiper/css";
@@ -16,14 +19,22 @@ import desktopCarousel3 from "../../assets/desktop-carousel-3.jpg";
 import mobileCarousel1 from "../../assets/mobile-carousel-1.jpg";
 import mobileCarousel2 from "../../assets/mobile-carousel-2.jpg";
 import mobileCarousel3 from "../../assets/mobile-carousel-3.jpg";
+import portrait1 from "../../assets/portrait-1.jpg";
 
 import founder from "../../assets/raghu_founder.jpg";
 import cards from "../../assets/cards.jpeg";
 import yoga from "../../assets/yoga.webp";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState("classes");
+
+  const aboutSectionRef = useRef(null);
+  const imageRef = useRef(null);
+  const textRef = useRef(null);
+  const gsapContext = useRef(null);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -36,6 +47,37 @@ const Home = () => {
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
+  }, []);
+
+  useEffect(() => {
+    gsapContext.current = gsap.context(() => {
+      gsap.from(imageRef.current, {
+        x: -200,
+        opacity: 0,
+        duration: .5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: aboutSectionRef.current,
+          start: "top 20%", 
+          markers: true,
+          toggleActions: "play none none reverse",
+        },
+      });
+     
+      gsap.from(textRef.current, {
+        opacity: 0,
+        y: 50,
+        duration: .5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: aboutSectionRef.current,
+          start: "top 35%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    });
+
+    return () => gsapContext.current.revert(); 
   }, []);
 
   const sliderContent = [desktopCarousel1, desktopCarousel2, desktopCarousel3];
@@ -117,6 +159,29 @@ const Home = () => {
       },
     ],
   };
+  const testimonials = [
+    {
+      id: 1,
+      name: "Sarah Chen",
+      role: "Product Manager at TechFlow",
+      text: "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+      image: portrait1,
+    },
+    {
+      id: 2,
+      name: "James Carter",
+      role: "Software Engineer at DevCorp",
+      text: "An exceptional experience with seamless integration. It’s rare to find something so well-crafted!",
+      image: "https://placehold.co/300",
+    },
+    {
+      id: 3,
+      name: "Emily Johnson",
+      role: "Marketing Lead at BrightIdeas",
+      text: "A game-changer for our team. The ease of use and thoughtful design make it an absolute must-have.",
+      image: "https://placehold.co/300",
+    },
+  ];
 
   return (
     <>
@@ -124,7 +189,7 @@ const Home = () => {
         <Test images={sliderContent} />
       </section>
 
-      <section className="about-section">
+      <section className="about-section" ref={aboutSectionRef}>
         <div className="container">
           <h2>About Us</h2>
           <p>
@@ -138,13 +203,16 @@ const Home = () => {
             create, and thrive.
           </p>
           <div className="founder">
-            <div className="text-container">
+            <div className="img-container" >
+              <img src={founder} alt="" ref={imageRef} />
+            </div>
+            <div className="text-container" ref={textRef}>
               <p>
                 Raghuram, a dedicated martial artist specializing in kickboxing
                 and Muay Thai, has created a private gym where individuals build
                 confidence, strength, and discipline. Inspired by his family's
                 century-old business, he expanded his vision beyond martial arts
-                to establish The Works—a multi-purpose community space. More
+                to establish The Works a multi-purpose community space. More
                 than a gym, The Works is a hub for fitness and creative
                 expression, where people can explore art, connect, and grow.
                 Raghuram believes in the transformative power of both physical
@@ -153,9 +221,6 @@ const Home = () => {
                 development. His mission is to empower individuals through
                 movement and creativity.
               </p>
-            </div>
-            <div className="img-container">
-              <img src={founder} alt="" />
             </div>
           </div>
         </div>
@@ -215,29 +280,10 @@ const Home = () => {
       </section>
 
       <section className="instructors-section">
-        <div className="container">
-          <h2>
-            Meet Our Instructors <hr />
-          </h2>
-
-          <div className="instructors">
-            <div className="instructor">
-              <img src={yoga} alt="Instructor" />
-              <h3>John Doe</h3>
-              <p>Yoga Instructor</p>
-            </div>
-            <div className="instructor">
-              <img src={yoga} alt="Instructor" />
-              <h3>Jane Doe</h3>
-              <p>Boxing Instructor</p>
-            </div>
-            <div className="instructor">
-              <img src={yoga} alt="Instructor" />
-              <h3>John Smith</h3>
-              <p>Jiu-Jitsu Instructor</p>
-            </div>
-          </div>
-        </div>
+        <h2>
+          Meet Our Instructors <hr />
+        </h2>
+        <Testimonials testimonials={testimonials} />
       </section>
     </>
   );

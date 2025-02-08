@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Footer.scss";
@@ -11,33 +10,9 @@ import whatsappLogo from "../../assets/icons/social-whatsapp.png";
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
-  const footerRef = useRef(null);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    gsap.fromTo(
-      footerRef.current,
-      { y: 200, opacity: 0, scale: 0.9 }, // Start below viewport
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        ease: "power2.out",
-        duration: 1.5,
-        scrollTrigger: {
-          trigger: containerRef.current, // Triggers when last section enters viewport
-          start: "top bottom",
-          end: "bottom bottom",
-          scrub: true,
-          markers: false, // Set to true for debugging
-        },
-      }
-    );
-  }, []);
-
   return (
-    <div ref={containerRef} className="footer-container">
-      <footer ref={footerRef}>
+    <div className="footer-container">
+      <footer>
         <div className="logo">
           <h2>The Works</h2>
         </div>
