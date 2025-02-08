@@ -54,20 +54,19 @@ const Home = () => {
       gsap.from(imageRef.current, {
         x: -200,
         opacity: 0,
-        duration: .5,
+        duration: 0.5,
         ease: "power3.out",
         scrollTrigger: {
           trigger: aboutSectionRef.current,
-          start: "top 20%", 
-          markers: true,
+          start: "top 20%",
           toggleActions: "play none none reverse",
         },
       });
-     
+
       gsap.from(textRef.current, {
         opacity: 0,
         y: 50,
-        duration: .5,
+        duration: 0.5,
         ease: "power3.out",
         scrollTrigger: {
           trigger: aboutSectionRef.current,
@@ -77,7 +76,7 @@ const Home = () => {
       });
     });
 
-    return () => gsapContext.current.revert(); 
+    return () => gsapContext.current.revert();
   }, []);
 
   const sliderContent = [desktopCarousel1, desktopCarousel2, desktopCarousel3];
@@ -203,8 +202,8 @@ const Home = () => {
             create, and thrive.
           </p>
           <div className="founder">
-            <div className="img-container" >
-              <img src={founder} alt="" ref={imageRef} />
+            <div className="img-container" ref={imageRef}>
+              <img src={founder} alt="" />
             </div>
             <div className="text-container" ref={textRef}>
               <p>
