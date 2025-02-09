@@ -8,17 +8,27 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+p {
+  font-family: "Averta", sans-serif;
+}
+
+
 @font-face {
   font-family: "Montserrat";
-  src: url('../src/assets/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+  src: url('./assets/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
 
 @font-face {
   font-family: "Lora";
-  src: url('../src/assets/fonts/Lora-VariableFont_wght.ttf') format('truetype');
+  src: url('./assets/fonts/Lora-VariableFont_wght.ttf') format('truetype');
 }
 
 @font-face {
   font-family: "Hind Madurai";
-  src: url('../src/assets/fonts/HindMadurai-Regular.ttf') format('truetype');
+  src: url('./assets/fonts/HindMadurai-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "Averta";
+  src: url('./assets/fonts/Averta.otf') format('opentype');
 }

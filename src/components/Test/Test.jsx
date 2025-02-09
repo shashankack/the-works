@@ -5,14 +5,16 @@ import "./Test.scss";
 
 const ImageSlider = ({ images }) => {
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 for next, -1 for prev
   const timeoutRef = useRef(null);
 
   useEffect(() => {
     resetTimeout();
-    timeoutRef.current = setTimeout(
-      () => setIndex((prevIndex) => (prevIndex + 1) % images.length),
-      3000
-    );
+    timeoutRef.current = setTimeout(() => {
+      setDirection(1);
+      setIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000);
+
     return () => resetTimeout();
   }, [index, images.length]);
 
@@ -23,10 +25,12 @@ const ImageSlider = ({ images }) => {
   };
 
   const handleNext = () => {
+    setDirection(1);
     setIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
   const handlePrev = () => {
+    setDirection(-1);
     setIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
   };
 
@@ -41,10 +45,10 @@ const ImageSlider = ({ images }) => {
         <motion.div
           key={index}
           className="slide"
-          initial={{ opacity: 0, scale: 1.2, x: 100 }}
+          initial={{ opacity: 0, scale: 1.1, x: direction * 200 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
-          exit={{ opacity: 0, scale: 1.2, x: -100 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          exit={{ opacity: 0, scale: 1.1, x: direction * -200 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           <img src={images[index]} alt="slider" className="slide-image" />
         </motion.div>
@@ -60,7 +64,10 @@ const ImageSlider = ({ images }) => {
           <span
             key={i}
             className={`dot ${i === index ? "active" : ""}`}
-            onClick={() => setIndex(i)}
+            onClick={() => {
+              setDirection(i > index ? 1 : -1);
+              setIndex(i);
+            }}
           ></span>
         ))}
       </div>

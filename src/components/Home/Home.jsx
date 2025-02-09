@@ -58,7 +58,7 @@ const Home = () => {
         ease: "power3.out",
         scrollTrigger: {
           trigger: aboutSectionRef.current,
-          start: "top 20%",
+          start: "top 35%",
           toggleActions: "play none none reverse",
         },
       });
@@ -72,6 +72,7 @@ const Home = () => {
           trigger: aboutSectionRef.current,
           start: "top 35%",
           toggleActions: "play none none reverse",
+          markers: true,
         },
       });
     });
@@ -190,36 +191,42 @@ const Home = () => {
 
       <section className="about-section" ref={aboutSectionRef}>
         <div className="container">
-          <h2>About Us</h2>
-          <p>
-            Rooted in the century-old legacy of The Nilgiris 1905, The Works is
-            a space built on tradition, perseverance, and community. Evolving
-            through four generations, it is now a vibrant hub where movement,
-            creativity, and connection come together. We believe in giving back
-            creating an inclusive, inspiring space for exploration,
-            collaboration, and self-growth. Whether through fitness, artistic
-            expression, or shared experiences, The Works is a place to move,
-            create, and thrive.
-          </p>
-          <div className="founder">
-            <div className="img-container" ref={imageRef}>
-              <img src={founder} alt="" />
+          <h2>
+            About Us <hr />{" "}
+          </h2>
+          <div className="top-container">
+            <p>
+              Rooted in the century-old legacy of The Nilgiris 1905, The Works
+              is a space built on tradition, perseverance, and community.
+              Evolving through four generations, it is now a vibrant hub where
+              movement, creativity, and connection come together. We believe in
+              giving back creating an inclusive, inspiring space for
+              exploration, collaboration, and self-growth. Whether through
+              fitness, artistic expression, or shared experiences, The Works is
+              a place to move, create, and thrive.
+            </p>
+          </div>
+          <div className="text-container">
+            <div className="left">
+              <img
+                src={founder}
+                alt="Founder"
+                ref={imageRef}
+                className="founder-image"
+              />
             </div>
-            <div className="text-container" ref={textRef}>
-              <p>
-                Raghuram, a dedicated martial artist specializing in kickboxing
-                and Muay Thai, has created a private gym where individuals build
-                confidence, strength, and discipline. Inspired by his family's
-                century-old business, he expanded his vision beyond martial arts
-                to establish The Works a multi-purpose community space. More
-                than a gym, The Works is a hub for fitness and creative
-                expression, where people can explore art, connect, and grow.
-                Raghuram believes in the transformative power of both physical
-                and artistic practices, fostering a supportive environment that
-                encourages self-expression, collaboration, and personal
-                development. His mission is to empower individuals through
-                movement and creativity.
+            <div className="right">
+              <h2 ref={textRef} >About the Founder</h2>
+              <p ref={textRef}>
+                A dedicated martial artist, Raghuram has spent years mastering
+                kickboxing and Muay Thai, transforming his expertise into a
+                private gym that fosters confidence, discipline, and holistic
+                strength. Inspired by his family's legacy, he envisioned The
+                Works as more than a gym—a dynamic community space where
+                movement and creativity intersect. Here, individuals can push
+                boundaries, express freely, and grow together.
               </p>
+              <p></p>
             </div>
           </div>
         </div>
