@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import "./Test.scss";
+import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
+import "./HeroSection.scss";
 
-const ImageSlider = ({ images }) => {
+const HeroSection = ({ images }) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 for next, -1 for prev
   const timeoutRef = useRef(null);
@@ -38,7 +38,7 @@ const ImageSlider = ({ images }) => {
     <div className="slider-container">
       {/* Left Arrow */}
       <button className="nav-arrow left-arrow" onClick={handlePrev}>
-        <FaArrowLeft size={30} />
+        <RiArrowLeftSLine size={80} />
       </button>
 
       <AnimatePresence>
@@ -56,7 +56,7 @@ const ImageSlider = ({ images }) => {
 
       {/* Right Arrow */}
       <button className="nav-arrow right-arrow" onClick={handleNext}>
-        <FaArrowRight size={30} />
+        <RiArrowRightSLine size={80} />
       </button>
 
       <div className="dots">
@@ -75,4 +75,4 @@ const ImageSlider = ({ images }) => {
   );
 };
 
-export default ImageSlider;
+export default HeroSection;

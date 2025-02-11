@@ -3,8 +3,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import Test from "../Test/Test";
-import Testimonials from "../Testimonials/Testimonials";
+import Test from "../HeroSection/HeroSection";
+import Testimonials from "../TrainersSection/Testimonials";
 
 import "./Home.scss";
 import "swiper/css";
@@ -31,10 +31,6 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState("classes");
 
-  const aboutSectionRef = useRef(null);
-  const imageRef = useRef(null);
-  const textRef = useRef(null);
-  const gsapContext = useRef(null);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -49,36 +45,7 @@ const Home = () => {
     };
   }, []);
 
-  useEffect(() => {
-    gsapContext.current = gsap.context(() => {
-      gsap.from(imageRef.current, {
-        x: -200,
-        opacity: 0,
-        duration: 0.5,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: aboutSectionRef.current,
-          start: "top 35%",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      gsap.from(textRef.current, {
-        opacity: 0,
-        y: 50,
-        duration: 0.5,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: aboutSectionRef.current,
-          start: "top 35%",
-          toggleActions: "play none none reverse",
-          markers: true,
-        },
-      });
-    });
-
-    return () => gsapContext.current.revert();
-  }, []);
+  
 
   const sliderContent = [desktopCarousel1, desktopCarousel2, desktopCarousel3];
 
@@ -159,29 +126,7 @@ const Home = () => {
       },
     ],
   };
-  const testimonials = [
-    {
-      id: 1,
-      name: "Sarah Chen",
-      role: "Product Manager at TechFlow",
-      text: "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
-      image: portrait1,
-    },
-    {
-      id: 2,
-      name: "James Carter",
-      role: "Software Engineer at DevCorp",
-      text: "An exceptional experience with seamless integration. It’s rare to find something so well-crafted!",
-      image: "https://placehold.co/300",
-    },
-    {
-      id: 3,
-      name: "Emily Johnson",
-      role: "Marketing Lead at BrightIdeas",
-      text: "A game-changer for our team. The ease of use and thoughtful design make it an absolute must-have.",
-      image: "https://placehold.co/300",
-    },
-  ];
+  
 
   return (
     <>
@@ -189,101 +134,9 @@ const Home = () => {
         <Test images={sliderContent} />
       </section>
 
-      <section className="about-section" ref={aboutSectionRef}>
-        <div className="container">
-          <h2>
-            About Us <hr />{" "}
-          </h2>
-          <div className="top-container">
-            <p>
-              Rooted in the century-old legacy of The Nilgiris 1905, The Works
-              is a space built on tradition, perseverance, and community.
-              Evolving through four generations, it is now a vibrant hub where
-              movement, creativity, and connection come together. We believe in
-              giving back creating an inclusive, inspiring space for
-              exploration, collaboration, and self-growth. Whether through
-              fitness, artistic expression, or shared experiences, The Works is
-              a place to move, create, and thrive.
-            </p>
-          </div>
-          <div className="text-container">
-            <div className="left">
-              <img
-                src={founder}
-                alt="Founder"
-                ref={imageRef}
-                className="founder-image"
-              />
-            </div>
-            <div className="right">
-              <h2 ref={textRef} >About the Founder</h2>
-              <p ref={textRef}>
-                A dedicated martial artist, Raghuram has spent years mastering
-                kickboxing and Muay Thai, transforming his expertise into a
-                private gym that fosters confidence, discipline, and holistic
-                strength. Inspired by his family's legacy, he envisioned The
-                Works as more than a gym—a dynamic community space where
-                movement and creativity intersect. Here, individuals can push
-                boundaries, express freely, and grow together.
-              </p>
-              <p></p>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
-      <section className="upcoming-events-section">
-        <div className="container">
-          <h2>
-            Upcoming {activeTab === "classes" ? "Classes" : "Events"} <hr />
-          </h2>
-
-          <div className="tabs">
-            <button
-              className={activeTab === "classes" ? "active" : ""}
-              onClick={() => setActiveTab("classes")}
-            >
-              Classes
-            </button>
-            <button
-              className={activeTab === "events" ? "active" : ""}
-              onClick={() => setActiveTab("events")}
-            >
-              Events
-            </button>
-          </div>
-
-          <div className="events">
-            <Swiper
-              breakpoints={{
-                320: { slidesPerView: 1, spaceBetween: 10 },
-                640: { slidesPerView: 2, spaceBetween: 20 },
-                768: { slidesPerView: 3, spaceBetween: 40 },
-                1024: { slidesPerView: 3, spaceBetween: 40 },
-              }}
-              loop={true}
-              grabCursor={true}
-              modules={[FreeMode, Pagination, Navigation]}
-              pagination={{ clickable: true }}
-              freeMode={true}
-              navigation={true}
-              style={{
-                padding: "20px",
-              }}
-            >
-              {mockData[activeTab].map((item) => (
-                <SwiperSlide key={item.id}>
-                  <div className="card">
-                    <img src={item.image} alt={item.title} />
-                    <h3>{item.title}</h3>
-                    <a href={item.redirect}>Read More</a>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
-      </section>
+      
 
       <section className="instructors-section">
         <h2>

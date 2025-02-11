@@ -1,34 +1,78 @@
-* {
+@font-face {
+  font-family: "Quicksand";
+  src: url(./assets/fonts/Quicksand.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("./assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Lora";
+  src: url("./assets/fonts/Lora-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Hind Madurai";
+  src: url("./assets/fonts/HindMadurai-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Averta";
+  src: url("./assets/fonts/Averta.otf") format("opentype");
+}
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body::-webkit-scrollbar {
-  display: none;
+ul,
+ol {
+  list-style: none;
 }
 
-p {
-  font-family: "Averta", sans-serif;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-
-@font-face {
-  font-family: "Montserrat";
-  src: url('./assets/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+button {
+  all: unset;
+  cursor: pointer;
 }
 
-@font-face {
-  font-family: "Lora";
-  src: url('./assets/fonts/Lora-VariableFont_wght.ttf') format('truetype');
+body {
+  font-family: "Inter", sans-serif;
+  line-height: 1.5;
+  color: #333;
+  background: #fff;
 }
 
-@font-face {
-  font-family: "Hind Madurai";
-  src: url('./assets/fonts/HindMadurai-Regular.ttf') format('truetype');
+img {
+  max-width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-@font-face {
-  font-family: "Averta";
-  src: url('./assets/fonts/Averta.otf') format('opentype');
+input,
+textarea,
+button,
+select {
+  border: none;
+  outline: none;
+  font: inherit;
+}
+
+html {
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
