@@ -123,8 +123,9 @@ const AboutSection = () => {
             <div
               key={card.id}
               className={`card ${selectedCard?.id === card.id ? "active" : ""}`}
-              onClick={() => handleCardClick(card.id)}
+              onMouseOver={() => handleCardClick(card.id)}
             >
+              <div className="line"></div>
               {card.title}
             </div>
           ))}
@@ -135,8 +136,15 @@ const AboutSection = () => {
             {selectedCard && (
               <>
                 <img src={selectedCard.image} alt={selectedCard.title} />
-                  <h3>{selectedCard.title}</h3>
-                  <p>{selectedCard.content}</p>
+                <h3>{selectedCard.title}</h3>
+                <p>{selectedCard.content}</p>
+                <button
+                  onClick={() =>
+                    (window.location.href = `${selectedCard.redirect}`)
+                  }
+                >
+                  Read More
+                </button>
               </>
             )}
           </div>

@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+
+  .subtitle {
+    background: #e1c5a8;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-weight: bold;
+    margin: 10px 0;
+    z-index: 100;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 300px 300px;
+    grid-row: 300px 300px;
+    grid-column-gap: 30px;
+    grid-row-gap: 30px;
+    position: relative;
+
+    .title {
+      font-family: "Quicksand";
+      font-size: 120px;
+      color: #ff88ff;
+      text-wrap: nowrap;
+      font-weight: bold;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    .grid-item {
+      height: 300px;
+      width: 300px;
+    }
+  }
+
+  .description {
+    max-width: 500px;
+    // margin: 20px 0;
+  }
+
+  .register-button {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid black;
+    transition: 0.3s;
+
+    &:hover {
+      background: black;
+      color: white;
+    }
+  }
+}

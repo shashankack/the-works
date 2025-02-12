@@ -5,11 +5,17 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./EventsSection.scss";
+import { useNavigate } from "react-router-dom";
 
 const EventsSection = ({ classesData, eventsData }) => {
   const [activeTab, setActiveTab] = useState("classes");
+  const nav = useNavigate();
 
   const data = activeTab === "classes" ? classesData : eventsData;
+
+  const handleRedirect = (item, type) => {
+    nav(`/${type}`, { state: { data: item } });
+  }
 
   return (
     <section className="events-section">
@@ -56,9 +62,9 @@ const EventsSection = ({ classesData, eventsData }) => {
                 <div className="card">
                   <img src={item.image} alt={item.title} />
                   <h3>{item.title}</h3>
-                  <a className="cta-button" href={item.redirect}>
+                  <button className="cta-button" onClick={() => handleRedirect(item, activeTab)}>
                     Read More
-                  </a>
+                  </button>
                 </div>
               </SwiperSlide>
             ))}
