@@ -31,7 +31,6 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState("classes");
 
-
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -45,98 +44,13 @@ const Home = () => {
     };
   }, []);
 
-  
-
   const sliderContent = [desktopCarousel1, desktopCarousel2, desktopCarousel3];
-
-  const mockData = {
-    classes: [
-      {
-        id: 1,
-        title: "WICK3D Jiu-Jutsu: Women's Collection",
-        description:
-          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
-        image: yoga,
-        redirect:
-          "https://shashankdev.dayschedule.com/wick3d-jiu-jutsu-womens-collection",
-      },
-      {
-        id: 2,
-        title: "Pilates",
-        description:
-          "Pilate is a physical fitness system developed in the early 20th century by Joseph Pilates, after whom it was named.",
-        image: yoga,
-      },
-      {
-        id: 3,
-        title: "Strength Training",
-        description:
-          "Strength training is a type of physical exercise specializing in the use of resistance to induce muscular contraction which builds the strength, anaerobic endurance, and size of skeletal muscles.",
-        image: yoga,
-      },
-      {
-        id: 4,
-        title: "WICK3D Jiu-Jutsu: Women's Collection",
-        description:
-          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
-        image: yoga,
-        redirect:
-          "https://shashankdev.dayschedule.com/wick3d-jiu-jutsu-womens-collection",
-      },
-      {
-        id: 5,
-        title: "Advanced Jiujitsu",
-        description:
-          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
-        image: yoga,
-      },
-      {
-        id: 6,
-        title: "Kickboxing Workout",
-        description:
-          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
-        image: yoga,
-      },
-      {
-        id: 7,
-        title: "Kickboxing Workout",
-        description:
-          "Dedicated to creating a supportive and empowering space for women to learn, grow, and thrive through Brazilian Jiu-Jitsu.",
-        image: yoga,
-      },
-    ],
-    events: [
-      {
-        id: 1,
-        title: "Community Yoga Session",
-        description: "Join us for a free outdoor yoga session.",
-        image: yoga,
-      },
-      {
-        id: 2,
-        title: "Boxing Challenge",
-        description: "Test your skills in our friendly boxing match.",
-        image: yoga,
-      },
-      {
-        id: 3,
-        title: "Book Reading & Discussion",
-        description: "Engage in a deep conversation about inspiring books.",
-        image: yoga,
-      },
-    ],
-  };
-  
 
   return (
     <>
       <section className="hero-section">
         <Test images={sliderContent} />
       </section>
-
-      
-
-      
 
       <section className="instructors-section">
         <h2>
