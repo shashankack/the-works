@@ -12,6 +12,7 @@
   "dependencies": {
     "@tabler/icons-react": "^3.30.0",
     "@tailwindcss/vite": "^4.0.4",
+    "axios": "^1.8.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.4.0",
     "gsap": "^3.12.7",

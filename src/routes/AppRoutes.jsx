@@ -6,9 +6,8 @@ import About from "../pages/AboutSection/About";
 import Events from "../pages/EventsSection/Events";
 import Classes from "../pages/EventsSection/Classes";
 
-import yoga from "../assets/yoga.webp";
-
-import { dummyClasses, dummyEvents } from "../../public/dummyData";
+import Login from "../pages/Dashboard/Login";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +17,9 @@ const AppRoutes = () => {
       <Route path="/about" element={<About />} />
       <Route path="/classes" element={<Classes />} />
       <Route path="/events" element={<Events />} />
+
+      <Route path="/admin/login" element={<Login />} />
+      <Route path="/admin/dashboard" element={<Dashboard />} />
     </Routes>
   );
 };
