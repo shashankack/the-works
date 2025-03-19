@@ -12,26 +12,31 @@ const CreateForm = ({ isClass = false }) => {
     conceptNote: "",
     classType: isClass ? "one-to-one" : "",
     recurrenceRule: "",
+    trainerId: "",
   });
+
   const [thumbnail, setThumbnail] = useState(null);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
+  // Handle text input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle file inputs for images & thumbnails
   const handleFileChange = (e) => {
     if (e.target.name === "thumbnail") {
-      setThumbnail(e.target.files[0]);
+      setThumbnail(e.target.files[0]); // Only one thumbnail
     } else {
-      setImages([...e.target.files]);
+      setImages(Array.from(e.target.files)); // Multiple images
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,27 +44,25 @@ const CreateForm = ({ isClass = false }) => {
     setError(null);
 
     try {
-      // Create Event or Class
-      const response = await axiosInstance.post(
-        isClass ? "/admin/classes" : "/admin/events",
-        formData
-      );
-      const itemId = response.data.newEvent?.id || response.data.newClass?.id;
+      const endpoint = isClass ? "/admin/classes" : "/admin/events";
+      const formPayload = new FormData();
 
-      // Upload images
-      if (itemId) {
-        const formDataImages = new FormData();
-        if (isClass) {
-          formDataImages.append("classId", itemId);
-        } else {
-          formDataImages.append("eventId", itemId);
-        }
-        formDataImages.append("thumbnail", thumbnail);
-        images.forEach((image) => formDataImages.append("images", image));
+      // Append form fields
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value) formPayload.append(key, value);
+      });
 
-        await axiosInstance.post("/admin/upload-images", formDataImages, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+      // Append files (Thumbnail & Images)
+      if (thumbnail) formPayload.append("thumbnail", thumbnail);
+      images.forEach((image) => formPayload.append("images", image));
+
+      // ✅ Send everything in ONE request
+      const response = await axiosInstance.post(endpoint, formPayload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (!response.data.success) {
+        throw new Error("Failed to create");
       }
 
       setMessage(`${isClass ? "Class" : "Event"} created successfully!`);
@@ -69,6 +72,7 @@ const CreateForm = ({ isClass = false }) => {
           `Failed to create ${isClass ? "class" : "event"}`
       );
     }
+
     setLoading(false);
   };
 
@@ -77,6 +81,7 @@ const CreateForm = ({ isClass = false }) => {
       <h2>Create {isClass ? "Class" : "Event"}</h2>
       {error && <p className="error">{error}</p>}
       {message && <p className="success">{message}</p>}
+
       <form onSubmit={handleSubmit}>
         <label>Title:</label>
         <input
@@ -146,13 +151,20 @@ const CreateForm = ({ isClass = false }) => {
           </>
         )}
 
+        <label>Trainer ID:</label>
+        <input
+          type="number"
+          name="trainerId"
+          value={formData.trainerId}
+          onChange={handleInputChange}
+        />
+
         <label>Thumbnail:</label>
         <input
           type="file"
           name="thumbnail"
           accept="image/*"
           onChange={handleFileChange}
-          required
         />
 
         <label>Upload Multiple Images:</label>
@@ -162,7 +174,6 @@ const CreateForm = ({ isClass = false }) => {
           accept="image/*"
           multiple
           onChange={handleFileChange}
-          required
         />
 
         <button type="submit" disabled={loading}>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { logout } from "../../utils/auth";
 import CreateForm from "../../components/Dashboard/CreateForm/CreateForm"; // Import reusable CreateForm
 import "./Dashboard.scss";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [errors, setErrors] = useState(null);
@@ -71,9 +72,12 @@ const Dashboard = () => {
           <ul className="list">
             {events.map((event) => (
               <li key={event.id}>
-                <Link to={`/admin/events/${event.id}`} className="clickable">
+                <button
+                  className="clickable"
+                  onClick={() => navigate(`/admin/events/${event.id}`)}
+                >
                   {event.title} - {event.eventStatus}
-                </Link>
+                </button>
               </li>
             ))}
           </ul>
@@ -94,16 +98,19 @@ const Dashboard = () => {
           <ul className="list">
             {classes.map((cls) => (
               <li key={cls.id}>
-                <Link to={`/admin/classes/${cls.id}`} className="clickable">
+                <button
+                  className="clickable"
+                  onClick={() => navigate(`/admin/classes/${cls.id}`)}
+                >
                   {cls.title} - {cls.eventStatus}
-                </Link>
+                </button>
               </li>
             ))}
           </ul>
         </section>
       </div>
 
-      {/* Full-Screen Modal */}
+      {/* Full-Screen Modal for Creating Events/Classes */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

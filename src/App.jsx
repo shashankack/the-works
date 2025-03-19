@@ -14,10 +14,10 @@ const Classes = lazy(() => import("./pages/EventsSection/Classes"));
 const Login = lazy(() => import("./pages/Dashboard/Login"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const NotFound = lazy(() => import("./components/NotFound"));
-const EventDetails = lazy(() => import("./pages/Dashboard/EventDetails"));
-const ClassDetails = lazy(() => import("./pages/Dashboard/ClassDetails"));
-const CreateEvent = lazy(() => import("./pages/Dashboard/CreateEvent.jsx"));
-const CreateClass = lazy(() => import("./pages/Dashboard/CreateClass"));  
+const DetailsInternal = lazy(() =>
+  import("./pages/DetailsInternal/DetailsInternal")
+);
+const EditForm = lazy(() => import("./components/Dashboard/EditForm/EditForm"));
 
 const App = () => {
   return (
@@ -36,10 +36,22 @@ const App = () => {
           <Route path="/admin/login" element={<Login />} />
           <Route element={<AdminLayout />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/admin/events/:id" element={<EventDetails />} />
-            <Route path="/admin/classes/:id" element={<ClassDetails />} />
-            <Route path="/admin/events/create" element={<CreateEvent />} />
-            <Route path="/admin/classes/create" element={<CreateClass />} />
+            <Route
+              path="/admin/events/:id"
+              element={<DetailsInternal isClass={false} />}
+            />
+            <Route
+              path="/admin/events/:id/update"
+              element={<EditForm isClass={false} />}
+            />
+            <Route
+              path="/admin/classes/:id"
+              element={<DetailsInternal isClass={true} />}
+            />
+            <Route
+              path="/admin/classes/:id/update"
+              element={<EditForm isClass={true} />}
+            />
           </Route>
 
           <Route path="*" element={<NotFound />} />
