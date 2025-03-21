@@ -4,19 +4,19 @@
   align-items: center;
   justify-content: start;
   padding: 5% 10%;
-  background-color: #c9bea2;
+  height: 100vh;
 
   h2 {
     text-align: center;
-    font-size: 60px;
-    color: #222;
-    font-family: "Quicksand";
+    font-size: 70px;
+    text-transform: uppercase;
+    font-family: "Questrial";
   }
 
   p {
-    font-family: "Averta";
-    font-size: 1.2rem;
-    color: #444;
+    font-family: "Roboto";
+    font-size: 20px;
+    font-weight: 500;
     text-transform: uppercase;
     margin-bottom: 30px;
   }
@@ -24,18 +24,20 @@
   .about-container {
     display: flex;
     width: 100%;
-    justify-content: center;
-    align-items: center;
+    height: 100%;
     padding: 20px;
     margin-top: 30px;
-    gap: 15%;
+    border: 1px solid black;
+    justify-content: space-around;
+    overflow: hidden;
 
     .cards {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      gap: 15px;
+      align-items: start;
+      border: 1px solid black;
+      padding: 10px;
 
       .card {
         width: min-content;
@@ -48,19 +50,19 @@
         cursor: pointer;
         font-size: 40px;
         text-align: start;
-        color: #444;
+        color: #804224;
         font-weight: 600;
         transition: all 0.2s ease-in-out;
         position: relative;
 
         &:hover {
           transition: all 0.2s ease-in-out;
-          color: #000;
+          color: #4e2916;
         }
 
         &.active {
           transition: all 0.2s ease-in-out;
-          color: #000;
+          color: #4e2916;
           scale: 1.1;
         }
 
@@ -69,7 +71,7 @@
           width: 10%;
           height: 4px;
           border-radius: 50px;
-          background: #555;
+          background: #4e2916;
           bottom: 10;
           transform: rotate(90deg);
           left: -12%;
@@ -90,42 +92,50 @@
     }
 
     .content-preview {
-      width: 50%;
-      height: 100%;
-      background: #fff;
-      padding: 20px;
+      width: 60%;
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       text-align: center;
-      overflow: hidden; /* Ensure smooth sliding effect */
 
       .content-inner {
         display: flex;
-        flex-direction: column;
-        align-items: start;
-        justify-content: center;
+        border: 1px solid red;
         transition: transform 0.2s ease-in-out;
-        gap: 20px;
 
-        img {
-          min-width: 100%;
-          height: 320px;
-          object-fit: cover;
+        .image-container {
+          width: 100%;
+          height: 100%;
           border-radius: 10px;
+          overflow: hidden;
+          position: relative;
+          img {
+            min-width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+          }
         }
 
-        h3 {
-          font-family: "Quicksand";
-          text-align: start;
-          color: #000;
-          font-size: 1.8rem;
-        }
+        .text-container {
+          width: 100%;
+          height: 50%;
+          padding: 20px;
+          position: absolute;
+          h3 {
+            font-family: "Quicksand";
+            text-align: start;
+            color: #4e2916;
+            font-size: 1.8rem;
+          }
 
-        p {
-          text-transform: none;
-          text-align: start;
-          font-size: 1.3rem;
-          color: #666;
+          p {
+            text-transform: none;
+            text-align: start;
+            font-size: 1.3rem;
+            color: #666;
+          }
+          button {
+          }
         }
       }
     }

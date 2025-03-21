@@ -1,5 +1,5 @@
 import yoga from "../src/assets/yoga.webp";
-import portrait1 from "../src/assets/portrait-1.jpg";
+import portrait1 from "../src/assets/images/bishal.jpg";
 import { sub } from "framer-motion/client";
 
 export const dummyClasses = [
@@ -80,12 +80,12 @@ export const dummyEvents = [
   },
 ];
 
-export const dummyTrainers = [
+export const trainers = [
   {
     id: 1,
-    name: "Sarah Chen",
-    role: "Product Manager at TechFlow",
-    text: "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+    name: "Bishal",
+    role: "Muay Thai Coach",
+    text: "Muay Thai coach from north east participated in national championship trained under Ifma president trained national and international fighters",
     image: portrait1,
   },
   {

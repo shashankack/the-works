@@ -1,152 +1,154 @@
 .events-section {
   padding: 3rem 1rem;
-  background: #fff;
-  height: auto;
+  min-height: 100vh;
 
   .container {
-    border: 2px solid #c9bea2;
-    border-radius: 50px;
-    height: 100%;
-    padding: 30px 20px;
-  }
-
-  h2 {
+    max-width: 1600px;
     margin: 0 auto;
-    width: max-content;
-    font-size: 4rem;
-    margin-bottom: 40px;
-    font-family: "Quicksand";
     text-align: center;
-    position: relative;
 
-    hr {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%);
-      width: 70%;
-      border: 1px solid #c9bea2;
-      border-radius: 50px;
-    }
-  }
+    .heading {
+      max-width: 600px;
+      margin: 0 auto;
 
-  .tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    gap: 20px;
+      h2 {
+        font-family: "Questrial", sans-serif;
+        font-size: 3.6rem;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+        color: #b15324;
 
-    button {
-      padding: 10px 20px;
-      border: 2px solid #c9bea2;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 16px;
-      background: none;
-      transition: 0.3s;
-
-      &.active {
-        background: #c9bea2;
-
-        color: #000;
-      }
-    }
-  }
-  .events {
-    .card {
-      background: #c9bea2;
-      backdrop-filter: blur(20px);
-      padding: 25px;
-      border-radius: 10% 10% 8px 8px;
-      height: 550px;
-      text-align: center;
-      box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1),
-        0px 4px 6px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease-in-out;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-
-      &:hover {
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0px -4px 16px rgba(0, 0, 0, 0.1),
-          0px 4px 16px rgba(0, 0, 0, 0.1);
-        transform: scale(1.01);
-      }
-
-      img {
-        width: 100%;
-        object-fit: cover; /* ✅ Ensures images fill the space */
-        border-radius: 6px;
-        border-radius: 10% 10% 8px 8px;
-        transition: transform 0.3s ease-in-out;
-      }
-
-      h3 {
-        margin: 10px 0;
-        font-size: 1.5rem;
-        font-family: "Quicksand";
-        color: #333;
-        flex-shrink: 0;
-      }
-
-      p {
-        font-size: 16px;
-        color: #666;
-        margin: 15px 0;
-        flex-grow: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-      .cta-button {
-        font-family: "Quicksand";
-        font-weight: 800;
-        background: #fff;
-        color: #c9bea2;
-        border: 2px solid #fff;
-        padding: 10px 24px;
-        font-size: 1rem;
-        cursor: pointer;
-        border-radius: 30px;
-        transition: all 0.3s ease;
-
-        &:hover {
-          color: #fff;
-          background: none;
+        hr {
+          margin: 0 auto;
+          border: 1px solid #4E2916;
+          border-radius: 50px;
         }
       }
     }
-  }
 
-  // Swiper Navigation Arrows - Better Positioning
-  .swiper-button-prev,
-  .swiper-button-next {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #00000044;
-    color: white;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    .tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
 
-    &::after {
-      font-size: 18px;
+      button {
+        padding: 0.75rem 2rem;
+        border-radius: 30px;
+        font-size: 1.3rem;
+        font-family: "Questrial", sans-serif;
+        cursor: pointer;
+        border: 1px solid #b15324;
+        transition: all 0.3s ease;
+        background-color: #b15324;
+        color: #4E2916;
+      }
+
+      hr {
+        border-radius: 50px;
+        margin: 0 20px;
+        height: 50px;
+        border: 1px solid #4E2916;
+      }
     }
-  }
 
-  .swiper-button-prev {
-    left: 10px;
-  }
+    .events {
+      .card {
+        border-radius: 20px;
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        min-height: 400px;
+        margin: 0 auto;
 
-  .swiper-button-next {
-    right: 10px;
+        .circle-image {
+          width: 470px;
+          height: 470px;
+          border-radius: 50%;
+          overflow: hidden;
+          margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          z-index: 10;
+
+          &:hover {
+            border-radius: 30px;
+            transform: scale(1.05);
+            z-index: 30;
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+            transform: scale(1.2);
+
+            &:hover {
+              transform: scale(1);
+            }
+          }
+
+          .placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #b15324;
+          }
+        }
+
+        h3 {
+          font-family: "Questrial", sans-serif;
+          font-size: 1.5rem;
+          color: #4E2916;
+          margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+          font-family: "Quicksand", sans-serif;
+          font-weight: 700;
+          padding: 0.5rem 1.5rem;
+          font-size: 1rem;
+          border-radius: 30px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: #fff;
+            color: #3f51b5; // your "orange" in the theme
+          }
+        }
+      }
+    }
+
+    // Swiper Navigation Arrows
+    .swiper-button-prev,
+    .swiper-button-next {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &::after {
+        font-size: 18px;
+      }
+    }
+
+    .swiper-button-prev {
+      left: 10px;
+    }
+
+    .swiper-button-next {
+      right: 10px;
+    }
   }
 }

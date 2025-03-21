@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./AboutSection.scss";
+import { useTheme } from "@mui/material/styles";
 
 import founderImg from "../../assets/raghu_founder.jpg";
-import { redirect } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +14,7 @@ const AboutSection = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [nextCard, setNextCard] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const theme = useTheme();
 
   const cards = [
     {
@@ -58,7 +59,6 @@ const AboutSection = () => {
     },
   ];
 
-  // Set first card as default on mount
   useEffect(() => {
     setSelectedCard(cards[0]);
   }, []);
@@ -85,23 +85,22 @@ const AboutSection = () => {
     if (isAnimating || selectedCard?.id === id) return;
 
     setIsAnimating(true);
-    setNextCard(cards.find((card) => card.id === id)); // Set next card immediately
+    setNextCard(cards.find((card) => card.id === id));
 
-    // Slide out animation (downwards)
     gsap.to(contentRef.current, {
       y: "100%",
       opacity: 0,
-      duration: 0.2, // Faster transition out
+      duration: 0.2,
       ease: "power3.in",
       onComplete: () => {
-        setSelectedCard(cards.find((card) => card.id === id)); // Change state instantly
+        setSelectedCard(cards.find((card) => card.id === id));
         gsap.fromTo(
           contentRef.current,
           { y: "-100%", opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.3, // Faster transition in
+            duration: 0.3,
             ease: "power3.out",
             onComplete: () => setIsAnimating(false),
           }
@@ -111,8 +110,11 @@ const AboutSection = () => {
   };
 
   return (
-    <section className="about-section">
-      <h2>
+    <section
+      className="about-section"
+      style={{ backgroundColor: theme.palette.site.beige }}
+    >
+      <h2 style={{ color: theme.palette.site.orange }}>
         Welcome to The Works
         <p>A legacy of movement, creativity, and connection.</p>
       </h2>
@@ -135,16 +137,20 @@ const AboutSection = () => {
           <div className="content-inner">
             {selectedCard && (
               <>
-                <img src={selectedCard.image} alt={selectedCard.title} />
-                <h3>{selectedCard.title}</h3>
-                <p>{selectedCard.content}</p>
-                <button
-                  onClick={() =>
-                    (window.location.href = `${selectedCard.redirect}`)
-                  }
-                >
-                  Read More
-                </button>
+                <div className="image-container">
+                  <img src={selectedCard.image} alt={selectedCard.title} />
+                </div>
+                <div className="text-container">
+                  <h3>{selectedCard.title}</h3>
+                  <p>{selectedCard.content}</p>
+                  <button
+                    onClick={() =>
+                      (window.location.href = `${selectedCard.redirect}`)
+                    }
+                  >
+                    Read More
+                  </button>
+                </div>
               </>
             )}
           </div>

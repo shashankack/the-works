@@ -16,6 +16,12 @@ const Sidebar = () => {
           <li>
             <a href="/admin/classes">Manage Classes</a>
           </li>
+          <li>
+            <a href="/admin/trainers">Manage Trainers</a>
+          </li>
+          <li>
+            <a href="/admin/bookings">Manage Bookings</a>
+          </li>
         </ul>
       </nav>
     </aside>

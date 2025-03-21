@@ -1,5 +1,19 @@
+// EditForm.jsx
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
+import {
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Typography,
+  Grid2,
+  Snackbar,
+  Alert,
+  Box,
+} from "@mui/material";
 import "./EditForm.scss";
 
 const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
@@ -11,6 +25,7 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
     location: "",
     conceptNote: "",
     classType: isClass ? "one-to-one" : "",
+    recurrence: false,
     recurrenceRule: "",
     trainerId: "",
   });
@@ -21,8 +36,8 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  // ✅ Load initialData when component mounts
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -33,6 +48,7 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
         location: initialData?.location || "",
         conceptNote: initialData?.conceptNote || "",
         classType: initialData?.classType || (isClass ? "one-to-one" : ""),
+        recurrence: !!initialData?.recurrence,
         recurrenceRule: initialData?.recurrenceRule || "",
         trainerId: initialData?.trainer?.id || "",
       });
@@ -53,15 +69,14 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
       setImages([]);
       setImagePreviews(parsedImages);
     }
-  }, [initialData]);
+  }, [initialData, isClass]);
 
-  // ✅ Handle input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
-  // ✅ Handle file input changes
   const handleFileChange = (e) => {
     const { name, files } = e.target;
 
@@ -71,28 +86,27 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
       setThumbnailPreview(URL.createObjectURL(file));
     } else {
       setImages([...files]);
-      setImagePreviews([
-        ...imagePreviews,
+      setImagePreviews((prev) => [
+        ...prev,
         ...Array.from(files).map((file) => URL.createObjectURL(file)),
       ]);
     }
   };
 
-  // ✅ Handle deleting an image
   const handleDeleteImage = async (imageUrl) => {
     if (!window.confirm("Are you sure you want to delete this image?")) return;
 
     try {
       const response = await axiosInstance.delete(
-        `/admin/${isClass ? "classes" : "events"}/${initialData.id}/delete-image`,
+        `/admin/${isClass ? "classes" : "events"}/${
+          initialData.id
+        }/delete-image`,
         { data: { imageUrl } }
       );
 
       if (response.data.success) {
         alert("Image deleted successfully!");
-
-        // ✅ Remove from UI
-        setImagePreviews((prevImages) => prevImages.filter((img) => img !== imageUrl));
+        setImagePreviews((prev) => prev.filter((img) => img !== imageUrl));
       } else {
         alert("Failed to delete image.");
       }
@@ -101,7 +115,6 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
     }
   };
 
-  // ✅ Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -114,7 +127,12 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
       const formPayload = new FormData();
 
       Object.entries(formData).forEach(([key, value]) => {
-        if (value) formPayload.append(key, value);
+        if (value !== undefined && value !== null) {
+          formPayload.append(
+            key,
+            typeof value === "boolean" ? value.toString() : value
+          );
+        }
       });
 
       if (thumbnail) formPayload.append("thumbnail", thumbnail);
@@ -129,77 +147,237 @@ const EditForm = ({ initialData, isClass = false, onSave, onCancel }) => {
       onSave(response.data.class || response.data.event);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to update.");
+      setSnackbarOpen(true);
     }
     setLoading(false);
   };
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <div className="edit-form">
-      <h2>Edit {isClass ? "Class" : "Event"}</h2>
-      {error && <p className="error">{error}</p>}
-
+      <Typography variant="h4" gutterBottom>
+        Edit {isClass ? "Class" : "Event"}
+      </Typography>
+      {error && (
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      )}
       <form onSubmit={handleSubmit}>
-        <label>Title:</label>
-        <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
+        <Grid2 container spacing={3}>
+          {/* Details Section */}
+          <Grid2 item xs={12}>
+            <Typography variant="h5">Details</Typography>
+          </Grid2>
 
-        <label>Start Time:</label>
-        <input type="datetime-local" name="startDuration" value={formData.startDuration} onChange={handleInputChange} required />
+          <Grid2 item xs={12} sm={6}>
+            <TextField
+              label="Title"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              fullWidth
+              required
+            />
+          </Grid2>
 
-        <label>End Time:</label>
-        <input type="datetime-local" name="endDuration" value={formData.endDuration} onChange={handleInputChange} required />
+          <Grid2 item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel>Status</InputLabel>
+              <Select
+                name="eventStatus"
+                value={formData.eventStatus}
+                onChange={handleInputChange}
+              >
+                <MenuItem value="UPCOMING">Upcoming</MenuItem>
+                <MenuItem value="ONGOING">Ongoing</MenuItem>
+                <MenuItem value="COMPLETED">Completed</MenuItem>
+                <MenuItem value="CANCELLED">Cancelled</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid2>
 
-        <label>Status:</label>
-        <select name="eventStatus" value={formData.eventStatus} onChange={handleInputChange}>
-          <option value="UPCOMING">Upcoming</option>
-          <option value="ONGOING">Ongoing</option>
-          <option value="COMPLETED">Completed</option>
-          <option value="CANCELLED">Cancelled</option>
-        </select>
+          <Grid2 item xs={12} sm={6}>
+            <TextField
+              label="Start Time"
+              type="datetime-local"
+              name="startDuration"
+              value={formData.startDuration}
+              onChange={handleInputChange}
+              fullWidth
+              required
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid2>
 
-        <label>Location:</label>
-        <input type="text" name="location" value={formData.location} onChange={handleInputChange} />
+          <Grid2 item xs={12} sm={6}>
+            <TextField
+              label="End Time"
+              type="datetime-local"
+              name="endDuration"
+              value={formData.endDuration}
+              onChange={handleInputChange}
+              fullWidth
+              required
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid2>
 
-        <label>Concept Note:</label>
-        <textarea name="conceptNote" value={formData.conceptNote} onChange={handleInputChange} />
+          <Grid2 item xs={12} sm={6}>
+            <FormControl>
+              <Typography variant="subtitle1">Is Recurring?</Typography>
+              <label
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <input
+                  type="checkbox"
+                  name="recurrence"
+                  checked={formData.recurrence}
+                  onChange={handleInputChange}
+                />
+                Enable Recurrence
+              </label>
+            </FormControl>
+          </Grid2>
 
-        {isClass && (
-          <>
-            <label>Class Type:</label>
-            <select name="classType" value={formData.classType} onChange={handleInputChange}>
-              <option value="one-to-one">One-to-One</option>
-              <option value="group">Group</option>
-            </select>
-          </>
-        )}
+          {formData.recurrence && (
+            <Grid2 item xs={12}>
+              <TextField
+                label="Recurrence Rule"
+                name="recurrenceRule"
+                value={formData.recurrenceRule}
+                onChange={handleInputChange}
+                fullWidth
+              />
+            </Grid2>
+          )}
 
-        {thumbnailPreview && (
-          <div className="current-thumbnail">
-            <p>Current Thumbnail:</p>
-            <img src={thumbnailPreview} alt="Current Thumbnail" />
-          </div>
-        )}
-        <label>New Thumbnail:</label>
-        <input type="file" name="thumbnail" accept="image/*" onChange={handleFileChange} />
+          <Grid2 item xs={12} sm={6}>
+            <TextField
+              label="Location"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              fullWidth
+            />
+          </Grid2>
 
-        {imagePreviews.length > 0 && (
-          <div className="current-images">
-            <p>Current Images:</p>
-            <div className="image-grid">
-              {imagePreviews.map((img, index) => (
-                <div key={index} className="image-wrapper">
-                  <img src={img} alt={`Current Image ${index}`} />
-                  <button className="delete-image-btn" onClick={() => handleDeleteImage(img)}>❌</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          <Grid2 item xs={12}>
+            <TextField
+              label="Concept Note"
+              name="conceptNote"
+              value={formData.conceptNote}
+              onChange={handleInputChange}
+              fullWidth
+              multiline
+              rows={4}
+            />
+          </Grid2>
 
-        <label>Upload New Images:</label>
-        <input type="file" name="images" accept="image/*" multiple onChange={handleFileChange} />
+          {isClass && (
+            <Grid2 item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Class Type</InputLabel>
+                <Select
+                  name="classType"
+                  value={formData.classType}
+                  onChange={handleInputChange}
+                >
+                  <MenuItem value="one-to-one">One-to-One</MenuItem>
+                  <MenuItem value="group">Group</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid2>
+          )}
 
-        <button type="submit" disabled={loading}>{loading ? "Saving..." : "Save Changes"}</button>
-        <button type="button" onClick={onCancel} className="cancel-btn">Cancel</button>
+          {/* Media Section */}
+          <Grid2 item xs={12}>
+            <Typography variant="h5">Media</Typography>
+          </Grid2>
+
+          <Grid2 item xs={12} sm={6}>
+            {thumbnailPreview && (
+              <Box mb={1}>
+                <Typography variant="subtitle1">Current Thumbnail:</Typography>
+                <img
+                  src={thumbnailPreview}
+                  alt="Current Thumbnail"
+                  style={{ maxWidth: "100%", height: "auto" }}
+                />
+              </Box>
+            )}
+            <input
+              type="file"
+              name="thumbnail"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </Grid2>
+
+          <Grid2 item xs={12} sm={6}>
+            {imagePreviews.length > 0 && (
+              <Box mb={1}>
+                <Typography variant="subtitle1">Current Images:</Typography>
+                <Box display="flex" flexWrap="wrap" gap={1}>
+                  {imagePreviews.map((img, index) => (
+                    <Box
+                      key={index}
+                      textAlign="center"
+                      className="image-wrapper"
+                    >
+                      <img
+                        src={img}
+                        alt={`Current Image ${index}`}
+                        style={{ width: "100px", height: "auto" }}
+                      />
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        onClick={() => handleDeleteImage(img)}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            )}
+            <input
+              type="file"
+              name="images"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+            />
+          </Grid2>
+
+          {/* Action Buttons */}
+          <Grid2 item xs={12}>
+            <Box display="flex" justifyContent="flex-end" gap={2}>
+              <Button variant="outlined" onClick={onCancel}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={loading}
+              >
+                {loading ? "Saving..." : "Save Changes"}
+              </Button>
+            </Box>
+          </Grid2>
+        </Grid2>
       </form>
     </div>
   );

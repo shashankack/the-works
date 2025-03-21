@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Testimonials.scss";
 import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
-import { section } from "framer-motion/client";
 
 const Testimonials = ({ data }) => {
   const [current, setCurrent] = useState(0);

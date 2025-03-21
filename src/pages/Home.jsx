@@ -10,7 +10,7 @@ import mobileCarousel1 from "../assets/mobile-carousel-1.jpg";
 import mobileCarousel2 from "../assets/mobile-carousel-2.jpg";
 import mobileCarousel3 from "../assets/mobile-carousel-3.jpg";
 
-import { dummyClasses, dummyEvents, dummyTrainers } from "../../public/dummyData";
+import { dummyClasses, dummyEvents, trainers } from "../../public/dummyData";
 
 
 
@@ -32,7 +32,7 @@ const Home = () => {
       <HeroSection images={sliderContent}/>
       <AboutSection />
       <EventsSection classesData={dummyClasses} eventsData={dummyEvents} />
-      <Testimonials data={dummyTrainers} />
+      <Testimonials data={trainers} />
     </>
   );
 };
