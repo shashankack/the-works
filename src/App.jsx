@@ -10,14 +10,9 @@ import AdminLayout from "./layouts/AdminLayout";
 // Lazy Load Pages for Performance
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/AboutSection/About"));
-const Events = lazy(() => import("./pages/EventsSection/EventsInternal"));
-const Classes = lazy(() => import("./pages/EventsSection/Details"));
 const Login = lazy(() => import("./pages/Dashboard/login"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const NotFound = lazy(() => import("./components/NotFound"));
-const EventsInternal = lazy(() =>
-  import("./pages/EventsSection/EventsInternal")
-);
 const Details = lazy(() => import("./pages/EventsSection/Details"));
 const DetailsInternal = lazy(() =>
   import("./pages/DetailsInternal/DetailsInternal")
@@ -49,8 +44,7 @@ const App = () => {
             <Route element={<MainLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
-              <Route path="/classes" element={<Classes />} />
-              <Route path="/events" element={<Events />} />
+
               <Route path="/classes/:id" element={<Details isClass={true} />} />
               <Route path="/events/:id" element={<Details isClass={false} />} />
             </Route>
