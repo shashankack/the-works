@@ -12,9 +12,6 @@ import mobileCarousel3 from "../assets/mobile-carousel-3.jpg";
 
 import { dummyClasses, dummyEvents, trainers } from "../../public/dummyData";
 
-
-
-
 const Home = () => {
   const sliderContent = [
     desktopCarousel1,
@@ -25,13 +22,11 @@ const Home = () => {
     mobileCarousel3, */
   ];
 
-  
-
   return (
     <>
-      <HeroSection images={sliderContent}/>
+      <HeroSection images={sliderContent} />
       <AboutSection />
-      <EventsSection classesData={dummyClasses} eventsData={dummyEvents} />
+      <EventsSection />
       <Testimonials data={trainers} />
     </>
   );

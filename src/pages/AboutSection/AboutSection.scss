@@ -27,7 +27,6 @@
     height: 100%;
     padding: 20px;
     margin-top: 30px;
-    border: 1px solid black;
     justify-content: space-around;
     overflow: hidden;
 
@@ -36,7 +35,6 @@
       flex-direction: column;
       justify-content: center;
       align-items: start;
-      border: 1px solid black;
       padding: 10px;
 
       .card {
@@ -99,7 +97,6 @@
 
       .content-inner {
         display: flex;
-        border: 1px solid red;
         transition: transform 0.2s ease-in-out;
 
         .image-container {

@@ -12,7 +12,7 @@ const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/AboutSection/About"));
 const Events = lazy(() => import("./pages/EventsSection/EventsInternal"));
 const Classes = lazy(() => import("./pages/EventsSection/Details"));
-const Login = lazy(() => import("./pages/Dashboard/Login"));
+const Login = lazy(() => import("./pages/Dashboard/login"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const NotFound = lazy(() => import("./components/NotFound"));
 const EventsInternal = lazy(() =>
