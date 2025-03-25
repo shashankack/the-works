@@ -112,9 +112,9 @@ const AboutSection = () => {
   return (
     <section
       className="about-section"
-      style={{ backgroundColor: theme.palette.site.beige }}
+      style={{ backgroundColor: theme.colors.beige }}
     >
-      <h2 style={{ color: theme.palette.site.orange }}>
+      <h2 style={{ color: theme.colors.orange }}>
         Welcome to The Works
         <p>A legacy of movement, creativity, and connection.</p>
       </h2>

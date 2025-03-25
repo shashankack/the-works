@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 // Layouts
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";
+import Bookings from "./pages/Dashboard/Bookings";
 
 // Lazy Load Pages for Performance
 const Home = lazy(() => import("./pages/Home"));
@@ -14,24 +15,17 @@ const Login = lazy(() => import("./pages/Dashboard/login"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const NotFound = lazy(() => import("./components/NotFound"));
 const Details = lazy(() => import("./pages/EventsSection/Details"));
+const Trainers = lazy(() => import("./pages/Dashboard/Trainers"));
 const DetailsInternal = lazy(() =>
   import("./pages/DetailsInternal/DetailsInternal")
 );
 const EditForm = lazy(() => import("./components/Dashboard/EditForm/EditForm"));
 
 const theme = createTheme({
-  palette: {
-    site: {
-      orange: "#B15324",
-      beige: "#E3DED3",
-      brown: "#4E2916",
-    },
-    dashboard: {
-      main: "#f50057",
-    },
-  },
-  typography: {
-    fontFamily: "Roboto",
+  colors: {
+    orange: "#B15324",
+    beige: "#E3DED3",
+    brown: "#4E2916",
   },
 });
 
@@ -56,6 +50,8 @@ const App = () => {
                 path="/admin/events/:id"
                 element={<DetailsInternal isClass={false} />}
               />
+              <Route path="/admin/trainers" element={<Trainers />} />
+              <Route path="/admin/bookings" element={<Bookings />} />
               <Route
                 path="/admin/events/:id/update"
                 element={<EditForm isClass={false} />}

@@ -36,8 +36,8 @@ const EventsSection = () => {
           setEventsError(eventsResponse.data.error);
         else setEventsData(eventsResponse.data.events || []);
       } catch (error) {
-        setClassesError("Failed to fetch classes data");
-        setEventsError("Failed to fetch events data");
+        setClassesError("No classes at the moment");
+        setEventsError("No Events at the moment");
       } finally {
         setLoading(false);
       }
@@ -51,22 +51,22 @@ const EventsSection = () => {
   const errorMessage = isClassesTab ? classesError : eventsError;
 
   const handleRedirect = (item, type) => {
-    navigate(`/${type}/${item.id}`,);
+    navigate(`/${type}/${item.id}`);
   };
 
   return (
     <section
       className="events-section"
-      style={{ backgroundColor: theme.palette.site.beige }}
+      style={{ backgroundColor: theme.colors.beige }}
     >
       <div className="container">
         {/* Heading */}
         <div className="heading">
-          <h2 style={{ color: theme.palette.site.tertiary }}>
+          <h2 style={{ color: theme.colors.tertiary }}>
             Upcoming {isClassesTab ? "Classes" : "Events"}
             <hr
               style={{
-                border: `1px solid ${theme.palette.site.tertiary}`,
+                border: `1px solid ${theme.colors.tertiary}`,
                 width: "50%",
                 marginTop: "0.5rem",
               }}
@@ -81,12 +81,12 @@ const EventsSection = () => {
             onClick={() => setActiveTab("classes")}
             style={{
               backgroundColor: isClassesTab
-                ? theme.palette.site.tertiary
-                : theme.palette.site.beige,
+                ? theme.colors.tertiary
+                : theme.colors.beige,
               color: isClassesTab
-                ? theme.palette.site.beige
-                : theme.palette.site.tertiary,
-              border: `1px solid ${theme.palette.site.tertiary}`,
+                ? theme.colors.beige
+                : theme.colors.tertiary,
+              border: `1px solid ${theme.colors.tertiary}`,
             }}
           >
             Classes
@@ -97,12 +97,12 @@ const EventsSection = () => {
             onClick={() => setActiveTab("events")}
             style={{
               backgroundColor: !isClassesTab
-                ? theme.palette.site.tertiary
-                : theme.palette.site.beige,
+                ? theme.colors.tertiary
+                : theme.colors.beige,
               color: !isClassesTab
-                ? theme.palette.site.beige
-                : theme.palette.site.tertiary,
-              border: `1px solid ${theme.palette.site.tertiary}`,
+                ? theme.colors.beige
+                : theme.colors.tertiary,
+              border: `1px solid ${theme.colors.tertiary}`,
             }}
           >
             Events
@@ -112,7 +112,7 @@ const EventsSection = () => {
         {/* Loading, Error, or No Data Message */}
         {loading ? (
           <p
-            style={{ textAlign: "center", color: theme.palette.site.tertiary }}
+            style={{ textAlign: "center", color: theme.colors.tertiary }}
           >
             Loading...
           </p>
@@ -120,7 +120,7 @@ const EventsSection = () => {
           <p style={{ textAlign: "center", color: "red" }}>{errorMessage}</p>
         ) : data.length === 0 ? (
           <p
-            style={{ textAlign: "center", color: theme.palette.site.tertiary }}
+            style={{ textAlign: "center", color: theme.colors.tertiary }}
           >
             No {isClassesTab ? "Classes" : "Events"} Available
           </p>
@@ -155,9 +155,9 @@ const EventsSection = () => {
                     <button
                       className="cta-button"
                       style={{
-                        backgroundColor: theme.palette.site.orange,
+                        backgroundColor: theme.colors.orange,
                         color: "#fff",
-                        border: `2px solid ${theme.palette.site.orange}`,
+                        border: `2px solid ${theme.colors.orange}`,
                       }}
                       onClick={() => handleRedirect(item, activeTab)}
                     >

@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
-import "./Details.scss";
+import {
+  Box,
+  Grid,
+  Typography,
+  Button,
+  CircularProgress,
+  Alert,
+  Card,
+  CardMedia,
+  CardContent,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 
 const Details = ({ isClass }) => {
   const { id } = useParams();
@@ -97,146 +112,180 @@ const Details = ({ isClass }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <Box textAlign="center" mt={5}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box textAlign="center" mt={5}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
+
   return (
-    <div className="details-internal">
-      <div className="top-buttons">
-        <button onClick={() => navigate(-1)} className="back-btn">
-          ⬅ Back
-        </button>
-      </div>
+    <Box p={3}>
+      <Button variant="outlined" onClick={() => navigate(-1)}>
+        ⬅ Back
+      </Button>
 
-      {loading ? (
-        <p className="loading">⏳ Loading...</p>
-      ) : error ? (
-        <p className="error">{error}</p>
-      ) : data ? (
-        <div className="data-card">
+      {data && (
+        <Card sx={{ mt: 3 }}>
           {data.thumbnail && (
-            <div className="thumbnail-container">
-              <img src={data.thumbnail} alt="Thumbnail" className="thumbnail" />
-            </div>
+            <CardMedia
+              component="img"
+              height="300"
+              image={data.thumbnail}
+              alt="Thumbnail"
+            />
           )}
-          <h1>{data.title}</h1>
-          <p>
-            <strong>Status:</strong> {data.eventStatus}
-          </p>
-          <p>
-            <strong>Location:</strong> {data.location}
-          </p>
-          <p>
-            <strong>Start Time:</strong> {data.startDuration}
-          </p>
-          <p>
-            <strong>End Time:</strong> {data.endDuration}
-          </p>
-          <p>
-            <strong>Recurrence:</strong>{" "}
-            {data.recurrence ? (
-              <pre className="recurrence-json">
-                {JSON.stringify(
-                  typeof data.recurrenceRule === "string"
-                    ? JSON.parse(data.recurrenceRule)
-                    : data.recurrenceRule,
-                  null,
-                  2
-                )}
-              </pre>
-            ) : (
-              "One-time"
+          <CardContent>
+            <Typography variant="h4" gutterBottom>
+              {data.title}
+            </Typography>
+
+            <Typography>
+              <strong>Status:</strong> {data.eventStatus}
+            </Typography>
+            <Typography>
+              <strong>Location:</strong> {data.location}
+            </Typography>
+            <Typography>
+              <strong>Start:</strong> {data.startDuration}
+            </Typography>
+            <Typography>
+              <strong>End:</strong> {data.endDuration}
+            </Typography>
+            <Typography>
+              <strong>Recurrence:</strong>{" "}
+              {data.recurrence ? (
+                <pre>
+                  {JSON.stringify(
+                    typeof data.recurrenceRule === "string"
+                      ? JSON.parse(data.recurrenceRule)
+                      : data.recurrenceRule,
+                    null,
+                    2
+                  )}
+                </pre>
+              ) : (
+                "One-time"
+              )}
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+              <strong>Description:</strong>{" "}
+              {data.conceptNote || "No description available"}
+            </Typography>
+
+            {data.trainer && (
+              <Box mt={3}>
+                <Typography variant="h6">Trainer</Typography>
+                <Typography>
+                  <strong>Name:</strong> {data.trainer.name}
+                </Typography>
+                <Typography>
+                  <strong>Phone:</strong> {data.trainer.phone || "Not provided"}
+                </Typography>
+                <Typography>
+                  <strong>Specialization:</strong>{" "}
+                  {data.trainer.specialization || "Not provided"}
+                </Typography>
+              </Box>
             )}
-          </p>
-          <p>
-            <strong>Description:</strong>{" "}
-            {data.conceptNote || "No description available"}
-          </p>
 
-          {data.trainer && (
-            <div className="trainer-details">
-              <h3>Trainer</h3>
-              <p>
-                <strong>Name:</strong> {data.trainer.name}
-              </p>
-              <p>
-                <strong>Phone:</strong> {data.trainer.phone || "Not provided"}
-              </p>
-              <p>
-                <strong>Specialization:</strong>{" "}
-                {data.trainer.specialization || "Not provided"}
-              </p>
-            </div>
-          )}
+            {data.images?.length > 0 && (
+              <Box mt={4}>
+                <Typography variant="h6">Gallery</Typography>
+                <Grid container spacing={2} mt={1}>
+                  {data.images.map((img, index) => (
+                    <Grid item xs={6} md={4} key={index}>
+                      <Card>
+                        <CardMedia
+                          component="img"
+                          image={img}
+                          alt={`img-${index}`}
+                        />
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
 
-          {data.images.length > 0 && (
-            <div className="images-container">
-              <h3>Images</h3>
-              <div className="image-grid">
-                {data.images.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={`Image ${index}`}
-                    className="image"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          <button className="register-button" onClick={() => setShowForm(true)}>
-            REGISTER
-          </button>
-
-          {showForm && (
-            <div className="popup-form-overlay">
-              <div className="popup-form">
-                <h2>Register</h2>
-                {formError && <p className="error">{formError}</p>}
-                {formSuccess && <p className="success">{formSuccess}</p>}
-                <form onSubmit={handleSubmit}>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="instaHandle"
-                    placeholder="Instagram Handle (optional)"
-                    value={formData.instaHandle}
-                    onChange={handleChange}
-                  />
-                  <button type="submit">Submit</button>
-                  <button type="button" onClick={() => setShowForm(false)}>
-                    Cancel
-                  </button>
-                </form>
-              </div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <p className="error">Not found</p>
+            <Box mt={4}>
+              <Button variant="contained" onClick={() => setShowForm(true)}>
+                Register
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
       )}
-    </div>
+
+      <Dialog open={showForm} onClose={() => setShowForm(false)}>
+        <DialogTitle>Register</DialogTitle>
+        <DialogContent>
+          {formError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {formError}
+            </Alert>
+          )}
+          {formSuccess && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {formSuccess}
+            </Alert>
+          )}
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <TextField
+              margin="dense"
+              label="Name"
+              fullWidth
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              margin="dense"
+              label="Email"
+              fullWidth
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              margin="dense"
+              label="Phone"
+              fullWidth
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              margin="dense"
+              label="Instagram Handle (optional)"
+              fullWidth
+              name="instaHandle"
+              value={formData.instaHandle}
+              onChange={handleChange}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowForm(false)}>Cancel</Button>
+          <Button type="submit" onClick={handleSubmit} variant="contained">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

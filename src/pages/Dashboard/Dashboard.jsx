@@ -1,9 +1,30 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { logout } from "../../utils/auth";
-import CreateForm from "../../components/Dashboard/CreateForm/CreateForm"; // Import reusable CreateForm
-import "./Dashboard.scss";
+import CreateForm from "../../components/Dashboard/CreateForm/CreateForm";
+
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Tabs,
+  Tab,
+  Box,
+  List,
+  ListItemButton,
+  ListItemText,
+  Divider,
+} from "@mui/material";
+
+import { useTheme } from "@mui/material/styles";
+
+const STATUS_TABS = ["UPCOMING", "INPROGRESS", "COMPLETED", "CANCELLED"];
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,15 +33,17 @@ const Dashboard = () => {
   const [errors, setErrors] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isCreatingClass, setIsCreatingClass] = useState(false);
+  const [activeEventTab, setActiveEventTab] = useState(0);
+  const [activeClassTab, setActiveClassTab] = useState(0);
+  const theme = useTheme();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      window.location.href = "/admin/login"; // Redirect if not logged in
+      window.location.href = "/admin/login";
       return;
     }
 
-    // Fetch events & classes
     axiosInstance
       .get("/events")
       .then((res) => setEvents(res.data.events))
@@ -36,92 +59,142 @@ const Dashboard = () => {
       );
   }, []);
 
+  const filteredEvents = events.filter(
+    (event) => event.eventStatus === STATUS_TABS[activeEventTab]
+  );
+
+  const filteredClasses = classes.filter(
+    (cls) => cls.eventStatus === STATUS_TABS[activeClassTab]
+  );
+
   return (
-    <div className="admin-dashboard">
-      <div className="main-content">
-        {/* Navbar */}
-        <header className="navbar">
-          <h1>Dashboard</h1>
-          <button onClick={logout}>Logout</button>
-        </header>
+    <>
+      {/* Navbar */}
+      <AppBar position="static" sx={{ backgroundColor: theme.colors.orange }}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Typography variant="h6">Admin Dashboard</Typography>
+          <Button color="inherit" onClick={logout}>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
 
-        {/* Events/Classes Count */}
-        <div className="overview">
-          <div className="card">
-            <h3>Total Events</h3>
-            <p>{events.length}</p>
-          </div>
-          <div className="card">
-            <h3>Total Classes</h3>
-            <p>{classes.length}</p>
-          </div>
-        </div>
-
-        {/* Event List */}
-        <section className="list-section">
-          <h2>Upcoming Events</h2>
-          <button
-            className="create-btn"
-            onClick={() => {
-              setShowModal(true);
-              setIsCreatingClass(false);
-            }}
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 6, height: "100%" }}>
+        {/* Events Section */}
+        <Box mt={6}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            + Create Event
-          </button>
-          <ul className="list">
-            {events.map((event) => (
-              <li key={event.id}>
-                <button
-                  className="clickable"
-                  onClick={() => navigate(`/admin/events/${event.id}`)}
-                >
-                  {event.title} - {event.eventStatus}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
+            <Typography variant="h5">Events</Typography>
+            <Box display="flex" alignItems="space-between" gap={2}>
+              <Typography variant="h6">Total: {events.length}</Typography>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setShowModal(true);
+                  setIsCreatingClass(false);
+                }}
+              >
+                + Create Event
+              </Button>
+            </Box>
+          </Box>
 
-        {/* Class List */}
-        <section className="list-section">
-          <h2>Upcoming Classes</h2>
-          <button
-            className="create-btn"
-            onClick={() => {
-              setShowModal(true);
-              setIsCreatingClass(true);
-            }}
+          <Tabs
+            value={activeEventTab}
+            onChange={(_, newValue) => setActiveEventTab(newValue)}
+            sx={{ mt: 2 }}
+            variant="scrollable"
+            scrollButtons="auto"
           >
-            + Create Class
-          </button>
-          <ul className="list">
-            {classes.map((cls) => (
-              <li key={cls.id}>
-                <button
-                  className="clickable"
-                  onClick={() => navigate(`/admin/classes/${cls.id}`)}
-                >
-                  {cls.title} - {cls.eventStatus}
-                </button>
-              </li>
+            {STATUS_TABS.map((label) => (
+              <Tab key={label} label={label} />
             ))}
-          </ul>
-        </section>
-      </div>
+          </Tabs>
 
-      {/* Full-Screen Modal for Creating Events/Classes */}
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setShowModal(false)}>
-              ✖
-            </button>
-            <CreateForm isClass={isCreatingClass} />
-          </div>
-        </div>
-      )}
-    </div>
+          <List sx={{ mt: 2 }}>
+            {filteredEvents.map((event) => (
+              <ListItemButton
+                key={event.id}
+                onClick={() => navigate(`/admin/events/${event.id}`)}
+              >
+                <ListItemText
+                  primary={event.title}
+                  secondary={event.eventStatus}
+                />
+              </ListItemButton>
+            ))}
+            {filteredEvents.length === 0 && (
+              <Typography sx={{ mt: 2 }} color="text.secondary">
+                No events in this category.
+              </Typography>
+            )}
+          </List>
+        </Box>
+
+        <Divider sx={{ my: 6 }} />
+
+        {/* Classes Section */}
+        <Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h5">Classes</Typography>
+            <Box display="flex" alignItems="space-between" gap={2}>
+              <Typography variant="h6">Total: {classes.length}</Typography>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setShowModal(true);
+                  setIsCreatingClass(true);
+                }}
+              >
+                + Create Class
+              </Button>
+            </Box>
+          </Box>
+
+          <Tabs
+            value={activeClassTab}
+            onChange={(_, newValue) => setActiveClassTab(newValue)}
+            sx={{ mt: 2 }}
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            {STATUS_TABS.map((label) => (
+              <Tab key={label} label={label} />
+            ))}
+          </Tabs>
+
+          <List sx={{ mt: 2 }}>
+            {filteredClasses.map((cls) => (
+              <ListItemButton
+                key={cls.id}
+                onClick={() => navigate(`/admin/classes/${cls.id}`)}
+              >
+                <ListItemText primary={cls.title} secondary={cls.eventStatus} />
+              </ListItemButton>
+            ))}
+            {filteredClasses.length === 0 && (
+              <Typography sx={{ mt: 2 }} color="text.secondary">
+                No classes in this category.
+              </Typography>
+            )}
+          </List>
+        </Box>
+      </Container>
+
+      {/* Modal */}
+      <CreateForm
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        isClass={isCreatingClass}
+      />
+    </>
   );
 };
 
