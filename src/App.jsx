@@ -10,7 +10,7 @@ import Bookings from "./pages/Dashboard/Bookings";
 
 // Lazy Load Pages for Performance
 const Home = lazy(() => import("./pages/Home"));
-const About = lazy(() => import("./pages/AboutSection/About"));
+const About = lazy(() => import("./pages/AboutSection/AboutSection"));
 const Login = lazy(() => import("./pages/Dashboard/login"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const NotFound = lazy(() => import("./components/NotFound"));

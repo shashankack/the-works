@@ -1,137 +1,88 @@
 .about-section {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: start;
-  padding: 5% 10%;
+  flex-direction: column;
+  padding: 20px;
   height: 100vh;
 
-  h2 {
-    text-align: center;
-    font-size: 70px;
-    text-transform: uppercase;
-    font-family: "Questrial";
-  }
-
-  p {
-    font-family: "Roboto";
-    font-size: 20px;
-    font-weight: 500;
-    text-transform: uppercase;
-    margin-bottom: 30px;
-  }
-
-  .about-container {
+  .founder-container {
+    margin-top: 60px;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1600px;
     width: 100%;
-    height: 100%;
+    height: 70%;
     padding: 20px;
-    margin-top: 30px;
-    justify-content: space-around;
-    overflow: hidden;
+    gap: 50px;
 
-    .cards {
+    .image-container {
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      align-items: start;
-      padding: 10px;
+      align-items: center;
+      width: 700px;
 
-      .card {
-        width: min-content;
-        display: flex;
-        align-items: center;
-        justify-content: start;
+      img {
         width: 100%;
         height: 100%;
-        text-align: center;
-        cursor: pointer;
-        font-size: 40px;
-        text-align: start;
-        color: #804224;
-        font-weight: 600;
-        transition: all 0.2s ease-in-out;
-        position: relative;
-
-        &:hover {
-          transition: all 0.2s ease-in-out;
-          color: #4e2916;
-        }
-
-        &.active {
-          transition: all 0.2s ease-in-out;
-          color: #4e2916;
-          scale: 1.1;
-        }
-
-        .line {
-          position: absolute;
-          width: 10%;
-          height: 4px;
-          border-radius: 50px;
-          background: #4e2916;
-          bottom: 10;
-          transform: rotate(90deg);
-          left: -12%;
-          transition: all 0.2s ease-in-out;
-        }
-
-        &:hover .line {
-          transform: rotate(90deg);
-          transition: all 0.2s ease-in-out;
-          width: 0;
-        }
-
-        &.active .line {
-          transition: all 0.2s ease-in-out;
-          width: 0;
-        }
+        object-fit: cover;
+        border-radius: 20px;
       }
     }
 
-    .content-preview {
-      width: 60%;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
+    .text-container {
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      flex-direction: column;
+      height: 100%;
+      width: 70%;
 
-      .content-inner {
-        display: flex;
-        transition: transform 0.2s ease-in-out;
+      h2 {
+        margin-top: 40px;
+        font-size: 60px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #b15324;
+      }
 
-        .image-container {
+      p {
+        font-size: 20px;
+        text-align: justify;
+        margin-bottom: 20px;
+        width: 100%;
+        flex-grow: 1;
+      }
+
+      .cards-section {
+        display: grid;
+        grid-template-columns: repeat(2, 50%);
+        width: 100%;
+        height: 200px;
+        gap: 10px;
+
+        .card {
           width: 100%;
           height: 100%;
+          background-color: #cbc0a7;
           border-radius: 10px;
-          overflow: hidden;
-          position: relative;
-          img {
-            min-width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-          }
-        }
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          font-size: 20px;
+          margin-top: auto;
 
-        .text-container {
-          width: 100%;
-          height: 50%;
-          padding: 20px;
-          position: absolute;
-          h3 {
-            font-family: "Quicksand";
-            text-align: start;
-            color: #4e2916;
-            font-size: 1.8rem;
+          &span {
+            display: inline-block;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            will-change: transform, opacity;
           }
 
-          p {
-            text-transform: none;
-            text-align: start;
-            font-size: 1.3rem;
-            color: #666;
-          }
-          button {
+          &:hover {
+            transform: scale(1.02);
           }
         }
       }

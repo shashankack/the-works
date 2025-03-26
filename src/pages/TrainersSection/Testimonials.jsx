@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Testimonials.scss";
 import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
+import { useTheme } from "@mui/material/styles";
 
 const Testimonials = ({ data }) => {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const theme = useTheme();
 
   if (!data || data.length === 0) {
     return <p>No data available.</p>;
@@ -26,7 +28,10 @@ const Testimonials = ({ data }) => {
       <h2>
         Meet our Trainers <hr />
       </h2>
-      <div className="testimonial-container">
+      <div
+        className="testimonial-container"
+        style={{ backgroundColor: theme.colors.orange }}
+      >
         {/* Left: Image with transition */}
         <div className="testimonial-image">
           <AnimatePresence mode="wait" custom={direction}>
@@ -42,7 +47,6 @@ const Testimonials = ({ data }) => {
           </AnimatePresence>
         </div>
 
-        {/* Right: Text Content with transition */}
         <div className="testimonial-content">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
