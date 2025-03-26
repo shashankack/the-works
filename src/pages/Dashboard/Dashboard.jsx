@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { logout } from "../../utils/auth";
 import CreateForm from "../../components/Dashboard/CreateForm/CreateForm";
+import dayjs from "dayjs";
 
 import {
   AppBar,
@@ -10,21 +11,24 @@ import {
   Typography,
   Button,
   Container,
-  Grid,
-  Card,
-  CardContent,
   Tabs,
   Tab,
   Box,
-  List,
-  ListItemButton,
-  ListItemText,
+  Paper,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  IconButton,
   Divider,
 } from "@mui/material";
 
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@mui/material/styles";
 
-const STATUS_TABS = ["UPCOMING", "INPROGRESS", "COMPLETED", "CANCELLED"];
+const STATUS_TABS = ["UPCOMING", "ONGOING", "COMPLETED", "CANCELLED"];
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -67,28 +71,99 @@ const Dashboard = () => {
     (cls) => cls.eventStatus === STATUS_TABS[activeClassTab]
   );
 
+  const renderTable = (items, isClass = false) => (
+    <Paper sx={{ mt: 2, maxHeight: 400, overflow: "auto" }}>
+      <Table stickyHeader size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Trainer</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Time</TableCell>
+            <TableCell align="right">Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5}>
+                <Typography sx={{ mt: 2 }} color="text.secondary">
+                  No {isClass ? "classes" : "events"} in this category.
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ) : (
+            items.map((item) => {
+              let dateDisplay = "—";
+              let timeDisplay = "—";
+
+              // Handle Recurring
+              if (item.recurrenceRule) {
+                try {
+                  const rule = JSON.parse(item.recurrenceRule);
+                  const day = Object.keys(rule)[0];
+                  const time = rule[day];
+                  dateDisplay = `Every ${day}`;
+                  timeDisplay = `${time.start} - ${time.end}`;
+                } catch (err) {
+                  console.error("Invalid recurrenceRule format", err);
+                }
+              }
+
+              // Handle One-Time
+              else if (item.startDuration) {
+                const date = dayjs(item.startDuration);
+                dateDisplay = date.format("DD/MM");
+                timeDisplay = date.format("HH:mm");
+              }
+
+              return (
+                <TableRow key={item.id}>
+                  <TableCell>{item.title}</TableCell>
+                  <TableCell>{item.trainer?.name || "—"}</TableCell>
+                  <TableCell>{dateDisplay}</TableCell>
+                  <TableCell>{timeDisplay}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={() =>
+                        navigate(
+                          `/admin/${isClass ? "classes" : "events"}/${item.id}`
+                        )
+                      }
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton color="error">
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          )}
+        </TableBody>
+      </Table>
+    </Paper>
+  );
+
+  const getEventCountByStatus = (status) =>
+    events.filter((event) => event.eventStatus === status).length;
+
+  const getClassCountByStatus = (status) =>
+    classes.filter((cls) => cls.eventStatus === status).length;
+
   return (
     <>
-      {/* Navbar */}
-      <AppBar position="static" sx={{ backgroundColor: theme.colors.orange }}>
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography variant="h6">Admin Dashboard</Typography>
-          <Button color="inherit" onClick={logout}>
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-
       <Container maxWidth="lg" sx={{ mt: 4, mb: 6, height: "100%" }}>
         {/* Events Section */}
-        <Box mt={6}>
+        <Box>
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
           >
             <Typography variant="h5">Events</Typography>
-            <Box display="flex" alignItems="space-between" gap={2}>
+            <Box display="flex" gap={2}>
               <Typography variant="h6">Total: {events.length}</Typography>
               <Button
                 variant="contained"
@@ -110,28 +185,14 @@ const Dashboard = () => {
             scrollButtons="auto"
           >
             {STATUS_TABS.map((label) => (
-              <Tab key={label} label={label} />
+              <Tab
+                key={label}
+                label={`${label} (${getEventCountByStatus(label)})`}
+              />
             ))}
           </Tabs>
 
-          <List sx={{ mt: 2 }}>
-            {filteredEvents.map((event) => (
-              <ListItemButton
-                key={event.id}
-                onClick={() => navigate(`/admin/events/${event.id}`)}
-              >
-                <ListItemText
-                  primary={event.title}
-                  secondary={event.eventStatus}
-                />
-              </ListItemButton>
-            ))}
-            {filteredEvents.length === 0 && (
-              <Typography sx={{ mt: 2 }} color="text.secondary">
-                No events in this category.
-              </Typography>
-            )}
-          </List>
+          {renderTable(filteredEvents, false)}
         </Box>
 
         <Divider sx={{ my: 6 }} />
@@ -144,7 +205,7 @@ const Dashboard = () => {
             alignItems="center"
           >
             <Typography variant="h5">Classes</Typography>
-            <Box display="flex" alignItems="space-between" gap={2}>
+            <Box display="flex" gap={2}>
               <Typography variant="h6">Total: {classes.length}</Typography>
               <Button
                 variant="contained"
@@ -166,25 +227,14 @@ const Dashboard = () => {
             scrollButtons="auto"
           >
             {STATUS_TABS.map((label) => (
-              <Tab key={label} label={label} />
+              <Tab
+                key={label}
+                label={`${label} (${getClassCountByStatus(label)})`}
+              />
             ))}
           </Tabs>
 
-          <List sx={{ mt: 2 }}>
-            {filteredClasses.map((cls) => (
-              <ListItemButton
-                key={cls.id}
-                onClick={() => navigate(`/admin/classes/${cls.id}`)}
-              >
-                <ListItemText primary={cls.title} secondary={cls.eventStatus} />
-              </ListItemButton>
-            ))}
-            {filteredClasses.length === 0 && (
-              <Typography sx={{ mt: 2 }} color="text.secondary">
-                No classes in this category.
-              </Typography>
-            )}
-          </List>
+          {renderTable(filteredClasses, true)}
         </Box>
       </Container>
 

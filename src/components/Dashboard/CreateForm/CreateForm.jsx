@@ -28,6 +28,7 @@ import axiosInstance from "../../../utils/axiosInstance";
 import RecurrencePopup from "../../ReccurencePopup/ReccurencePopup";
 import RichTextEditor from "react-rte";
 import AddIcon from "@mui/icons-material/Add";
+import ImageUploader from "../../ImageUploader/ImageUploader";
 
 const StyledDialogContent = styled(DialogContent)({
   height: "680px",
@@ -179,7 +180,7 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
       >
         Create {isClass ? "Class" : "Event"}
         <IconButton onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon color="error" />
         </IconButton>
       </DialogTitle>
 
@@ -216,30 +217,78 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
                   </Select>
                 </FormControl>
               </Grid2>
-              <Grid2 size={{ md: 6, sm: 12 }}>
-                <TextField
-                  fullWidth
-                  label="Start Time"
-                  type="datetime-local"
-                  name="startDuration"
-                  value={formData.startDuration}
-                  onChange={handleInputChange}
-                  InputLabelProps={{ shrink: true }}
-                  required
-                />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.recurrence}
+                    onChange={handleInputChange}
+                    name="recurrence"
+                  />
+                }
+                label="Is this recurring?"
+              />
+              <Grid2 size={12}>
+                {formData.recurrence && (
+                  <Box>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setRecurrenceDialogOpen(true)}
+                    >
+                      Set Recurrence Rule
+                    </Button>
+                    {formData.recurrenceRule && (
+                      <Box mt={1} fontSize={12}>
+                        <strong>Recurrence Rule:</strong>
+                        <pre>{formData.recurrenceRule}</pre>
+                      </Box>
+                    )}
+                    <RecurrencePopup
+                      open={recurrenceDialogOpen}
+                      onClose={() => setRecurrenceDialogOpen(false)}
+                      onSave={(rule) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          recurrenceRule: JSON.stringify(rule),
+                        }))
+                      }
+                      initialValue={
+                        formData.recurrenceRule
+                          ? JSON.parse(formData.recurrenceRule)
+                          : {}
+                      }
+                    />
+                  </Box>
+                )}
               </Grid2>
-              <Grid2 size={{ md: 6, sm: 12 }}>
-                <TextField
-                  fullWidth
-                  label="End Time"
-                  type="datetime-local"
-                  name="endDuration"
-                  value={formData.endDuration}
-                  onChange={handleInputChange}
-                  InputLabelProps={{ shrink: true }}
-                  required
-                />
-              </Grid2>
+              {!formData.recurrence && (
+                <>
+                  <Grid2 size={{ md: 6, sm: 12 }}>
+                    <TextField
+                      fullWidth
+                      label="Start Time"
+                      type="datetime-local"
+                      name="startDuration"
+                      value={formData.startDuration}
+                      onChange={handleInputChange}
+                      InputLabelProps={{ shrink: true }}
+                      required
+                    />
+                  </Grid2>
+
+                  <Grid2 size={{ md: 6, sm: 12 }}>
+                    <TextField
+                      fullWidth
+                      label="End Time"
+                      type="datetime-local"
+                      name="endDuration"
+                      value={formData.endDuration}
+                      onChange={handleInputChange}
+                      InputLabelProps={{ shrink: true }}
+                      required
+                    />
+                  </Grid2>
+                </>
+              )}
               <Grid2 size={{ md: 6, sm: 12 }}>
                 <TextField
                   fullWidth
@@ -326,73 +375,114 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
               />
             </Box>
 
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.recurrence}
-                  onChange={handleInputChange}
-                  name="recurrence"
-                />
-              }
-              label="Is this recurring?"
+            <Divider />
+
+            {/* Thumbnail Upload */}
+            <ImageUploader
+              label="Upload Thumbnail"
+              multiple={false}
+              preview={thumbnail}
+              onDrop={(acceptedFiles) => setThumbnail(acceptedFiles[0])}
             />
 
-            {formData.recurrence && (
-              <Box>
-                <Button
-                  variant="outlined"
-                  onClick={() => setRecurrenceDialogOpen(true)}
+            {thumbnail && (
+              <Box mt={2}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Thumbnail Preview
+                </Typography>
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: 150,
+                    height: 150,
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    boxShadow: 1,
+                  }}
                 >
-                  Set Recurrence Rule
-                </Button>
-                {formData.recurrenceRule && (
-                  <Box mt={1} fontSize={12}>
-                    <strong>Recurrence Rule:</strong>
-                    <pre>{formData.recurrenceRule}</pre>
-                  </Box>
-                )}
-                <RecurrencePopup
-                  open={recurrenceDialogOpen}
-                  onClose={() => setRecurrenceDialogOpen(false)}
-                  onSave={(rule) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      recurrenceRule: JSON.stringify(rule),
-                    }))
-                  }
-                  initialValue={
-                    formData.recurrenceRule
-                      ? JSON.parse(formData.recurrenceRule)
-                      : {}
-                  }
-                />
+                  <img
+                    src={URL.createObjectURL(thumbnail)}
+                    alt="thumbnail-preview"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => setThumbnail(null)}
+                    sx={{
+                      position: "absolute",
+                      top: 4,
+                      right: 4,
+                      minWidth: "18px",
+                      padding: 0,
+                      lineHeight: 1,
+                      fontSize: "0.75rem",
+                    }}
+                  >
+                    ✕
+                  </Button>
+                </Box>
               </Box>
             )}
 
-            <Divider />
+            {/* Multi-Image Upload */}
+            <ImageUploader
+              label="Upload Multiple Images"
+              multiple={true}
+              onDrop={(acceptedFiles) => setImages(acceptedFiles)}
+            />
 
-            <Box>
-              <Typography variant="subtitle1">Thumbnail</Typography>
-              <input
-                type="file"
-                name="thumbnail"
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle1">
-                Upload Multiple Images
-              </Typography>
-              <input
-                type="file"
-                name="images"
-                accept="image/*"
-                multiple
-                onChange={handleFileChange}
-              />
-            </Box>
+            {images.length > 0 && (
+              <Box display="flex" gap={2} mt={2} flexWrap="wrap">
+                {images.map((file, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{
+                      position: "relative",
+                      width: 150,
+                      height: 150,
+                      borderRadius: 2,
+                      overflow: "hidden",
+                      boxShadow: 1,
+                    }}
+                  >
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`preview-${idx}`}
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    />
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={() => {
+                        const updated = [...images];
+                        updated.splice(idx, 1);
+                        setImages(updated);
+                      }}
+                      sx={{
+                        position: "absolute",
+                        top: 2,
+                        right: 2,
+                        minWidth: "24px",
+                        padding: 0,
+                        lineHeight: 1,
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      ✕
+                    </Button>
+                  </Box>
+                ))}
+              </Box>
+            )}
 
             <Divider />
 
@@ -460,7 +550,9 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
             </Alert>
           )}
         </Box>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button variant="outlined" color="error" onClick={onClose}>
+          Cancel
+        </Button>
         <Button onClick={handleSubmit} variant="contained" disabled={loading}>
           {loading ? "Creating..." : `Create ${isClass ? "Class" : "Event"}`}
         </Button>
