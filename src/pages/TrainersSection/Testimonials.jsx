@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Testimonials.scss";
-import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
+import { RiArrowLeftWideLine, RiArrowRightWideLine } from "react-icons/ri";
 import { useTheme } from "@mui/material/styles";
 
 const Testimonials = ({ data }) => {
@@ -25,8 +25,8 @@ const Testimonials = ({ data }) => {
 
   return (
     <section className="trainers-section">
-      <h2>
-        Meet our Trainers <hr />
+      <h2 style={{ color: theme.colors.orange }}>
+        Meet our Trainers <hr style={{border: `1px solid ${theme.colors.brown}`}}/>
       </h2>
       <div
         className="testimonial-container"
@@ -57,18 +57,27 @@ const Testimonials = ({ data }) => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <h3 className="testimonial-name">{data[current].name}</h3>
-              <p className="testimonial-role">{data[current].role}</p>
-              <p className="testimonial-text">{data[current].text}</p>
+              <p
+                className="testimonial-role"
+                style={{ color: theme.colors.beige }}
+              >
+                {data[current].role}
+              </p>
+              <p
+                className="testimonial-text"
+                style={{ color: theme.colors.beige }}
+              >
+                {data[current].text}
+              </p>
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation Arrows */}
           <div className="testimonial-nav">
             <button onClick={prevTestimonial}>
-              <RiArrowLeftSLine />
+              <RiArrowLeftWideLine size={50} color={theme.colors.beige} />
             </button>
             <button onClick={nextTestimonial}>
-              <RiArrowRightSLine />
+              <RiArrowRightWideLine size={50} color={theme.colors.beige} />
             </button>
           </div>
         </div>

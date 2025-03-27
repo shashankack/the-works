@@ -1,77 +1,79 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
+import React, { useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  EffectCreative,
+  Autoplay,
+  Pagination,
+  Navigation,
+} from "swiper/modules";
+import "swiper/css";
+import "swiper/css/effect-creative";
+import { gsap } from "gsap"; // Import GSAP
+
 import "./HeroSection.scss";
 
 const HeroSection = ({ images }) => {
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 for next, -1 for prev
-  const timeoutRef = useRef(null);
-
   useEffect(() => {
-    resetTimeout();
-    timeoutRef.current = setTimeout(() => {
-      setDirection(1);
-      setIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000);
+    // GSAP animations
+    gsap.from(".hero-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1.5,
+      ease: "power3.out",
+    });
 
-    return () => resetTimeout();
-  }, [index, images.length]);
-
-  const resetTimeout = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  };
-
-  const handleNext = () => {
-    setDirection(1);
-    setIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const handlePrev = () => {
-    setDirection(-1);
-    setIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
-  };
+    gsap.from(".hero-intro", {
+      opacity: 0,
+      y: 30,
+      duration: 1.5,
+      delay: 0.5,
+      ease: "power3.out",
+    });
+  }, []);
 
   return (
-    <div className="slider-container">
-      {/* Left Arrow */}
-      <button className="nav-arrow left-arrow" onClick={handlePrev}>
-        <RiArrowLeftSLine size={80} />
-      </button>
-
-      <AnimatePresence>
-        <motion.div
-          key={index}
-          className="slide"
-          initial={{ opacity: 0, scale: 1.1, x: direction * 200 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          exit={{ opacity: 0, scale: 1.1, x: direction * -200 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        >
-          <img src={images[index]} alt="slider" className="slide-image" />
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Right Arrow */}
-      <button className="nav-arrow right-arrow" onClick={handleNext}>
-        <RiArrowRightSLine size={80} />
-      </button>
-
-      <div className="dots">
-        {images.map((_, i) => (
-          <span
-            key={i}
-            className={`dot ${i === index ? "active" : ""}`}
-            onClick={() => {
-              setDirection(i > index ? 1 : -1);
-              setIndex(i);
-            }}
-          ></span>
+    <section className="hero-section">
+      <Swiper
+        grabCursor={true}
+        effect={"creative"}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        speed={1000}
+        pagination={{
+          clickable: true,
+        }}
+        navigation
+        loop={true}
+        creativeEffect={{
+          prev: {
+            shadow: true,
+            translate: ["-20%", 0, -1],
+          },
+          next: {
+            translate: ["100%", 0, 0],
+          },
+        }}
+        modules={[EffectCreative, Pagination, Navigation, Autoplay]}
+        className="hero-swiper"
+      >
+        {images.map((image, index) => (
+          <SwiperSlide key={index}>
+            <img src={image} alt="Hero Slide" className="hero-section__image" />
+          </SwiperSlide>
         ))}
+      </Swiper>
+
+      {/* Hero Content */}
+      <div className="hero-content">
+        <h1 className="hero-title">Welcome to The Works</h1>
+        <p className="hero-intro">
+          A vibrant oasis in the heart of Bangalore, where movement, culture,
+          and creativity come alive.
+        </p>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -8,6 +8,7 @@ import "./EventsSection.scss";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import LoadingScreen from "../../components/Loader";
 
 const EventsSection = () => {
   const [activeTab, setActiveTab] = useState("classes");
@@ -83,9 +84,7 @@ const EventsSection = () => {
               backgroundColor: isClassesTab
                 ? theme.colors.tertiary
                 : theme.colors.beige,
-              color: isClassesTab
-                ? theme.colors.beige
-                : theme.colors.tertiary,
+              color: isClassesTab ? theme.colors.beige : theme.colors.tertiary,
               border: `1px solid ${theme.colors.tertiary}`,
             }}
           >
@@ -99,9 +98,7 @@ const EventsSection = () => {
               backgroundColor: !isClassesTab
                 ? theme.colors.tertiary
                 : theme.colors.beige,
-              color: !isClassesTab
-                ? theme.colors.beige
-                : theme.colors.tertiary,
+              color: !isClassesTab ? theme.colors.beige : theme.colors.tertiary,
               border: `1px solid ${theme.colors.tertiary}`,
             }}
           >
@@ -111,17 +108,11 @@ const EventsSection = () => {
 
         {/* Loading, Error, or No Data Message */}
         {loading ? (
-          <p
-            style={{ textAlign: "center", color: theme.colors.tertiary }}
-          >
-            Loading...
-          </p>
+          <LoadingScreen />
         ) : errorMessage && data.length === 0 ? (
           <p style={{ textAlign: "center", color: "red" }}>{errorMessage}</p>
         ) : data.length === 0 ? (
-          <p
-            style={{ textAlign: "center", color: theme.colors.tertiary }}
-          >
+          <p style={{ textAlign: "center", color: theme.colors.tertiary }}>
             No {isClassesTab ? "Classes" : "Events"} Available
           </p>
         ) : (

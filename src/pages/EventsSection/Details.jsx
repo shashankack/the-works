@@ -3,20 +3,21 @@ import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import {
   Box,
-  Grid,
+  Grid2,
   Typography,
   Button,
   CircularProgress,
   Alert,
   Card,
   CardMedia,
-  CardContent,
   TextField,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
 } from "@mui/material";
+
+import ImageSlider from "../../components/GridGallery/ImageSlider";
 
 const Details = ({ isClass }) => {
   const { id } = useParams();
@@ -25,7 +26,6 @@ const Details = ({ isClass }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -52,7 +52,6 @@ const Details = ({ isClass }) => {
               ? fetchedItem.imageUrls
               : JSON.parse(fetchedItem.imageUrls);
           } catch (error) {
-            console.error("❌ Error parsing imageUrls:", error);
             images = [];
           }
         }
@@ -71,36 +70,36 @@ const Details = ({ isClass }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const formatRecurrenceRule = (data) => {
+    try {
+      const rule = JSON.parse(data);
+      const entries = Object.entries(rule);
+
+      return entries
+        .map(([day, time]) => `${day} - ${time.start} - ${time.end}`)
+        .join(", ");
+    } catch (error) {
+      return "Invalid recurrence rule!";
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
     setFormSuccess("");
 
-    const { name, email, phone } = formData;
-    if (!name || !email || !phone) {
+    if (!formData.name || !formData.email || !formData.phone) {
       setFormError("Name, Email and Phone are required.");
       return;
     }
 
     try {
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        instaHandle: formData.instaHandle || null,
-      };
-
-      const endpoint = `/${isClass ? "classes" : "events"}/${id}/register`;
-      await axiosInstance.post(endpoint, payload);
-
+      await axiosInstance.post(
+        `/${isClass ? "classes" : "events"}/${id}/register`,
+        formData
+      );
       setFormSuccess("Registration successful!");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        instaHandle: "",
-      });
-
+      setFormData({ name: "", email: "", phone: "", instaHandle: "" });
       setTimeout(() => {
         setShowForm(false);
         setFormSuccess("");
@@ -114,8 +113,13 @@ const Details = ({ isClass }) => {
 
   if (loading) {
     return (
-      <Box textAlign="center" mt={5}>
-        <CircularProgress />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress color="primary" />
       </Box>
     );
   }
@@ -130,157 +134,139 @@ const Details = ({ isClass }) => {
 
   return (
     <Box p={3}>
-      <Button variant="outlined" onClick={() => navigate(-1)}>
-        ⬅ Back
-      </Button>
-
       {data && (
-        <Card sx={{ mt: 3 }}>
-          {data.thumbnail && (
-            <CardMedia
-              component="img"
-              height="300"
-              image={data.thumbnail}
-              alt="Thumbnail"
-            />
-          )}
-          <CardContent>
-            <Typography variant="h4" gutterBottom>
-              {data.title}
-            </Typography>
-
+        <Grid2 border={1} p={5} container spacing={2}>
+          <Grid2 size={9} border={1}>
+            <Typography variant="h4">{data.title}</Typography>
+          </Grid2>
+          <Grid2 size={3} border={1}>
             <Typography>
               <strong>Status:</strong> {data.eventStatus}
             </Typography>
+          </Grid2>
+          <Grid2 size={4} border={1}>
+            {data.thumbnail && (
+              <img
+                src={data.thumbnail}
+                alt={data.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            )}
+          </Grid2>
+          <Grid2 size={8} border={1}>
             <Typography>
               <strong>Location:</strong> {data.location}
             </Typography>
+            {data.startDuration && (
+              <Typography>
+                <strong>Start:</strong> {data.startDuration || "TBA"}
+              </Typography>
+            )}
+            {data.endDuration && (
+              <Typography>
+                <strong>End:</strong> {data.endDuration || "TBA"}
+              </Typography>
+            )}
             <Typography>
-              <strong>Start:</strong> {data.startDuration}
+              <strong>Registration Fee:</strong> ₹
+              {data.registrationFee || "No registration fee"}
             </Typography>
+            {data.recurrenceRule && (
+              <Typography>
+                <strong>Duration:</strong>{" "}
+                {formatRecurrenceRule(data.recurrenceRule)}
+              </Typography>
+            )}
             <Typography>
-              <strong>End:</strong> {data.endDuration}
-            </Typography>
-            <Typography>
-              <strong>Recurrence:</strong>{" "}
-              {data.recurrence ? (
-                <pre>
-                  {JSON.stringify(
-                    typeof data.recurrenceRule === "string"
-                      ? JSON.parse(data.recurrenceRule)
-                      : data.recurrenceRule,
-                    null,
-                    2
-                  )}
-                </pre>
-              ) : (
-                "One-time"
-              )}
-            </Typography>
-            <Typography sx={{ mt: 2 }}>
               <strong>Description:</strong>{" "}
-              {data.conceptNote || "No description available"}
+              {data.description || "No description available"}
             </Typography>
+            <Typography>
+              <strong>Instructions:</strong>{" "}
+              {data.instructions || "No instructions available"}
+            </Typography>
+          </Grid2>
 
-            {data.trainer && (
-              <Box mt={3}>
-                <Typography variant="h6">Trainer</Typography>
-                <Typography>
-                  <strong>Name:</strong> {data.trainer.name}
-                </Typography>
-                <Typography>
-                  <strong>Phone:</strong> {data.trainer.phone || "Not provided"}
-                </Typography>
-                <Typography>
-                  <strong>Specialization:</strong>{" "}
-                  {data.trainer.specialization || "Not provided"}
-                </Typography>
-              </Box>
-            )}
+          {data.trainer && (
+            <Grid2 xs={12}>
+              <Typography variant="h6">Trainer</Typography>
+              <Typography>
+                <strong>Name:</strong> {data.trainer.name}
+              </Typography>
+              <Typography>
+                <strong>Specialization:</strong> {data.trainer.specialization}
+              </Typography>
+            </Grid2>
+          )}
 
-            {data.images?.length > 0 && (
-              <Box mt={4}>
-                <Typography variant="h6">Gallery</Typography>
-                <Grid container spacing={2} mt={1}>
-                  {data.images.map((img, index) => (
-                    <Grid item xs={6} md={4} key={index}>
-                      <Card>
-                        <CardMedia
-                          component="img"
-                          image={img}
-                          alt={`img-${index}`}
-                        />
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            )}
+          {data.images?.length > 0 && (
+            <Grid2 size={12} border={1} height={600}>
+              <Typography variant="h6">Gallery</Typography>
+              <Grid2 height={"100%"} border={"1px solid red"} spacing={2}>
+                <ImageSlider images={data.images} direction="horizontal" />
+              </Grid2>
+            </Grid2>
+          )}
 
-            <Box mt={4}>
+          {data.eventStatus === "UPCOMING" && (
+            <Grid2 xs={12}>
               <Button variant="contained" onClick={() => setShowForm(true)}>
                 Register
               </Button>
-            </Box>
-          </CardContent>
-        </Card>
+            </Grid2>
+          )}
+        </Grid2>
       )}
 
       <Dialog open={showForm} onClose={() => setShowForm(false)}>
         <DialogTitle>Register</DialogTitle>
         <DialogContent>
-          {formError && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {formError}
-            </Alert>
-          )}
-          {formSuccess && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              {formSuccess}
-            </Alert>
-          )}
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="dense"
-              label="Name"
-              fullWidth
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              margin="dense"
-              label="Email"
-              fullWidth
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              margin="dense"
-              label="Phone"
-              fullWidth
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              margin="dense"
-              label="Instagram Handle (optional)"
-              fullWidth
-              name="instaHandle"
-              value={formData.instaHandle}
-              onChange={handleChange}
-            />
-          </Box>
+          {formError && <Alert severity="error">{formError}</Alert>}
+          {formSuccess && <Alert severity="success">{formSuccess}</Alert>}
+          <TextField
+            margin="dense"
+            label="Name"
+            fullWidth
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Email"
+            fullWidth
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Phone"
+            fullWidth
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Instagram Handle (optional)"
+            fullWidth
+            name="instaHandle"
+            value={formData.instaHandle}
+            onChange={handleChange}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowForm(false)}>Cancel</Button>
-          <Button type="submit" onClick={handleSubmit} variant="contained">
+          <Button variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
         </DialogActions>

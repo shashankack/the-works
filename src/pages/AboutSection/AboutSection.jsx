@@ -18,25 +18,25 @@ const data = [
   {
     id: 2,
     title: "Our Legacy & Vision",
-    text: `The foundation of The Works is rooted in the legacy of The Nilgiris 1905. Built as a bridge across generations, it’s a home for creative communities—where collaboration, growth, and expression thrive.`,
+    text: `Rooted in the rich heritage of The Nilgiris 1905, The Works was born from a desire to honor the values passed down through generations—resilience, quality, and community. What began as a family legacy has grown into a vibrant space that bridges the past with the future. Our vision is to create a home for creative and conscious communities—a space where people can move, connect, and grow together. By blending tradition with innovation, The Works represents an ongoing commitment to give back and build something that lives beyond any one person or era.`,
     image: founderImg,
   },
   {
     id: 3,
     title: "Our Space",
-    text: `The Works is more than a gym—it’s a multi-purpose sanctuary where movement and self-expression collide.`,
+    text: `The Works is more than just a gym—it’s a multi-purpose sanctuary designed to nurture movement, creativity, and connection. Built to break down boundaries between disciplines, our space invites people from all walks of life to explore, express, and evolve. From martial arts to art workshops, every corner is thoughtfully created to inspire personal growth and collective energy. Whether you're here to train, create, or simply be, our space is a reflection of the community that brings it to life.`,
     image: founderImg,
   },
   {
     id: 4,
     title: "Stay Fit With Us",
-    text: `Rooted in martial arts, our personalized kickboxing and Muay Thai programs develop not just strength, but discipline and clarity.`,
+    text: `At The Works, fitness is more than a routine—it’s a way of life grounded in discipline, strength, and self-awareness. Rooted in martial arts, our personalized kickboxing and Muay Thai programs are designed to help you move with intention and push past your limits. Every session is crafted to challenge your body while calming your mind, creating space for confidence and clarity to grow. Whether you're a beginner or seasoned athlete, our coaches meet you where you are and guide you toward where you want to be.`,
     image: founderImg,
   },
   {
     id: 5,
     title: "What to Expect",
-    text: `✔ Master the fundamentals\n✔ Understand body mechanics\n✔ High-intensity personal training\n✔ Build confidence and patience`,
+    text: `Every session at The Works is designed to help you build from the ground up—physically, mentally, and emotionally. You’ll learn the fundamentals of kickboxing and Muay Thai, understand body mechanics, and train with intention through high-intensity, personalized workouts. More than just technique, you’ll develop confidence, discipline, and patience that extend far beyond the gym. Our experienced coaches are here to support your journey, challenge your limits, and help you unlock your full potential.`,
     image: founderImg,
   },
 ];
@@ -135,7 +135,7 @@ const AboutSection = () => {
   return (
     <section
       className="about-section"
-      style={{ backgroundColor: theme.colors.beige }}
+      style={{ backgroundColor: theme.colors.orange }}
     >
       <div className="founder-container">
         <div className="image-container" ref={imageRef}>
