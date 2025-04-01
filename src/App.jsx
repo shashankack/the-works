@@ -19,7 +19,7 @@ const Trainers = lazy(() => import("./pages/Dashboard/Trainers"));
 const DetailsInternal = lazy(() =>
   import("./pages/DetailsInternal/DetailsInternal")
 );
-const EditForm = lazy(() => import("./components/Dashboard/EditForm/EditForm"));
+const EditForm = lazy(() => import("./components/Forms/EditForm"));
 
 const theme = createTheme({
   colors: {

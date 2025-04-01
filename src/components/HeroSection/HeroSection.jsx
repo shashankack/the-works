@@ -8,13 +8,12 @@ import {
 } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-creative";
-import { gsap } from "gsap"; // Import GSAP
+import { gsap } from "gsap";
 
 import "./HeroSection.scss";
 
 const HeroSection = ({ images }) => {
   useEffect(() => {
-    // GSAP animations
     gsap.from(".hero-title", {
       opacity: 0,
       y: -50,
@@ -65,7 +64,6 @@ const HeroSection = ({ images }) => {
         ))}
       </Swiper>
 
-      {/* Hero Content */}
       <div className="hero-content">
         <h1 className="hero-title">Welcome to The Works</h1>
         <p className="hero-intro">

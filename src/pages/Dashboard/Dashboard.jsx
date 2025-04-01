@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { logout } from "../../utils/auth";
-import CreateForm from "../../components/Dashboard/CreateForm/CreateForm";
+import CreateForm from "../../components/Forms/CreateForm";
 import dayjs from "dayjs";
 
 import {

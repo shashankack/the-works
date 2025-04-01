@@ -24,11 +24,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/system";
 import { useState, useEffect } from "react";
-import axiosInstance from "../../../utils/axiosInstance";
-import RecurrencePopup from "../../ReccurencePopup/ReccurencePopup";
+import axiosInstance from "../../utils/axiosInstance";
+import RecurrencePopup from "../ReccurencePopup/ReccurencePopup";
 import RichTextEditor from "react-rte";
 import AddIcon from "@mui/icons-material/Add";
-import ImageUploader from "../../ImageUploader/ImageUploader";
+import ImageUploader from "../ImageUploader/ImageUploader";
 
 const StyledDialogContent = styled(DialogContent)({
   height: "680px",
