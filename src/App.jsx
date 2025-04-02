@@ -8,7 +8,7 @@ import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import Bookings from "./pages/Dashboard/Bookings";
 
-// Lazy Load Pages for Performance
+// Lazy Load Pages
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/AboutSection/AboutSection"));
 const Login = lazy(() => import("./pages/Dashboard/login"));
@@ -19,7 +19,6 @@ const Trainers = lazy(() => import("./pages/Dashboard/Trainers"));
 const DetailsInternal = lazy(() =>
   import("./pages/DetailsInternal/DetailsInternal")
 );
-const EditForm = lazy(() => import("./components/Forms/EditForm"));
 
 const theme = createTheme({
   colors: {
@@ -38,7 +37,6 @@ const App = () => {
             <Route element={<MainLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
-
               <Route path="/classes/:id" element={<Details isClass={true} />} />
               <Route path="/events/:id" element={<Details isClass={false} />} />
             </Route>
@@ -46,24 +44,17 @@ const App = () => {
             <Route path="/admin/login" element={<Login />} />
             <Route element={<AdminLayout />}>
               <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route path="/admin/trainers" element={<Trainers />} />
+              <Route path="/admin/bookings" element={<Bookings />} />
+              <Route
+                path="/admin/classes/:id"
+                element={<DetailsInternal isClass={true} />}
+              /> 
               <Route
                 path="/admin/events/:id"
                 element={<DetailsInternal isClass={false} />}
               />
-              <Route path="/admin/trainers" element={<Trainers />} />
-              <Route path="/admin/bookings" element={<Bookings />} />
-              <Route
-                path="/admin/events/:id/update"
-                element={<EditForm isClass={false} />}
-              />
-              <Route
-                path="/admin/classes/:id"
-                element={<DetailsInternal isClass={true} />}
-              />
-              <Route
-                path="/admin/classes/:id/update"
-                element={<EditForm isClass={true} />}
-              />
+              {/* Removed edit form routes, now handled via dialog */}
             </Route>
 
             <Route path="*" element={<NotFound />} />

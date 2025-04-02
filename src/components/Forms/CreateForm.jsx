@@ -87,6 +87,15 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
     }));
   };
 
+  const totalPayable =
+    Number(formData.registrationFee || 0) +
+    (Array.isArray(formData.addOnFees)
+      ? formData.addOnFees.reduce((sum, item) => {
+          const price = Number(item?.price);
+          return sum + (isNaN(price) ? 0 : price);
+        }, 0)
+      : 0);
+
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (name === "thumbnail") setThumbnail(files[0]);
@@ -116,7 +125,6 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
     setLoading(true);
     setMessage(null);
     setError(null);
-    onClose();
 
     try {
       const endpoint = isClass ? "/admin/classes" : "/admin/events";
@@ -129,13 +137,14 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
       };
 
       Object.entries(submissionData).forEach(([key, value]) => {
-        if (key === "addOnFees")
+        if (key === "addOnFees") {
           formPayload.append("add_on_fees", JSON.stringify(value));
-        else if (value !== undefined && value !== null)
+        } else if (value !== undefined && value !== null) {
           formPayload.append(
             key,
             typeof value === "boolean" ? value.toString() : value
           );
+        }
       });
 
       if (thumbnail) formPayload.append("thumbnail", thumbnail);
@@ -146,14 +155,16 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
       });
 
       if (!res.data.success) throw new Error("Creation failed");
+
       setMessage(`${isClass ? "Class" : "Event"} created successfully!`);
+      onSave?.(res.data.class || res.data.event); // optional callback
+      onClose(); // ✅ Only close when it's truly successful
     } catch (err) {
-      setError(
-        err.response?.data?.error ||
-          `Failed to create ${isClass ? "class" : "event"}`
-      );
+      console.error(err);
+      setError(err.response?.data?.error || "Failed to create.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -217,49 +228,80 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
                   </Select>
                 </FormControl>
               </Grid2>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={formData.recurrence}
-                    onChange={handleInputChange}
-                    name="recurrence"
-                  />
-                }
-                label="Is this recurring?"
-              />
-              <Grid2 size={12}>
-                {formData.recurrence && (
-                  <Box>
-                    <Button
-                      variant="outlined"
-                      onClick={() => setRecurrenceDialogOpen(true)}
-                    >
-                      Set Recurrence Rule
-                    </Button>
-                    {formData.recurrenceRule && (
-                      <Box mt={1} fontSize={12}>
-                        <strong>Recurrence Rule:</strong>
-                        <pre>{formData.recurrenceRule}</pre>
-                      </Box>
-                    )}
-                    <RecurrencePopup
-                      open={recurrenceDialogOpen}
-                      onClose={() => setRecurrenceDialogOpen(false)}
-                      onSave={(rule) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          recurrenceRule: JSON.stringify(rule),
-                        }))
-                      }
-                      initialValue={
-                        formData.recurrenceRule
-                          ? JSON.parse(formData.recurrenceRule)
-                          : {}
-                      }
+
+              <Grid2 size={12} p={2}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={formData.recurrence}
+                      onChange={handleInputChange}
+                      name="recurrence"
                     />
-                  </Box>
-                )}
+                  }
+                  label="Is this recurring?"
+                />
+                <Grid2 size={12}>
+                  {formData.recurrence && (
+                    <Box>
+                      <Button
+                        variant="outlined"
+                        onClick={() => setRecurrenceDialogOpen(true)}
+                      >
+                        Set Recurrence Rule
+                      </Button>
+                      {formData.recurrenceRule && (
+                        <Box mt={2}>
+                          <Typography variant="subtitle2">
+                            Recurrence Schedule:
+                          </Typography>
+                          {(() => {
+                            try {
+                              const rule =
+                                typeof formData.recurrenceRule === "string"
+                                  ? JSON.parse(formData.recurrenceRule)
+                                  : formData.recurrenceRule;
+
+                              return Object.entries(rule).map(([day, time]) => (
+                                <Typography
+                                  key={day}
+                                  variant="body2"
+                                  sx={{ mt: 1 }}
+                                >
+                                  <strong>Every {day}</strong> — {time.start} to{" "}
+                                  {time.end}
+                                </Typography>
+                              ));
+                            } catch {
+                              return (
+                                <Typography variant="body2" color="error">
+                                  ⚠️ Invalid recurrence format
+                                </Typography>
+                              );
+                            }
+                          })()}
+                        </Box>
+                      )}
+
+                      <RecurrencePopup
+                        open={recurrenceDialogOpen}
+                        onClose={() => setRecurrenceDialogOpen(false)}
+                        onSave={(rule) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            recurrenceRule: JSON.stringify(rule),
+                          }))
+                        }
+                        initialValue={
+                          formData.recurrenceRule
+                            ? JSON.parse(formData.recurrenceRule)
+                            : {}
+                        }
+                      />
+                    </Box>
+                  )}
+                </Grid2>
               </Grid2>
+
               {!formData.recurrence && (
                 <>
                   <Grid2 size={{ md: 6, sm: 12 }}>
@@ -325,6 +367,7 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
                   </Select>
                 </FormControl>
               </Grid2>
+
               <Grid2 size={{ md: 6, sm: 12 }}>
                 <TextField
                   label="Registration Fee (INR)"
@@ -335,6 +378,83 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
                   fullWidth
                 />
               </Grid2>
+              <Grid2
+                size={12}
+                border={1}
+                borderColor="#ccc"
+                p={1}
+                borderRadius={2}
+              >
+                <Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    mb={1}
+                  >
+                    <Typography variant="subtitle1">Add-On Items</Typography>
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={addAddOnItem}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
+
+                  <Stack spacing={2}>
+                    {formData.addOnFees.map((item, index) => (
+                      <Stack
+                        key={index}
+                        direction="row"
+                        spacing={2}
+                        alignItems="center"
+                      >
+                        <TextField
+                          label="Name"
+                          value={item.name}
+                          onChange={(e) =>
+                            handleAddOnChange(index, "name", e.target.value)
+                          }
+                        />
+                        <TextField
+                          label="Price (INR)"
+                          type="number"
+                          value={item.price}
+                          onChange={(e) =>
+                            handleAddOnChange(index, "price", e.target.value)
+                          }
+                        />
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={() => removeAddOnItem(index)}
+                        >
+                          Delete
+                        </Button>
+                      </Stack>
+                    ))}
+                  </Stack>
+                  <Box
+                    mt={3}
+                    p={2}
+                    bgcolor="#f5f5f5"
+                    borderRadius={2}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    border="1px solid #ccc"
+                  >
+                    <Typography variant="subtitle1" fontWeight={600}>
+                      Total Payable
+                    </Typography>
+                    <Typography variant="h6" color="primary" fontWeight={700}>
+                      ₹{totalPayable}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid2>
+
               {isClass && (
                 <Grid2 size={12}>
                   <FormControl fullWidth>
@@ -485,76 +605,21 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
             )}
 
             <Divider />
-
-            <Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                mb={1}
-              >
-                <Typography variant="subtitle1">Add-On Items</Typography>
-                <IconButton size="small" color="primary" onClick={addAddOnItem}>
-                  <AddIcon />
-                </IconButton>
-              </Box>
-
-              <Stack spacing={2}>
-                {formData.addOnFees.map((item, index) => (
-                  <Stack
-                    key={index}
-                    direction="row"
-                    spacing={2}
-                    alignItems="center"
-                  >
-                    <TextField
-                      label="Name"
-                      value={item.name}
-                      onChange={(e) =>
-                        handleAddOnChange(index, "name", e.target.value)
-                      }
-                    />
-                    <TextField
-                      label="Price (INR)"
-                      type="number"
-                      value={item.price}
-                      onChange={(e) =>
-                        handleAddOnChange(index, "price", e.target.value)
-                      }
-                    />
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => removeAddOnItem(index)}
-                    >
-                      Delete
-                    </Button>
-                  </Stack>
-                ))}
-              </Stack>
-            </Box>
           </Stack>
         </form>
       </StyledDialogContent>
 
       <DialogActions sx={{ p: 2 }}>
-        <Box sx={{ flexGrow: 1 }}>
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
-          {message && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              {message}
-            </Alert>
-          )}
-        </Box>
-        <Button variant="outlined" color="error" onClick={onClose}>
+        {error && (
+          <Alert severity="error" sx={{ mr: "auto" }}>
+            {error}
+          </Alert>
+        )}
+        <Button onClick={onClose} variant="outlined" color="error">
           Cancel
         </Button>
         <Button onClick={handleSubmit} variant="contained" disabled={loading}>
-          {loading ? "Creating..." : `Create ${isClass ? "Class" : "Event"}`}
+          {loading ? "Saving..." : "Create"}
         </Button>
       </DialogActions>
     </Dialog>

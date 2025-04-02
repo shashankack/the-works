@@ -53,6 +53,7 @@ const EventsSection = () => {
 
   const handleRedirect = (item, type) => {
     navigate(`/${type}/${item.id}`);
+    window.scrollTo(0, 0);
   };
 
   return (

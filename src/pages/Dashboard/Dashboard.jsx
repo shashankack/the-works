@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
-import { logout } from "../../utils/auth";
+
 import CreateForm from "../../components/Forms/CreateForm";
+import EditForm from "../../components/Forms/EditForm";
+
 import dayjs from "dayjs";
 
 import {
-  AppBar,
-  Toolbar,
+  Dialog,
   Typography,
   Button,
   Container,
@@ -21,6 +22,8 @@ import {
   TableRow,
   TableCell,
   IconButton,
+  Snackbar,
+  Alert,
   Divider,
 } from "@mui/material";
 
@@ -35,6 +38,19 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [errors, setErrors] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isEditingClass, setIsEditingClass] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteIsClass, setDeleteIsClass] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
   const [isCreatingClass, setIsCreatingClass] = useState(false);
   const [activeEventTab, setActiveEventTab] = useState(0);
@@ -62,6 +78,10 @@ const Dashboard = () => {
         setErrors(err.response?.data?.error || "Error fetching classes")
       );
   }, []);
+
+  const showAlert = (message, severity = "success") => {
+    setAlert({ open: true, message, severity });
+  };
 
   const filteredEvents = events.filter(
     (event) => event.eventStatus === STATUS_TABS[activeEventTab]
@@ -125,15 +145,22 @@ const Dashboard = () => {
                   <TableCell>{timeDisplay}</TableCell>
                   <TableCell align="right">
                     <IconButton
-                      onClick={() =>
-                        navigate(
-                          `/admin/${isClass ? "classes" : "events"}/${item.id}`
-                        )
-                      }
+                      onClick={() => {
+                        setSelectedItem(item);
+                        setIsEditingClass(isClass);
+                        setEditModalOpen(true);
+                      }}
                     >
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton color="error">
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setDeleteTarget(item);
+                        setDeleteIsClass(isClass);
+                        setConfirmOpen(true);
+                      }}
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </TableCell>
@@ -244,6 +271,102 @@ const Dashboard = () => {
         onClose={() => setShowModal(false)}
         isClass={isCreatingClass}
       />
+
+      <Dialog
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <EditForm
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          initialData={selectedItem}
+          isClass={isEditingClass}
+          onSave={(updated) => {
+            try {
+              setEditModalOpen(false);
+              if (isEditingClass) {
+                setClasses((prev) =>
+                  prev.map((c) => (c.id === updated.id ? updated : c))
+                );
+              } else {
+                setEvents((prev) =>
+                  prev.map((e) => (e.id === updated.id ? updated : e))
+                );
+              }
+              showAlert(`${isClass ? "Class" : "Event"} saved successfully.`);
+            } catch (err) {
+              showAlert("Failed to save item.", "error");
+            }
+          }}
+        />
+      </Dialog>
+
+      {/* Delete confirmation */}
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <Box p={3}>
+          <Typography mb={2}>
+            Are you sure you want to delete this{" "}
+            {deleteIsClass ? "class" : "event"}?
+          </Typography>
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            <Button
+              onClick={() => setConfirmOpen(false)}
+              color="primary"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                try {
+                  const endpoint = `/admin/${
+                    deleteIsClass ? "classes" : "events"
+                  }/${deleteTarget.id}`;
+                  await axiosInstance.delete(endpoint);
+
+                  if (deleteIsClass) {
+                    setClasses((prev) =>
+                      prev.filter((c) => c.id !== deleteTarget.id)
+                    );
+                  } else {
+                    setEvents((prev) =>
+                      prev.filter((e) => e.id !== deleteTarget.id)
+                    );
+                  }
+                  showAlert(
+                    `${deleteIsClass ? "Class" : "Event"} deleted successfully!`
+                  );
+
+                  setConfirmOpen(false);
+                } catch (err) {
+                  showAlert("Failed to delete item.", "error");
+                }
+              }}
+              color="error"
+              variant="contained"
+            >
+              Delete
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
+
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={3000}
+        onClose={() => setAlert((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          severity={alert.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

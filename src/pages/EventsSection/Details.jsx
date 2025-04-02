@@ -71,16 +71,23 @@ const Details = ({ isClass }) => {
             images = Array.isArray(fetchedItem.imageUrls)
               ? fetchedItem.imageUrls
               : JSON.parse(fetchedItem.imageUrls);
-          } catch (error) {
+          } catch {
             images = [];
           }
         }
 
-        setData({ ...fetchedItem, images });
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.response?.data?.error || "Not found");
+        let addOnFees = [];
+        if (fetchedItem.addOnFees) {
+          try {
+            addOnFees = Array.isArray(fetchedItem.addOnFees)
+              ? fetchedItem.addOnFees
+              : JSON.parse(fetchedItem.addOnFees);
+          } catch {
+            addOnFees = [];
+          }
+        }
+
+        setData({ ...fetchedItem, images, addOnFees });
         setLoading(false);
       });
   }, [id, isClass]);
@@ -517,6 +524,8 @@ const Details = ({ isClass }) => {
             <Card
               sx={{
                 mb: 4,
+                boxShadow: 4,
+                borderRadius: 4,
                 position: "sticky",
                 top: 20,
                 bgcolor: theme.colors.orange,
@@ -538,25 +547,82 @@ const Details = ({ isClass }) => {
                   }}
                 />
                 <Stack spacing={2}>
-                  {data.registrationFee && (
-                    <Box>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          color: theme.colors.beige,
-                        }}
+                  <Box
+                    p={1.5}
+                    bgcolor={theme.colors.beige}
+                    borderRadius={2}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={1}
+                  >
+                    <Typography fontWeight={600} color={theme.colors.orange}>
+                      Registration Fee
+                    </Typography>
+                    <Typography fontWeight={700} color={theme.colors.brown}>
+                      ₹{data.registrationFee}
+                    </Typography>
+                  </Box>
+
+                  {Array.isArray(data.addOnFees) &&
+                    data.addOnFees.length > 0 && (
+                      <Box
+                        p={1.5}
+                        bgcolor={theme.colors.beige}
+                        borderRadius={2}
+                        mb={1}
                       >
-                        <PaymentIcon fontSize="small" />
-                        Fee
-                      </Typography>
-                      <Typography sx={{ color: theme.colors.beige }}>
-                        ₹{data.registrationFee}
-                      </Typography>
-                    </Box>
-                  )}
+                        <Typography
+                          fontWeight={600}
+                          color={theme.colors.orange}
+                          mb={1}
+                        >
+                          Add-On Fees
+                        </Typography>
+                        <Stack spacing={0.5}>
+                          {data.addOnFees.map((item, idx) => (
+                            <Box
+                              key={idx}
+                              display="flex"
+                              justifyContent="space-between"
+                              alignItems="center"
+                            >
+                              <Typography color={theme.colors.brown}>
+                                {item.name}
+                              </Typography>
+                              <Typography
+                                fontWeight={600}
+                                color={theme.colors.brown}
+                              >
+                                ₹{item.price}
+                              </Typography>
+                            </Box>
+                          ))}
+                        </Stack>
+                      </Box>
+                    )}
+
+                  <Box
+                    mt={1}
+                    p={2}
+                    bgcolor={theme.colors.beige}
+                    borderRadius={2}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Typography fontWeight={600} color={theme.colors.orange}>
+                      Total Payable
+                    </Typography>
+                    <Typography fontWeight={700} color={theme.colors.brown}>
+                      ₹
+                      {data.registrationFee +
+                        data.addOnFees.reduce(
+                          (sum, f) => sum + Number(f.price || 0),
+                          0
+                        )}
+                    </Typography>
+                  </Box>
 
                   <Box>
                     <Typography
@@ -673,7 +739,17 @@ const Details = ({ isClass }) => {
               <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={20}
-                slidesPerView={1}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                  },
+                  1024: {
+                    slidesPerView: 3,
+                  },
+                }}
                 navigation
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 5000 }}
