@@ -46,7 +46,7 @@ const EditForm = ({ open, onClose, initialData, isClass = false, onSave }) => {
     recurrenceRule: "",
     trainerId: "",
     statusToggle: "active",
-    totalSeats: 0,
+    totalSeats: initialData.totalSeats ?? initialData.availableSeats ?? 0,
     registrationFee: 0,
     addOnFees: [],
   });

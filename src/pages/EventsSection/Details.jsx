@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 import {
   Box,
   Typography,
@@ -16,27 +21,29 @@ import {
   Card,
   CardContent,
   Container,
+  ImageList,
+  ImageListItem,
+  Dialog,
+  useTheme,
 } from "@mui/material";
-import { useTheme } from "@mui/material";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CloseIcon from "@mui/icons-material/Close";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import PersonIcon from "@mui/icons-material/Person";
 import InfoIcon from "@mui/icons-material/Info";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import PaymentIcon from "@mui/icons-material/Payment";
 import GroupsIcon from "@mui/icons-material/Groups";
 
 import RegisterForm from "../../components/Forms/RegisterForm";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+dayjs.extend(localizedFormat);
 
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/autoplay";
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
 
 const Details = ({ isClass }) => {
   const { id } = useParams();
@@ -55,6 +62,63 @@ const Details = ({ isClass }) => {
   });
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const thumbnailRef = useRef(null);
+
+  const handleAddOnToggle = (index) => {
+    setSelectedAddOns((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
+  };
+
+  const getDurationHHMM = (start, end, recurrenceRule) => {
+    if (recurrenceRule) {
+      try {
+        const rule =
+          typeof recurrenceRule === "string"
+            ? JSON.parse(recurrenceRule)
+            : recurrenceRule;
+
+        const [_, time] = Object.entries(rule)[0];
+        const startTime = dayjs(`1970-01-01T${time.start}`);
+        const endTime = dayjs(`1970-01-01T${time.end}`);
+        const diffMs = endTime.diff(startTime);
+
+        const d = dayjs.duration(diffMs);
+        const hours = Math.floor(d.asHours());
+        const minutes = d.minutes();
+        return `${hours.toString().padStart(2, "0")}:${minutes
+          .toString()
+          .padStart(2, "0")}`;
+      } catch {
+        return null;
+      }
+    }
+
+    if (!start || !end) return null;
+    const diffMs = dayjs(end).diff(dayjs(start));
+    const d = dayjs.duration(diffMs);
+    const hours = Math.floor(d.asHours());
+    const minutes = d.minutes();
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const calculateTotal = () => {
+    const base = Number(data.registrationFee || 0);
+    const selectedFees = data.addOnFees
+      .filter((_, i) => selectedAddOns.includes(i))
+      .reduce((sum, item) => sum + Number(item.price || 0), 0);
+    return base + selectedFees;
+  };
+
+  useEffect(() => {
+    const handleFocus = () => fetchData();
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -96,6 +160,25 @@ const Details = ({ isClass }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  useEffect(() => {
+    if (thumbnailRef.current) {
+      gsap.fromTo(
+        thumbnailRef.current,
+        { y: 0 },
+        {
+          y: 400,
+          ease: "none",
+          scrollTrigger: {
+            trigger: thumbnailRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
+    }
+  });
 
   const formatRecurrenceRule = (data) => {
     try {
@@ -144,7 +227,8 @@ const Details = ({ isClass }) => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="80vh"
+        minHeight="100vh"
+        backgroundColor={theme.colors.beige}
       >
         <CircularProgress sx={{ color: theme.colors.orange }} />
       </Box>
@@ -179,7 +263,6 @@ const Details = ({ isClass }) => {
 
   return (
     <Box sx={{ bgcolor: theme.colors.beige, minHeight: "100vh" }}>
-      {/* Hero Section */}
       <Box
         sx={{
           position: "relative",
@@ -192,6 +275,7 @@ const Details = ({ isClass }) => {
           component="img"
           src={data.thumbnail}
           alt={data.title}
+          ref={thumbnailRef}
           sx={{
             width: "100%",
             height: "100%",
@@ -232,50 +316,73 @@ const Details = ({ isClass }) => {
                 fontWeight: 700,
                 mb: 1,
                 fontSize: {
-                  xs: "1.75rem", // small screen (≈h4)
-                  sm: "2.25rem", // medium (≈h3)
-                  md: "3rem", // default (≈h2)
+                  xs: "1.75rem",
+                  sm: "2.25rem",
+                  md: "3rem",
                 },
               }}
             >
               {data.title}
             </Typography>
-            <Stack direction="row" spacing={2} mt={2}>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={2}
+              mt={2}
+              flexWrap="wrap"
+              useFlexGap
+            >
               <Chip
                 label={data.eventStatus || (isClass ? "Class" : "Event")}
                 size="medium"
                 sx={{
-                  bgcolor: theme.colors.orange,
-                  color: theme.colors.beige,
+                  bgcolor: theme.colors.beige,
+                  color: theme.colors.orange,
                   fontSize: "1rem",
                   fontWeight: 600,
                   px: 2,
                 }}
               />
-              {data.registrationFee && (
+
+              {(data.startDuration && data.endDuration) ||
+              data.recurrenceRule ? (
                 <Chip
-                  label={`₹${data.registrationFee}`}
+                  label={`${getDurationHHMM(
+                    data.startDuration,
+                    data.endDuration,
+                    data.recurrenceRule
+                  )} hrs`}
                   size="medium"
                   sx={{
                     bgcolor: theme.colors.beige,
-                    color: theme.colors.brown,
+                    color: theme.colors.orange,
                     fontSize: "1rem",
                     fontWeight: 600,
                     px: 2,
                   }}
                 />
-              )}
+              ) : null}
+
+              {data.registrationFee ? (
+                <Chip
+                  label={`₹${data.registrationFee}`}
+                  size="medium"
+                  sx={{
+                    bgcolor: theme.colors.beige,
+                    color: theme.colors.orange,
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    px: 2,
+                  }}
+                />
+              ) : null}
             </Stack>
           </Container>
         </Box>
       </Box>
 
-      {/* Main Content */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Grid container spacing={4}>
-          {/* Left Column - Details */}
-          <Grid item xs={12} md={8}>
-            {/* About Section */}
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Grid2 container spacing={4}>
+          <Grid2 size={{ xs: 12, md: 8 }}>
             <Card
               sx={{
                 mb: 4,
@@ -298,13 +405,15 @@ const Details = ({ isClass }) => {
                     borderColor: theme.colors.brown,
                   }}
                 />
-                <Typography>
-                  {data.conceptNote || "No description available"}
-                </Typography>
+                <Box
+                  sx={{ color: theme.colors.beige, fontSize: "1rem" }}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      data.conceptNote || "<p>No description available</p>",
+                  }}
+                />
               </CardContent>
             </Card>
-
-            {/* Instructions Card */}
 
             <Card
               sx={{
@@ -324,13 +433,16 @@ const Details = ({ isClass }) => {
                     borderColor: theme.colors.brown,
                   }}
                 />
-                <Typography>
-                  {data.instructions || "No instructions available"}
-                </Typography>
+                <Box
+                  sx={{ color: theme.colors.beige, fontSize: "1rem" }}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      data.instructions || "<p>No instructions available</p>",
+                  }}
+                />
               </CardContent>
             </Card>
 
-            {/* Schedule Section */}
             <Card
               sx={{
                 mb: 4,
@@ -400,8 +512,13 @@ const Details = ({ isClass }) => {
                               Date
                             </Typography>
                             <Typography sx={{ color: theme.colors.beige }}>
-                              {data.startDuration}
-                              {data.endDuration && ` - ${data.endDuration}`}
+                              {dayjs(data.startDuration).format(
+                                "MMMM D, YYYY – h:mm A"
+                              )}
+                              {data.endDuration &&
+                                ` - ${dayjs(data.endDuration).format(
+                                  "MMMM D, YYYY – h:mm A"
+                                )}`}
                             </Typography>
                           </Box>
                         </>
@@ -440,7 +557,6 @@ const Details = ({ isClass }) => {
               </CardContent>
             </Card>
 
-            {/* Trainer Section */}
             {data.trainer && (
               <Card
                 sx={{
@@ -463,12 +579,12 @@ const Details = ({ isClass }) => {
                       borderColor: theme.colors.brown,
                     }}
                   />
-                  <Grid container spacing={3} alignItems="center">
-                    <Grid item xs={12} sm={4}>
+                  <Grid2 container spacing={3} alignItems="center">
+                    <Grid2 item xs={12} sm={4}>
                       <Box
                         sx={{
-                          width: "100%",
-                          height: 200,
+                          width: 300,
+                          height: 300,
                           borderRadius: 2,
                           overflow: "hidden",
                           border: `1px solid ${theme.colors.brown}`,
@@ -484,8 +600,8 @@ const Details = ({ isClass }) => {
                           }}
                         />
                       </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={8}>
+                    </Grid2>
+                    <Grid2 item xs={12} sm={8}>
                       <Stack spacing={1}>
                         <Typography
                           variant="h6"
@@ -511,16 +627,14 @@ const Details = ({ isClass }) => {
                           </Typography>
                         )}
                       </Stack>
-                    </Grid>
-                  </Grid>
+                    </Grid2>
+                  </Grid2>
                 </CardContent>
               </Card>
             )}
-          </Grid>
+          </Grid2>
 
-          {/* Right Column - Sidebar */}
-          <Grid item xs={12} md={4}>
-            {/* Quick Info Card */}
+          <Grid2 size={{ xs: 12, md: 4 }}>
             <Card
               sx={{
                 mb: 4,
@@ -577,26 +691,21 @@ const Details = ({ isClass }) => {
                           color={theme.colors.orange}
                           mb={1}
                         >
-                          Add-On Fees
+                          Select Add-On Fees
                         </Typography>
                         <Stack spacing={0.5}>
                           {data.addOnFees.map((item, idx) => (
-                            <Box
+                            <FormControlLabel
                               key={idx}
-                              display="flex"
-                              justifyContent="space-between"
-                              alignItems="center"
-                            >
-                              <Typography color={theme.colors.brown}>
-                                {item.name}
-                              </Typography>
-                              <Typography
-                                fontWeight={600}
-                                color={theme.colors.brown}
-                              >
-                                ₹{item.price}
-                              </Typography>
-                            </Box>
+                              control={
+                                <Checkbox
+                                  checked={selectedAddOns.includes(idx)}
+                                  onChange={() => handleAddOnToggle(idx)}
+                                  sx={{ color: theme.colors.brown }}
+                                />
+                              }
+                              label={`${item.name} - ₹${item.price}`}
+                            />
                           ))}
                         </Stack>
                       </Box>
@@ -615,12 +724,7 @@ const Details = ({ isClass }) => {
                       Total Payable
                     </Typography>
                     <Typography fontWeight={700} color={theme.colors.brown}>
-                      ₹
-                      {data.registrationFee +
-                        data.addOnFees.reduce(
-                          (sum, f) => sum + Number(f.price || 0),
-                          0
-                        )}
+                      ₹{calculateTotal()}
                     </Typography>
                   </Box>
 
@@ -712,8 +816,9 @@ const Details = ({ isClass }) => {
                 )}
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
+
         {/* Gallery Section */}
         {data.images?.length > 0 && (
           <Card
@@ -736,52 +841,42 @@ const Details = ({ isClass }) => {
                   borderColor: theme.colors.brown,
                 }}
               />
-              <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                spaceBetween={20}
-                breakpoints={{
-                  640: {
-                    slidesPerView: 1,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                  },
-                  1024: {
-                    slidesPerView: 3,
-                  },
-                }}
-                navigation
-                pagination={{ clickable: true }}
-                autoplay={{ delay: 5000 }}
-                style={{
-                  borderRadius: 8,
-                  "--swiper-pagination-color": theme.colors.orange,
-                  "--swiper-navigation-color": theme.colors.orange,
-                }}
-              >
-                {data.images.map((img, index) => (
-                  <SwiperSlide key={index}>
-                    <Box
-                      sx={{
-                        height: { xs: 300, md: 400 },
-                        borderRadius: 1,
-                        overflow: "hidden",
-                        border: `1px solid ${theme.colors.brown}`,
+              <ImageList variant="masonry" cols={3} gap={12}>
+                {data.images.map((img, idx) => (
+                  <ImageListItem
+                    key={idx}
+                    sx={{
+                      cursor: "pointer",
+                      overflow: "hidden",
+                      transition: "transform 0.3s ease",
+                      "&:hover": {
+                        transform: "scale(0.90)",
+                      },
+                      "& img": {
+                        transition: "transform 0.4s ease, filter 0.4s ease",
+                        transform: "scale(1)",
+                        filter: "brightness(1)",
+                        "&:hover": {
+                          transform: "scale(1.2)",
+                          filter: "brightness(0.8)",
+                        },
+                      },
+                    }}
+                  >
+                    <img
+                      src={img}
+                      alt={`Gallery ${idx + 1}`}
+                      loading="lazy"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
                       }}
-                    >
-                      <img
-                        src={img}
-                        alt={`Gallery ${index + 1}`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </Box>
-                  </SwiperSlide>
+                      onClick={() => setSelectedIndex(idx)}
+                    />
+                  </ImageListItem>
                 ))}
-              </Swiper>
+              </ImageList>
             </CardContent>
           </Card>
         )}
@@ -798,6 +893,103 @@ const Details = ({ isClass }) => {
         error={formError}
         success={formSuccess}
       />
+
+      <Dialog
+        open={selectedIndex !== null}
+        onClose={() => setSelectedIndex(null)}
+        fullScreen
+        PaperProps={{ sx: { bgcolor: "transparent" } }}
+      >
+        {selectedIndex !== null && (
+          <Box
+            sx={{
+              width: "100vw",
+              height: "100vh",
+              bgcolor: "rgba(0,0,0,0.85)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+            }}
+          >
+            {/* Close Button */}
+            <IconButton
+              onClick={() => setSelectedIndex(null)}
+              sx={{
+                position: "absolute",
+                top: 20,
+                right: 20,
+                color: "white",
+                zIndex: 20,
+              }}
+            >
+              <CloseIcon
+                sx={{
+                  left: 20,
+                  color: "red",
+                  fontSize: 30,
+                  zIndex: 20,
+                  borderRadius: "50%",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.2)",
+                  },
+                }}
+              />
+            </IconButton>
+
+            {/* Prev Button */}
+            <IconButton
+              onClick={() =>
+                setSelectedIndex((prev) =>
+                  prev === 0 ? data.images.length - 1 : prev - 1
+                )
+              }
+              sx={{
+                position: "absolute",
+                left: 20,
+                color: "white",
+                zIndex: 20,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.4)" },
+              }}
+            >
+              <ArrowBackIosNewIcon />
+            </IconButton>
+
+            {/* Next Button */}
+            <IconButton
+              onClick={() =>
+                setSelectedIndex((prev) =>
+                  prev === data.images.length - 1 ? 0 : prev + 1
+                )
+              }
+              sx={{
+                position: "absolute",
+                right: 20,
+                color: "white",
+                zIndex: 20,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.4)" },
+              }}
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+
+            {/* Full Image */}
+            <img
+              src={data.images[selectedIndex]}
+              alt={`Preview ${selectedIndex}`}
+              style={{
+                maxWidth: "90vw",
+                maxHeight: "90vh",
+                objectFit: "contain",
+                borderRadius: 8,
+              }}
+            />
+          </Box>
+        )}
+      </Dialog>
     </Box>
   );
 };

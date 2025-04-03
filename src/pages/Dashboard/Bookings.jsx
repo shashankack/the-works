@@ -37,6 +37,7 @@ const Bookings = () => {
     bookingId: null,
     action: null,
   });
+  const [savingText, setSavingText] = useState("");
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -60,6 +61,9 @@ const Bookings = () => {
     const { bookingId, action } = confirmDialog;
     if (!bookingId || !action) return;
 
+    setSavingText(
+      action === "confirm" ? "Sending Confirmation Mail" : "Sending Cancellation Mail"
+    );
     setLoading(true);
     try {
       const res = await axiosInstance.post(
@@ -71,6 +75,7 @@ const Bookings = () => {
       setAlert({ message: "Failed to update booking", severity: "error" });
     } finally {
       setConfirmDialog({ open: false, bookingId: null, action: null });
+      setSavingText("");
       setLoading(false);
     }
   };
@@ -90,7 +95,16 @@ const Bookings = () => {
 
   return (
     <Box p={4}>
-      {loading && <LinearProgress />}
+      {loading && (
+        <Box>
+          <LinearProgress />
+          {savingText && (
+            <Typography variant="body2" mt={1} textAlign="center">
+              {savingText}
+            </Typography>
+          )}
+        </Box>
+      )}
 
       <Typography variant="h4" gutterBottom>
         Bookings
