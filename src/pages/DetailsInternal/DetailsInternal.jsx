@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
-import EditForm from "../../components/Dashboard/EditForm/EditForm";
+import EditForm from "../../components/Forms/EditForm";
 import "./DetailsInternal.scss";
 
 const DetailsInternal = ({ isClass }) => {
