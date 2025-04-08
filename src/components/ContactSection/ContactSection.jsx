@@ -59,7 +59,15 @@ const ContactSection = () => {
         style={{ backgroundColor: theme.colors.beige }}
       >
         <div className="image-container">
-          <h2 style={{ color: theme.colors.beige, zIndex: 30, marginTop: "100px" }}>Contact Us</h2>
+          <h2
+            style={{
+              color: theme.colors.beige,
+              zIndex: 30,
+              marginTop: "100px",
+            }}
+          >
+            Contact Us
+          </h2>
           <img src={image} ref={imageRef} />
           <div className="overlay" />
         </div>
@@ -70,21 +78,21 @@ const ContactSection = () => {
           }}
         >
           <div className="card">
-            <IoLocationSharp />
+            <IoLocationSharp className="icon" />
             <hr />
             <a href="#">
               Directions <HiOutlineArrowLongRight size={70} />
             </a>
           </div>
           <div className="card">
-            <IoLogoInstagram />
+            <IoLogoInstagram className="icon" />
             <hr />
             <a href="#">
               Follow Us <HiOutlineArrowLongRight size={70} />
             </a>
           </div>
           <div className="card">
-            <BiSupport />
+            <BiSupport className="icon" />
             <hr />
             <a href="#">
               Support <HiOutlineArrowLongRight size={70} />

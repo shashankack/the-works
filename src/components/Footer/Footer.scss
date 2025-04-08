@@ -43,6 +43,7 @@
         width: 100%;
         list-style: none;
         margin: 0;
+        padding: 0;
 
         li a {
           font-family: "Quicksand";
@@ -84,6 +85,75 @@
     .copyrights {
       font-size: 16px;
       margin: 20px 0;
+    }
+  }
+
+  // Tablet
+  @media (max-width: 768px) {
+    footer {
+      padding: 40px 20px;
+
+      .logo h2 {
+        font-size: 4rem;
+      }
+
+      .navbar ul {
+        gap: 40px;
+
+        li a {
+          font-size: 14px;
+        }
+      }
+
+      .socials {
+        gap: 40px;
+
+        a img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      .copyrights {
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Mobile
+  @media (max-width: 500px) {
+    footer {
+      padding: 30px 10px;
+
+      .logo h2 {
+        font-size: 2.5rem;
+      }
+
+      .navbar ul {
+        flex-direction: column;
+        gap: 20px;
+
+        li a {
+          font-size: 13px;
+        }
+      }
+
+      .socials {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 30px;
+
+        a img {
+          width: 36px;
+          height: 36px;
+        }
+      }
+
+      .copyrights {
+        font-size: 13px;
+        text-align: center;
+        padding: 0 10px;
+      }
     }
   }
 }

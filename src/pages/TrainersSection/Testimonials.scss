@@ -1,15 +1,16 @@
 .trainers-section {
-  padding: 5% 0;
+  padding: 2rem 1rem;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 100%;
-  height: auto;
+  justify-content: flex-start;
 
   h2 {
-    font-size: 4rem;
-    margin-bottom: 40px;
+    font-size: 3rem;
+    margin-bottom: 2rem;
     font-family: "Questrial", sans-serif;
     text-align: center;
     position: relative;
@@ -17,7 +18,7 @@
     hr {
       position: absolute;
       left: 50%;
-      transform: translate(-50%);
+      transform: translateX(-50%);
       width: 70%;
       border-radius: 50px;
     }
@@ -29,15 +30,16 @@
     justify-content: center;
     max-width: 1300px;
     width: 100%;
-    height: 700px;
-    border-radius: 60px;
-    padding: 30px;
+    height: calc(100vh - 160px); // Remaining height after heading
+    border-radius: 40px;
+    padding: 20px;
+    gap: 40px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    gap: 60px;
+    overflow: hidden;
 
     .testimonial-image {
-      position: relative;
-      width: 500px;
+      flex-shrink: 0;
+      width: 40%;
       height: 100%;
       display: flex;
       justify-content: center;
@@ -47,48 +49,47 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 30px;
+        border-radius: 20px;
       }
     }
 
     .testimonial-content {
-      width: 100%;
+      flex: 1;
       height: 100%;
       display: flex;
-      flex: 1;
-      flex-shrink: 1;
       flex-direction: column;
-      justify-content: center;
-      align-items: start;
+      justify-content: space-evenly;
+      overflow: hidden;
 
       .testimonial-name {
-        font-size: 56px;
+        font-size: 2.5rem;
         font-weight: bold;
-        margin-top: 160px;
       }
 
       .testimonial-role {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: 600;
         text-transform: uppercase;
       }
 
       .testimonial-text {
-        font-size: 1.2rem;
-        text-align: justify;
-        width: 90%;
+        font-size: 1rem;
+        margin-top: 1rem;
         color: #ddd;
-        margin-top: 30px;
+        text-align: justify;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        max-height: 180px;
+        width: 80%;
       }
 
       .testimonial-nav {
         display: flex;
-        align-items: end;
-        height: 100%;
-        padding: 60px 0;
-        gap: 2rem;
+        gap: 1rem;
+        align-items: flex-end;
+        justify-content: flex-start;
 
-        & button {
+        button {
           transition: all 0.5s ease;
 
           &:hover {
@@ -98,20 +99,84 @@
         }
       }
     }
-    @media (max-width: 768px) {
-      .testimonial-container {
-        flex-direction: column;
-        text-align: center;
-      }
+  }
+
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 2.2rem;
+    }
+
+    .testimonial-container {
+      flex-direction: column;
+      height: calc(100vh - 120px);
+      padding: 10px;
 
       .testimonial-image {
-        width: 200px;
-        height: 200px;
-        margin-bottom: 1.5rem;
+        width: 100%;
+        height: 40%;
+        img {
+          border-radius: 15px;
+        }
       }
 
       .testimonial-content {
         width: 100%;
+        height: 60%;
+        align-items: center;
+        text-align: center;
+
+        .testimonial-name {
+          font-size: 1.8rem;
+          margin-top: 1rem;
+        }
+
+        .testimonial-role {
+          font-size: 1rem;
+        }
+
+        .testimonial-text {
+          font-size: 0.95rem;
+          width: 100%;
+          max-height: 160px;
+        }
+
+        .testimonial-nav {
+          justify-content: space-between;
+          position: absolute;
+          width: 90%;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 500px) {
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    .testimonial-container {
+      border-radius: 15px;
+      height: calc(100vh - 100px);
+      gap: 1rem;
+
+      .testimonial-image {
+        height: 60%;
+      }
+    }
+
+    
+
+    .testimonial-content {
+      .testimonial-name {
+        font-size: 1.5rem;
+      }
+      .testimonial-role {
+        font-size: 0.9rem;
+      }
+      .testimonial-text {
+        font-size: 0.9rem;
       }
     }
   }

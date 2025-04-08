@@ -61,34 +61,17 @@
 }
 
 .header.scrolled {
-  // backdrop-filter: blur(10px);
-  // background-color: #d6a771ce;
+  margin-top: 20px;
+  backdrop-filter: blur(10px);
+  background-color: #d6a771ce;
+  border-radius: 100px;
+  width: 90%;
+
   .navbar > ul > li > a {
     color: #000;
 
     &::after {
       background-color: #000;
     }
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-  .header {
-    padding: 15px 0;
-  }
-
-  .navbar ul {
-    gap: 50px;
-  }
-}
-
-@media (max-width: 480px) {
-  .navbar ul {
-    gap: 30px;
-  }
-
-  .navbar ul li a {
-    font-size: 12px;
   }
 }

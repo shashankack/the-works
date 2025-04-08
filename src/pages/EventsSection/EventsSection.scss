@@ -1,11 +1,15 @@
 .events-section {
-  padding: 3rem 1rem;
-  min-height: 100vh;
+  padding: 1rem;
+  height: 100vh;
+  overflow: hidden;
 
   .container {
     max-width: 1600px;
     margin: 0 auto;
-    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 
     .heading {
       max-width: 600px;
@@ -13,9 +17,9 @@
 
       h2 {
         font-family: "Questrial", sans-serif;
-        font-size: 3.6rem;
+        font-size: 2.5rem;
         text-transform: uppercase;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         color: #b15324;
 
         hr {
@@ -27,15 +31,16 @@
     }
 
     .tabs {
-      display: inline-flex;
+      display: flex;
+      justify-content: center;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 3rem;
+      margin-bottom: 1rem;
 
       button {
-        padding: 0.75rem 2rem;
+        padding: 0.5rem 1.5rem;
         border-radius: 30px;
-        font-size: 1.3rem;
+        font-size: 1rem;
         font-family: "Questrial", sans-serif;
         cursor: pointer;
         border: 1px solid #b15324;
@@ -45,27 +50,30 @@
       }
 
       hr {
-        border-radius: 50px;
-        margin: 0 20px;
-        height: 50px;
+        height: 40px;
         border: 1px solid #4E2916;
+        border-radius: 50px;
+        margin: 0 10px;
       }
     }
 
     .events {
+      flex: 1;
+      min-height: 0;
+      overflow-y: hidden;
+
       .card {
         border-radius: 20px;
-        padding: 2rem 1rem;
+        padding: 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        min-height: 400px;
-        margin: 0 auto;
+        min-height: 350px;
 
         .circle-image {
-          width: 470px;
-          height: 470px;
+          width:  480px;
+          height: 480px;
           border-radius: 50%;
           overflow: hidden;
           margin-bottom: 1rem;
@@ -73,19 +81,17 @@
           align-items: center;
           justify-content: center;
           transition: all 0.3s ease;
-          z-index: 10;
 
           &:hover {
             border-radius: 30px;
             transform: scale(1.05);
-            z-index: 30;
           }
 
           img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
             transform: scale(1.2);
 
             &:hover {
@@ -102,53 +108,74 @@
 
         h3 {
           font-family: "Questrial", sans-serif;
-          font-size: 1.5rem;
+          font-size: 1.2rem;
           color: #4E2916;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
         }
 
         .cta-button {
           font-family: "Quicksand", sans-serif;
           font-weight: 700;
-          padding: 0.5rem 1.5rem;
-          font-size: 1rem;
+          padding: 0.5rem 1.2rem;
+          font-size: 0.9rem;
           border-radius: 30px;
-          cursor: pointer;
           transition: all 0.3s ease;
 
           &:hover {
             background-color: #fff;
-            color: #3f51b5; // your "orange" in the theme
+            color: #3f51b5;
           }
         }
       }
     }
 
-    // Swiper Navigation Arrows
+    // Swiper Navigation
     .swiper-button-prev,
     .swiper-button-next {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 35px;
+      height: 35px;
       background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
       color: #fff;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
 
       &::after {
-        font-size: 18px;
+        font-size: 16px;
       }
     }
+  }
 
-    .swiper-button-prev {
-      left: 10px;
-    }
+  @media (max-width: 500px) {
+    .container {
+      padding-top: 5rem;
 
-    .swiper-button-next {
-      right: 10px;
+      .heading h2 {
+        font-size: 2rem;
+      }
+
+      .tabs {
+        gap: 4rem;
+        hr {
+          display: none;
+        }
+      }
+
+      .events {
+        .card {
+          .circle-image {
+            width:  300px;
+            height: 300px;
+          }
+
+          h3 {
+            font-size: 1rem;
+          }
+
+          .cta-button {
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+          }
+        }
+      }
     }
   }
 }

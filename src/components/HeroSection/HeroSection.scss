@@ -1,5 +1,6 @@
 .hero-section {
   height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,6 +8,7 @@
   text-align: center;
   background-color: #f3f3f3;
   position: relative;
+  overflow: hidden;
 
   .hero-content {
     z-index: 10;
@@ -94,13 +96,14 @@
   @media screen and (max-width: 500px) {
     .hero-content {
       width: 100%;
-      top: 80%;
+      top: 70%;
+      left: 10px;
       .hero-title {
         font-size: 2.7rem;
       }
 
       .hero-intro {
-        font-size: 1rem;
+        font-size: 1.4rem;
         width: 90%;
       }
     }
