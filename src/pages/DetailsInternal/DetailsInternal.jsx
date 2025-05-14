@@ -11,7 +11,7 @@ const DetailsInternal = ({ isClass }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false); // Modal State
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -22,7 +22,6 @@ const DetailsInternal = ({ isClass }) => {
       .then((res) => {
         const fetchedItem = res.data.class || res.data.event;
 
-        // ✅ Ensure `imageUrls` is properly formatted as an array
         let images = [];
         if (fetchedItem.imageUrls) {
           try {
@@ -46,12 +45,18 @@ const DetailsInternal = ({ isClass }) => {
 
   // ✅ Handle Delete
   const handleDelete = async () => {
-    if (!window.confirm(`Are you sure you want to delete this ${isClass ? "class" : "event"}?`))
+    if (
+      !window.confirm(
+        `Are you sure you want to delete this ${isClass ? "class" : "event"}?`
+      )
+    )
       return;
 
     setDeleteLoading(true);
     try {
-      await axiosInstance.delete(`/admin/${isClass ? "classes" : "events"}/${id}`);
+      await axiosInstance.delete(
+        `/admin/${isClass ? "classes" : "events"}/${id}`
+      );
       alert(`${isClass ? "Class" : "Event"} deleted successfully!`);
       navigate("/admin"); // Redirect to dashboard
     } catch (err) {
@@ -69,9 +74,17 @@ const DetailsInternal = ({ isClass }) => {
   return (
     <div className="details-internal">
       <div className="top-buttons">
-        <button onClick={() => navigate(-1)} className="back-btn">⬅ Back</button>
-        <button onClick={() => setShowEditModal(true)} className="edit-btn">✏️ Edit</button>
-        <button onClick={handleDelete} className="delete-btn" disabled={deleteLoading}>
+        <button onClick={() => navigate(-1)} className="back-btn">
+          ⬅ Back
+        </button>
+        <button onClick={() => setShowEditModal(true)} className="edit-btn">
+          ✏️ Edit
+        </button>
+        <button
+          onClick={handleDelete}
+          className="delete-btn"
+          disabled={deleteLoading}
+        >
           {deleteLoading ? "Deleting..." : "🗑 Delete"}
         </button>
       </div>
@@ -88,19 +101,39 @@ const DetailsInternal = ({ isClass }) => {
             </div>
           )}
           <h1>{item.title}</h1>
-          <p><strong>Status:</strong> {item.eventStatus}</p>
-          <p><strong>Location:</strong> {item.location}</p>
-          <p><strong>Start Time:</strong> {item.startDuration}</p>
-          <p><strong>End Time:</strong> {item.endDuration}</p>
-          <p><strong>Recurrence:</strong> {item.recurrenceRule || "One-time"}</p>
-          <p><strong>Description:</strong> {item.conceptNote || "No description available"}</p>
+          <p>
+            <strong>Status:</strong> {item.eventStatus}
+          </p>
+          <p>
+            <strong>Location:</strong> {item.location}
+          </p>
+          <p>
+            <strong>Start Time:</strong> {item.startDuration}
+          </p>
+          <p>
+            <strong>End Time:</strong> {item.endDuration}
+          </p>
+          <p>
+            <strong>Recurrence:</strong> {item.recurrenceRule || "One-time"}
+          </p>
+          <p>
+            <strong>Description:</strong>{" "}
+            {item.conceptNote || "No description available"}
+          </p>
 
           {item.trainer && (
             <div className="trainer-details">
               <h3>Trainer</h3>
-              <p><strong>Name:</strong> {item.trainer.name}</p>
-              <p><strong>Phone:</strong> {item.trainer.phone || "Not provided"}</p>
-              <p><strong>Specialization:</strong> {item.trainer.specialization || "Not provided"}</p>
+              <p>
+                <strong>Name:</strong> {item.trainer.name}
+              </p>
+              <p>
+                <strong>Phone:</strong> {item.trainer.phone || "Not provided"}
+              </p>
+              <p>
+                <strong>Specialization:</strong>{" "}
+                {item.trainer.specialization || "Not provided"}
+              </p>
             </div>
           )}
 
@@ -110,7 +143,12 @@ const DetailsInternal = ({ isClass }) => {
               <h3>Images</h3>
               <div className="image-grid">
                 {item.images.map((image, index) => (
-                  <img key={index} src={image} alt={`Image ${index}`} className="image" />
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Image ${index}`}
+                    className="image"
+                  />
                 ))}
               </div>
             </div>
@@ -124,7 +162,12 @@ const DetailsInternal = ({ isClass }) => {
       {showEditModal && (
         <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setShowEditModal(false)}>✖</button>
+            <button
+              className="close-btn"
+              onClick={() => setShowEditModal(false)}
+            >
+              ✖
+            </button>
             <EditForm
               initialData={item}
               isClass={isClass}
