@@ -44,13 +44,13 @@ const Sidebar = () => {
         [`& .MuiDrawer-paper`]: {
           width: 240,
           boxSizing: "border-box",
-          borderColor: theme.colors.brown,
-          backgroundColor: theme.colors.beige,
+          borderColor: theme.palette.brown,
+          backgroundColor: theme.palette.beige,
         },
       }}
     >
-      <Box sx={{ p: 2 }} backgroundColor={theme.colors.orange}>
-        <Typography variant="h6" fontWeight="bold" color={theme.colors.beige}>
+      <Box sx={{ p: 2 }} backgroundColor={theme.palette.orange}>
+        <Typography variant="h6" fontWeight="bold" color={theme.palette.beige}>
           The Works
         </Typography>
       </Box>

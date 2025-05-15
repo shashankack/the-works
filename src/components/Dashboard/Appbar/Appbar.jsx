@@ -10,7 +10,7 @@ const Appbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: theme.colors.orange }}>
+    <AppBar position="static" sx={{ backgroundColor: theme.palette.orange }}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Typography variant="h6">Admin Dashboard</Typography>
         <Button color="inherit" onClick={logout}>

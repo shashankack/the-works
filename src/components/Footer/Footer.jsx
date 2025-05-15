@@ -12,14 +12,17 @@ const Footer = () => {
     <div className="footer-container">
       <footer
         style={{
-          backgroundColor: theme.colors.orange,
-          color: theme.colors.beige,
+          backgroundColor: theme.palette.orange,
+          color: theme.palette.beige,
         }}
       >
         <div className="logo">
           <h2>The Works</h2>
         </div>
-        <nav className="navbar" style={{ backgroundColor: theme.colors.beige }}>
+        <nav
+          className="navbar"
+          style={{ backgroundColor: theme.palette.beige }}
+        >
           <ul className="nav-menu">
             <li className="nav-item">
               <a href="/" className="nav-link">

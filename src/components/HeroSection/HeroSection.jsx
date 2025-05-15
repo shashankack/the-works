@@ -1,77 +1,74 @@
-import React, { useEffect } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 import {
-  EffectCreative,
-  Autoplay,
-  Pagination,
-  Navigation,
-} from "swiper/modules";
-import "swiper/css";
-import "swiper/css/effect-creative";
-import { gsap } from "gsap";
+  Box,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Button,
+} from "@mui/material";
 
-import "./HeroSection.scss";
+import heroImage from "/images/hero.png";
 
-const HeroSection = ({ images }) => {
-  useEffect(() => {
-    gsap.from(".hero-title", {
-      opacity: 0,
-      y: -50,
-      duration: 1.5,
-      ease: "power3.out",
-    });
-
-    gsap.from(".hero-intro", {
-      opacity: 0,
-      y: 30,
-      duration: 1.5,
-      delay: 0.5,
-      ease: "power3.out",
-    });
-  }, []);
+const HeroSection = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <section className="hero-section">
-      <Swiper
-        grabCursor={true}
-        effect={"creative"}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
+    <Box height="100vh" position="relative" overflow="hidden">
+      <Box
+        component="img"
+        src={heroImage}
+        sx={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
         }}
-        speed={1000}
-        pagination={{
-          clickable: true,
+      />
+      <Box
+        width={isMobile ? "90%" : "60%"}
+        position="absolute"
+        bottom={100}
+        left="50%"
+        textAlign="center"
+        sx={{
+          transform: "translateX(-50%)",
         }}
-        navigation
-        loop={true}
-        creativeEffect={{
-          prev: {
-            shadow: true,
-            translate: ["-20%", 0, -1],
-          },
-          next: {
-            translate: ["100%", 0, 0],
-          },
-        }}
-        modules={[EffectCreative, Pagination, Navigation, Autoplay]}
-        className="hero-swiper"
       >
-        {images.map((image, index) => (
-          <SwiperSlide key={index}>
-            <img src={image} alt="Hero Slide" className="hero-section__image" />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-
-      <div className="hero-content">
-        <h1 className="hero-title">Welcome to The Works</h1>
-        <p className="hero-intro">
+        <Typography
+          variant="h3"
+          fontSize={isMobile ? "4vw" : "3vw"}
+          fontWeight={700}
+          textTransform="uppercase"
+          color={theme.palette.beige}
+          fontFamily={theme.fonts.primary}
+          whiteSpace="nowrap"
+        >
+          Welcome to the works
+        </Typography>
+        <Typography
+          variant="h5"
+          fontSize={isMobile ? "3.5vw" : "2vw"}
+          color={theme.palette.beige}
+          fontFamily={theme.fonts.primary}
+        >
           A vibrant oasis in the heart of Bangalore, where movement, culture,
           and creativity come alive.
-        </p>
-      </div>
-    </section>
+        </Typography>
+
+        <Button
+          sx={{
+            mt: 3,
+            py: 0.3,
+            px: 5,
+            backgroundColor: "transparent",
+            color: theme.palette.beige,
+            border: `2px solid ${theme.palette.beige}`,
+            borderRadius: "50px",
+          }}
+        >
+          View
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

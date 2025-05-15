@@ -6,9 +6,11 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./EventsSection.scss";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
 import LoadingScreen from "../../components/Loader";
+
+import { Box } from "@mui/material";
 
 const EventsSection = () => {
   const [activeTab, setActiveTab] = useState("classes");
@@ -17,6 +19,10 @@ const EventsSection = () => {
   const [loading, setLoading] = useState(true);
   const [classesError, setClassesError] = useState(null);
   const [eventsError, setEventsError] = useState(null);
+
+  const isClassesTab = activeTab === "classes";
+  const data = isClassesTab ? classesData : eventsData;
+  const errorMessage = isClassesTab ? classesError : eventsError;
 
   const theme = useTheme();
   const navigate = useNavigate();
@@ -47,28 +53,23 @@ const EventsSection = () => {
     fetchData();
   }, []);
 
-  const isClassesTab = activeTab === "classes";
-  const data = isClassesTab ? classesData : eventsData;
-  const errorMessage = isClassesTab ? classesError : eventsError;
-
   const handleRedirect = (item, type) => {
     navigate(`/${type}/${item.id}`);
     window.scrollTo(0, 0);
   };
 
   return (
-    <section
+    <Box
       className="events-section"
-      style={{ backgroundColor: theme.colors.beige }}
+      style={{ backgroundColor: theme.palette.beige }}
     >
       <div className="container">
-        {/* Heading */}
         <div className="heading">
-          <h2 style={{ color: theme.colors.tertiary }}>
+          <h2 style={{ color: theme.palette.tertiary }}>
             Upcoming {isClassesTab ? "Classes" : "Events"}
             <hr
               style={{
-                border: `1px solid ${theme.colors.tertiary}`,
+                border: `1px solid ${theme.palette.tertiary}`,
                 width: "50%",
                 marginTop: "0.5rem",
               }}
@@ -76,17 +77,18 @@ const EventsSection = () => {
           </h2>
         </div>
 
-        {/* Tabs */}
         <div className="tabs">
           <button
             className={isClassesTab ? "active" : ""}
             onClick={() => setActiveTab("classes")}
             style={{
               backgroundColor: isClassesTab
-                ? theme.colors.tertiary
-                : theme.colors.beige,
-              color: isClassesTab ? theme.colors.beige : theme.colors.tertiary,
-              border: `1px solid ${theme.colors.tertiary}`,
+                ? theme.palette.tertiary
+                : theme.palette.beige,
+              color: isClassesTab
+                ? theme.palette.beige
+                : theme.palette.tertiary,
+              border: `1px solid ${theme.palette.tertiary}`,
             }}
           >
             Classes
@@ -97,23 +99,24 @@ const EventsSection = () => {
             onClick={() => setActiveTab("events")}
             style={{
               backgroundColor: !isClassesTab
-                ? theme.colors.tertiary
-                : theme.colors.beige,
-              color: !isClassesTab ? theme.colors.beige : theme.colors.tertiary,
-              border: `1px solid ${theme.colors.tertiary}`,
+                ? theme.palette.tertiary
+                : theme.palette.beige,
+              color: !isClassesTab
+                ? theme.palette.beige
+                : theme.palette.tertiary,
+              border: `1px solid ${theme.palette.tertiary}`,
             }}
           >
             Events
           </button>
         </div>
 
-        {/* Loading, Error, or No Data Message */}
         {loading ? (
           <LoadingScreen />
         ) : errorMessage && data.length === 0 ? (
           <p style={{ textAlign: "center", color: "red" }}>{errorMessage}</p>
         ) : data.length === 0 ? (
-          <p style={{ textAlign: "center", color: theme.colors.tertiary }}>
+          <p style={{ textAlign: "center", color: theme.palette.tertiary }}>
             No {isClassesTab ? "Classes" : "Events"} Available
           </p>
         ) : (
@@ -144,17 +147,27 @@ const EventsSection = () => {
                       )}
                     </div>
                     <h3>{item.title}</h3>
-                    <button
-                      className="cta-button"
-                      style={{
-                        backgroundColor: theme.colors.orange,
+                    <Button
+                      sx={{
+                        backgroundColor: theme.palette.orange,
                         color: "#fff",
-                        border: `2px solid ${theme.colors.orange}`,
+                        border: `2px solid ${theme.palette.orange}`,
+                        fontWeight: 700,
+                        padding: "0.5rem 1.2rem",
+                        fontSize: "1rem",
+                        borderRadius: "30px",
+                        transition: "all 0.3s ease",
+                        textTransform: "none",
+
+                        "&:hover": {
+                          backgroundColor: theme.palette.beige,
+                          color: theme.palette.orange,
+                        },
                       }}
                       onClick={() => handleRedirect(item, activeTab)}
                     >
                       {isClassesTab ? "Book Class" : "Book Event"}
-                    </button>
+                    </Button>
                   </div>
                 </SwiperSlide>
               ))}
@@ -162,7 +175,7 @@ const EventsSection = () => {
           </div>
         )}
       </div>
-    </section>
+    </Box>
   );
 };
 

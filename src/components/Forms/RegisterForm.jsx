@@ -31,16 +31,16 @@ const RegisterForm = ({
       fullWidth
       PaperProps={{
         sx: {
-          bgcolor: theme.colors.beige,
-          border: `2px solid ${theme.colors.brown}`,
+          bgcolor: theme.palette.beige,
+          border: `2px solid ${theme.palette.brown}`,
         },
       }}
     >
       <DialogTitle
         sx={{
-          bgcolor: theme.colors.orange,
-          color: theme.colors.beige,
-          borderBottom: `2px solid ${theme.colors.brown}`,
+          bgcolor: theme.palette.orange,
+          color: theme.palette.beige,
+          borderBottom: `2px solid ${theme.palette.brown}`,
         }}
       >
         Register for {title}
@@ -51,9 +51,9 @@ const RegisterForm = ({
             severity="error"
             sx={{
               mb: 2,
-              bgcolor: theme.colors.beige,
-              color: theme.colors.brown,
-              border: `1px solid ${theme.colors.brown}`,
+              bgcolor: theme.palette.beige,
+              color: theme.palette.brown,
+              border: `1px solid ${theme.palette.brown}`,
             }}
           >
             {error}
@@ -64,9 +64,9 @@ const RegisterForm = ({
             severity="success"
             sx={{
               mb: 2,
-              bgcolor: theme.colors.beige,
-              color: theme.colors.brown,
-              border: `1px solid ${theme.colors.brown}`,
+              bgcolor: theme.palette.beige,
+              color: theme.palette.brown,
+              border: `1px solid ${theme.palette.brown}`,
             }}
           >
             {success}
@@ -85,10 +85,10 @@ const RegisterForm = ({
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
-                  borderColor: theme.colors.brown,
+                  borderColor: theme.palette.brown,
                 },
                 "&:hover fieldset": {
-                  borderColor: theme.colors.orange,
+                  borderColor: theme.palette.orange,
                 },
               },
             }}
@@ -105,10 +105,10 @@ const RegisterForm = ({
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
-                  borderColor: theme.colors.brown,
+                  borderColor: theme.palette.brown,
                 },
                 "&:hover fieldset": {
-                  borderColor: theme.colors.orange,
+                  borderColor: theme.palette.orange,
                 },
               },
             }}
@@ -124,10 +124,10 @@ const RegisterForm = ({
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
-                  borderColor: theme.colors.brown,
+                  borderColor: theme.palette.brown,
                 },
                 "&:hover fieldset": {
-                  borderColor: theme.colors.orange,
+                  borderColor: theme.palette.orange,
                 },
               },
             }}
@@ -142,10 +142,10 @@ const RegisterForm = ({
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
-                  borderColor: theme.colors.brown,
+                  borderColor: theme.palette.brown,
                 },
                 "&:hover fieldset": {
-                  borderColor: theme.colors.orange,
+                  borderColor: theme.palette.orange,
                 },
               },
             }}
@@ -155,15 +155,15 @@ const RegisterForm = ({
       <DialogActions
         sx={{
           p: 3,
-          borderTop: `2px solid ${theme.colors.brown}`,
+          borderTop: `2px solid ${theme.palette.brown}`,
         }}
       >
         <Button
           onClick={onClose}
           sx={{
-            color: theme.colors.brown,
+            color: theme.palette.brown,
             "&:hover": {
-              color: theme.colors.orange,
+              color: theme.palette.orange,
               bgcolor: "transparent",
             },
           }}
@@ -177,10 +177,10 @@ const RegisterForm = ({
           startIcon={<EventAvailableIcon />}
           sx={{
             px: 4,
-            bgcolor: theme.colors.brown,
-            color: theme.colors.beige,
+            bgcolor: theme.palette.brown,
+            color: theme.palette.beige,
             "&:hover": {
-              bgcolor: theme.colors.orange,
+              bgcolor: theme.palette.orange,
             },
           }}
         >

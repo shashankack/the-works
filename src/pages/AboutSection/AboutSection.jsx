@@ -135,7 +135,7 @@ const AboutSection = () => {
   return (
     <section
       className="about-section"
-      style={{ backgroundColor: theme.colors.orange }}
+      style={{ backgroundColor: theme.palette.orange }}
     >
       <div className="founder-container">
         <div className="image-container" ref={imageRef}>

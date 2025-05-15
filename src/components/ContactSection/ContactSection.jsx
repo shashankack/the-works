@@ -51,17 +51,17 @@ const ContactSection = () => {
     <section
       className="contact-section"
       style={{
-        backgroundColor: theme.colors.beige,
+        backgroundColor: theme.palette.beige,
       }}
     >
       <div
         className="rectangle"
-        style={{ backgroundColor: theme.colors.beige }}
+        style={{ backgroundColor: theme.palette.beige }}
       >
         <div className="image-container">
           <h2
             style={{
-              color: theme.colors.beige,
+              color: theme.palette.beige,
               zIndex: 30,
               marginTop: "100px",
             }}
@@ -74,7 +74,7 @@ const ContactSection = () => {
         <div
           className="cards"
           style={{
-            color: theme.colors.beige,
+            color: theme.palette.beige,
           }}
         >
           <div className="card">

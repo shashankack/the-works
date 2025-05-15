@@ -24,13 +24,17 @@ const Testimonials = ({ data }) => {
   };
 
   return (
-    <section className="trainers-section" style={{ backgroundColor: theme.colors.orange }}>
-      <h2 style={{ color: theme.colors.beige }}>
-        Meet our Trainers <hr style={{border: `1px solid ${theme.colors.brown}`}}/>
+    <section
+      className="trainers-section"
+      style={{ backgroundColor: theme.palette.orange }}
+    >
+      <h2 style={{ color: theme.palette.beige }}>
+        Meet our Trainers{" "}
+        <hr style={{ border: `1px solid ${theme.palette.brown}` }} />
       </h2>
       <div
         className="testimonial-container"
-        style={{ backgroundColor: theme.colors.beige }}
+        style={{ backgroundColor: theme.palette.beige }}
       >
         {/* Left: Image with transition */}
         <div className="testimonial-image">
@@ -56,18 +60,23 @@ const Testimonials = ({ data }) => {
               exit={{ opacity: 0, y: direction * -20 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <h3 className="testimonial-name" style={{
-                color: theme.colors.orange,
-              }}>{data[current].name}</h3>
+              <h3
+                className="testimonial-name"
+                style={{
+                  color: theme.palette.orange,
+                }}
+              >
+                {data[current].name}
+              </h3>
               <p
                 className="testimonial-role"
-                style={{ color: theme.colors.orange }}
+                style={{ color: theme.palette.orange }}
               >
                 {data[current].role}
               </p>
               <p
                 className="testimonial-text"
-                style={{ color: theme.colors.orange }}
+                style={{ color: theme.palette.orange }}
               >
                 {data[current].text}
               </p>
@@ -76,10 +85,10 @@ const Testimonials = ({ data }) => {
 
           <div className="testimonial-nav">
             <button onClick={prevTestimonial}>
-              <RiArrowLeftWideLine size={50} color={theme.colors.orange} />
+              <RiArrowLeftWideLine size={50} color={theme.palette.orange} />
             </button>
             <button onClick={nextTestimonial}>
-              <RiArrowRightWideLine size={50} color={theme.colors.orange} />
+              <RiArrowRightWideLine size={50} color={theme.palette.orange} />
             </button>
           </div>
         </div>

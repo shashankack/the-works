@@ -228,9 +228,9 @@ const Details = ({ isClass }) => {
         justifyContent="center"
         alignItems="center"
         minHeight="100vh"
-        backgroundColor={theme.colors.beige}
+        backgroundColor={theme.palette.beige}
       >
-        <CircularProgress sx={{ color: theme.colors.orange }} />
+        <CircularProgress sx={{ color: theme.palette.orange }} />
       </Box>
     );
   }
@@ -246,10 +246,10 @@ const Details = ({ isClass }) => {
           variant="contained"
           startIcon={<ArrowBackIcon />}
           sx={{
-            bgcolor: theme.colors.orange,
-            color: theme.colors.beige,
+            bgcolor: theme.palette.orange,
+            color: theme.palette.beige,
             "&:hover": {
-              bgcolor: theme.colors.brown,
+              bgcolor: theme.palette.brown,
             },
           }}
         >
@@ -262,7 +262,7 @@ const Details = ({ isClass }) => {
   if (!data) return null;
 
   return (
-    <Box sx={{ bgcolor: theme.colors.beige, minHeight: "100vh" }}>
+    <Box sx={{ bgcolor: theme.palette.beige, minHeight: "100vh" }}>
       <Box
         sx={{
           position: "relative",
@@ -299,10 +299,10 @@ const Details = ({ isClass }) => {
               startIcon={<ArrowBackIcon />}
               onClick={() => navigate(-1)}
               sx={{
-                color: theme.colors.beige,
+                color: theme.palette.beige,
                 mb: 2,
                 "&:hover": {
-                  color: theme.colors.orange,
+                  color: theme.palette.orange,
                 },
               }}
             >
@@ -312,7 +312,7 @@ const Details = ({ isClass }) => {
               variant="h2"
               component="h1"
               sx={{
-                color: theme.colors.beige,
+                color: theme.palette.beige,
                 fontWeight: 700,
                 mb: 1,
                 fontSize: {
@@ -335,8 +335,8 @@ const Details = ({ isClass }) => {
                 label={data.eventStatus || (isClass ? "Class" : "Event")}
                 size="medium"
                 sx={{
-                  bgcolor: theme.colors.beige,
-                  color: theme.colors.orange,
+                  bgcolor: theme.palette.beige,
+                  color: theme.palette.orange,
                   fontSize: "1rem",
                   fontWeight: 600,
                   px: 2,
@@ -353,8 +353,8 @@ const Details = ({ isClass }) => {
                   )} hrs`}
                   size="medium"
                   sx={{
-                    bgcolor: theme.colors.beige,
-                    color: theme.colors.orange,
+                    bgcolor: theme.palette.beige,
+                    color: theme.palette.orange,
                     fontSize: "1rem",
                     fontWeight: 600,
                     px: 2,
@@ -367,8 +367,8 @@ const Details = ({ isClass }) => {
                   label={`₹${data.registrationFee}`}
                   size="medium"
                   sx={{
-                    bgcolor: theme.colors.beige,
-                    color: theme.colors.orange,
+                    bgcolor: theme.palette.beige,
+                    color: theme.palette.orange,
                     fontSize: "1rem",
                     fontWeight: 600,
                     px: 2,
@@ -386,8 +386,8 @@ const Details = ({ isClass }) => {
             <Card
               sx={{
                 mb: 4,
-                bgcolor: theme.colors.orange,
-                color: theme.colors.beige,
+                bgcolor: theme.palette.orange,
+                color: theme.palette.beige,
                 borderRadius: 4,
               }}
             >
@@ -395,18 +395,18 @@ const Details = ({ isClass }) => {
                 <Typography
                   variant="h5"
                   gutterBottom
-                  sx={{ fontWeight: 600, color: theme.colors.beige }}
+                  sx={{ fontWeight: 600, color: theme.palette.beige }}
                 >
                   About This {isClass ? "Class" : "Event"}
                 </Typography>
                 <Divider
                   sx={{
                     mb: 3,
-                    borderColor: theme.colors.brown,
+                    borderColor: theme.palette.brown,
                   }}
                 />
                 <Box
-                  sx={{ color: theme.colors.beige, fontSize: "1rem" }}
+                  sx={{ color: theme.palette.beige, fontSize: "1rem" }}
                   dangerouslySetInnerHTML={{
                     __html:
                       data.conceptNote || "<p>No description available</p>",
@@ -418,8 +418,8 @@ const Details = ({ isClass }) => {
             <Card
               sx={{
                 mb: 4,
-                bgcolor: theme.colors.orange,
-                color: theme.colors.beige,
+                bgcolor: theme.palette.orange,
+                color: theme.palette.beige,
                 borderRadius: 4,
               }}
             >
@@ -430,11 +430,11 @@ const Details = ({ isClass }) => {
                 <Divider
                   sx={{
                     mb: 3,
-                    borderColor: theme.colors.brown,
+                    borderColor: theme.palette.brown,
                   }}
                 />
                 <Box
-                  sx={{ color: theme.colors.beige, fontSize: "1rem" }}
+                  sx={{ color: theme.palette.beige, fontSize: "1rem" }}
                   dangerouslySetInnerHTML={{
                     __html:
                       data.instructions || "<p>No instructions available</p>",
@@ -446,8 +446,8 @@ const Details = ({ isClass }) => {
             <Card
               sx={{
                 mb: 4,
-                bgcolor: theme.colors.beige,
-                border: `1px solid ${theme.colors.brown}`,
+                bgcolor: theme.palette.beige,
+                border: `1px solid ${theme.palette.brown}`,
                 borderRadius: 3,
                 boxShadow: 1,
               }}
@@ -456,19 +456,19 @@ const Details = ({ isClass }) => {
                 <Typography
                   variant="h5"
                   gutterBottom
-                  sx={{ fontWeight: 600, color: theme.colors.brown }}
+                  sx={{ fontWeight: 600, color: theme.palette.brown }}
                 >
                   Schedule & Location
                 </Typography>
 
-                <Divider sx={{ mb: 3, borderColor: theme.colors.brown }} />
+                <Divider sx={{ mb: 3, borderColor: theme.palette.brown }} />
 
                 <Grid2 container spacing={3}>
                   <Grid2 xs={12} md={6}>
                     <Box
                       sx={{
                         p: 2,
-                        bgcolor: theme.colors.orange,
+                        bgcolor: theme.palette.orange,
                         borderRadius: 2,
                         display: "flex",
                         alignItems: "flex-start",
@@ -478,12 +478,12 @@ const Details = ({ isClass }) => {
                       {data.recurrenceRule ? (
                         <>
                           <AccessTimeIcon
-                            sx={{ color: theme.colors.beige, mt: 0.5 }}
+                            sx={{ color: theme.palette.beige, mt: 0.5 }}
                           />
                           <Box>
                             <Typography
                               variant="subtitle2"
-                              sx={{ color: theme.colors.beige }}
+                              sx={{ color: theme.palette.beige }}
                             >
                               Class Schedule
                             </Typography>
@@ -491,7 +491,7 @@ const Details = ({ isClass }) => {
                               component="div"
                               sx={{
                                 whiteSpace: "pre-line",
-                                color: theme.colors.beige,
+                                color: theme.palette.beige,
                                 fontSize: "0.9rem",
                               }}
                             >
@@ -502,16 +502,16 @@ const Details = ({ isClass }) => {
                       ) : (
                         <>
                           <CalendarTodayIcon
-                            sx={{ color: theme.colors.beige, mt: 0.5 }}
+                            sx={{ color: theme.palette.beige, mt: 0.5 }}
                           />
                           <Box>
                             <Typography
                               variant="subtitle2"
-                              sx={{ color: theme.colors.beige }}
+                              sx={{ color: theme.palette.beige }}
                             >
                               Date
                             </Typography>
-                            <Typography sx={{ color: theme.colors.beige }}>
+                            <Typography sx={{ color: theme.palette.beige }}>
                               {dayjs(data.startDuration).format(
                                 "MMMM D, YYYY – h:mm A"
                               )}
@@ -530,7 +530,7 @@ const Details = ({ isClass }) => {
                     <Box
                       sx={{
                         p: 2,
-                        bgcolor: theme.colors.brown,
+                        bgcolor: theme.palette.brown,
                         borderRadius: 2,
                         display: "flex",
                         alignItems: "flex-start",
@@ -538,16 +538,16 @@ const Details = ({ isClass }) => {
                       }}
                     >
                       <LocationOnIcon
-                        sx={{ color: theme.colors.beige, mt: 0.5 }}
+                        sx={{ color: theme.palette.beige, mt: 0.5 }}
                       />
                       <Box>
                         <Typography
                           variant="subtitle2"
-                          sx={{ color: theme.colors.beige }}
+                          sx={{ color: theme.palette.beige }}
                         >
                           Location
                         </Typography>
-                        <Typography sx={{ color: theme.colors.beige }}>
+                        <Typography sx={{ color: theme.palette.beige }}>
                           {data.location}
                         </Typography>
                       </Box>
@@ -561,22 +561,22 @@ const Details = ({ isClass }) => {
               <Card
                 sx={{
                   mb: 4,
-                  bgcolor: theme.colors.beige,
-                  border: `1px solid ${theme.colors.brown}`,
+                  bgcolor: theme.palette.beige,
+                  border: `1px solid ${theme.palette.brown}`,
                 }}
               >
                 <CardContent>
                   <Typography
                     variant="h5"
                     gutterBottom
-                    sx={{ fontWeight: 600, color: theme.colors.brown }}
+                    sx={{ fontWeight: 600, color: theme.palette.brown }}
                   >
                     About The Trainer
                   </Typography>
                   <Divider
                     sx={{
                       mb: 3,
-                      borderColor: theme.colors.brown,
+                      borderColor: theme.palette.brown,
                     }}
                   />
                   <Grid2 container spacing={3} alignItems="center">
@@ -587,7 +587,7 @@ const Details = ({ isClass }) => {
                           height: 300,
                           borderRadius: 2,
                           overflow: "hidden",
-                          border: `1px solid ${theme.colors.brown}`,
+                          border: `1px solid ${theme.palette.brown}`,
                         }}
                       >
                         <img
@@ -605,7 +605,7 @@ const Details = ({ isClass }) => {
                       <Stack spacing={1}>
                         <Typography
                           variant="h6"
-                          sx={{ color: theme.colors.brown }}
+                          sx={{ color: theme.palette.brown }}
                         >
                           {data.trainer.name}
                         </Typography>
@@ -613,15 +613,15 @@ const Details = ({ isClass }) => {
                           label={data.trainer.specialization}
                           size="small"
                           sx={{
-                            bgcolor: theme.colors.orange,
-                            color: theme.colors.beige,
+                            bgcolor: theme.palette.orange,
+                            color: theme.palette.beige,
                             alignSelf: "flex-start",
                           }}
                         />
                         {data.trainer.bio && (
                           <Typography
                             variant="body2"
-                            sx={{ color: theme.colors.brown }}
+                            sx={{ color: theme.palette.brown }}
                           >
                             {data.trainer.bio}
                           </Typography>
@@ -642,38 +642,38 @@ const Details = ({ isClass }) => {
                 borderRadius: 4,
                 position: "sticky",
                 top: 20,
-                bgcolor: theme.colors.orange,
-                color: theme.colors.beige,
+                bgcolor: theme.palette.orange,
+                color: theme.palette.beige,
               }}
             >
               <CardContent>
                 <Typography
                   variant="h6"
                   gutterBottom
-                  sx={{ fontWeight: 600, color: theme.colors.beige }}
+                  sx={{ fontWeight: 600, color: theme.palette.beige }}
                 >
                   Quick Info
                 </Typography>
                 <Divider
                   sx={{
                     mb: 3,
-                    borderColor: theme.colors.beige,
+                    borderColor: theme.palette.beige,
                   }}
                 />
                 <Stack spacing={2}>
                   <Box
                     p={1.5}
-                    bgcolor={theme.colors.beige}
+                    bgcolor={theme.palette.beige}
                     borderRadius={2}
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
                     mb={1}
                   >
-                    <Typography fontWeight={600} color={theme.colors.orange}>
+                    <Typography fontWeight={600} color={theme.palette.orange}>
                       Registration Fee
                     </Typography>
-                    <Typography fontWeight={700} color={theme.colors.brown}>
+                    <Typography fontWeight={700} color={theme.palette.brown}>
                       ₹{data.registrationFee}
                     </Typography>
                   </Box>
@@ -682,13 +682,13 @@ const Details = ({ isClass }) => {
                     data.addOnFees.length > 0 && (
                       <Box
                         p={1.5}
-                        bgcolor={theme.colors.beige}
+                        bgcolor={theme.palette.beige}
                         borderRadius={2}
                         mb={1}
                       >
                         <Typography
                           fontWeight={600}
-                          color={theme.colors.orange}
+                          color={theme.palette.orange}
                           mb={1}
                         >
                           Select Add-On Fees
@@ -701,7 +701,7 @@ const Details = ({ isClass }) => {
                                 <Checkbox
                                   checked={selectedAddOns.includes(idx)}
                                   onChange={() => handleAddOnToggle(idx)}
-                                  sx={{ color: theme.colors.brown }}
+                                  sx={{ color: theme.palette.brown }}
                                 />
                               }
                               label={`${item.name} - ₹${item.price}`}
@@ -714,16 +714,16 @@ const Details = ({ isClass }) => {
                   <Box
                     mt={1}
                     p={2}
-                    bgcolor={theme.colors.beige}
+                    bgcolor={theme.palette.beige}
                     borderRadius={2}
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
                   >
-                    <Typography fontWeight={600} color={theme.colors.orange}>
+                    <Typography fontWeight={600} color={theme.palette.orange}>
                       Total Payable
                     </Typography>
-                    <Typography fontWeight={700} color={theme.colors.brown}>
+                    <Typography fontWeight={700} color={theme.palette.brown}>
                       ₹{calculateTotal()}
                     </Typography>
                   </Box>
@@ -735,13 +735,13 @@ const Details = ({ isClass }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: 1,
-                        color: theme.colors.beige,
+                        color: theme.palette.beige,
                       }}
                     >
                       <GroupsIcon fontSize="small" />
                       Capacity
                     </Typography>
-                    <Typography sx={{ color: theme.colors.beige }}>
+                    <Typography sx={{ color: theme.palette.beige }}>
                       {data.totalSeats} participants
                     </Typography>
                   </Box>
@@ -754,7 +754,7 @@ const Details = ({ isClass }) => {
                           display: "flex",
                           alignItems: "center",
                           gap: 1,
-                          color: theme.colors.beige,
+                          color: theme.palette.beige,
                         }}
                       >
                         <InfoIcon fontSize="small" />
@@ -766,12 +766,12 @@ const Details = ({ isClass }) => {
                         sx={{
                           bgcolor:
                             data.availableSeats > 5
-                              ? theme.colors.beige
-                              : theme.colors.red || "#d32f2f",
+                              ? theme.palette.beige
+                              : theme.palette.red || "#d32f2f",
                           color:
                             data.availableSeats > 5
-                              ? theme.colors.brown
-                              : theme.colors.beige,
+                              ? theme.palette.brown
+                              : theme.palette.beige,
                           fontWeight: "bold",
                           fontSize: "1rem",
                           px: 2,
@@ -794,18 +794,18 @@ const Details = ({ isClass }) => {
                       mt: 3,
                       bgcolor:
                         data.availableSeats === 0
-                          ? theme.colors.brown
-                          : theme.colors.brown,
-                      color: theme.colors.beige,
+                          ? theme.palette.brown
+                          : theme.palette.brown,
+                      color: theme.palette.beige,
                       "&:hover": {
                         bgcolor:
                           data.availableSeats === 0
-                            ? theme.colors.brown
-                            : theme.colors.beige,
+                            ? theme.palette.brown
+                            : theme.palette.beige,
                         color:
                           data.availableSeats === 0
-                            ? theme.colors.beige
-                            : theme.colors.brown,
+                            ? theme.palette.beige
+                            : theme.palette.brown,
                       },
                     }}
                   >
@@ -823,22 +823,22 @@ const Details = ({ isClass }) => {
         {data.images?.length > 0 && (
           <Card
             sx={{
-              bgcolor: theme.colors.beige,
-              border: `1px solid ${theme.colors.brown}`,
+              bgcolor: theme.palette.beige,
+              border: `1px solid ${theme.palette.brown}`,
             }}
           >
             <CardContent>
               <Typography
                 variant="h5"
                 gutterBottom
-                sx={{ fontWeight: 600, color: theme.colors.brown }}
+                sx={{ fontWeight: 600, color: theme.palette.brown }}
               >
                 Gallery
               </Typography>
               <Divider
                 sx={{
                   mb: 3,
-                  borderColor: theme.colors.brown,
+                  borderColor: theme.palette.brown,
                 }}
               />
               <ImageList variant="masonry" cols={3} gap={12}>

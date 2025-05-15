@@ -7,10 +7,11 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import Bookings from "./pages/Dashboard/Bookings";
+import EventsSection from "./components/EventsSection";
 
 // Lazy Load Pages
 const Home = lazy(() => import("./pages/Home"));
-const About = lazy(() => import("./pages/AboutSection/AboutSection"));
+const About = lazy(() => import("./components/AboutSection"));
 const Login = lazy(() => import("./pages/Dashboard/login"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const NotFound = lazy(() => import("./components/NotFound"));
@@ -21,10 +22,14 @@ const DetailsInternal = lazy(() =>
 );
 
 const theme = createTheme({
-  colors: {
+  palette: {
     orange: "#B15324",
     beige: "#E3DED3",
     brown: "#4E2916",
+  },
+
+  fonts: {
+    primary: "Sen",
   },
 });
 
@@ -39,6 +44,7 @@ const App = () => {
               <Route path="/about" element={<About />} />
               <Route path="/classes/:id" element={<Details isClass={true} />} />
               <Route path="/events/:id" element={<Details isClass={false} />} />
+              <Route path="/test" element={<EventsSection />} />
             </Route>
 
             <Route path="/admin/login" element={<Login />} />
@@ -49,7 +55,7 @@ const App = () => {
               <Route
                 path="/admin/classes/:id"
                 element={<DetailsInternal isClass={true} />}
-              /> 
+              />
               <Route
                 path="/admin/events/:id"
                 element={<DetailsInternal isClass={false} />}
