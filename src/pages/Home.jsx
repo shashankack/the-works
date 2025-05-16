@@ -14,7 +14,7 @@ import { trainers } from "../../public/dummyData";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ContactSection from "../components/ContactSection/ContactSection";
+import ContactSection from "../components/ContactSection";
 import TeamSection from "../components/TeamSection";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -32,6 +32,7 @@ const Home = () => {
       <AboutSection />
       <EventsSection />
       <TeamSection />
+      <ContactSection />
     </>
   );
 };

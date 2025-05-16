@@ -1,76 +1,129 @@
-import "./Footer.scss";
-import { useTheme } from "@emotion/react";
-
-import instaLogo from "../../assets/icons/social-instagram.png";
-import twitterLogo from "../../assets/icons/social-twitter.png";
-import facebookLogo from "../../assets/icons/social-facebook.png";
-import whatsappLogo from "../../assets/icons/social-whatsapp.png";
+import {
+  Box,
+  useMediaQuery,
+  useTheme,
+  Stack,
+  Typography,
+  Link,
+  Divider,
+} from "@mui/material";
 
 const Footer = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Classes", path: "/classes" },
+    { name: "Events", path: "/events" },
+  ];
+
+  const socialLinks = [
+    { name: "YouTube", path: "https://www.youtube.com" },
+    { name: "LinkedIn", path: "https://www.linkedin.com" },
+    { name: "Facebook", path: "https://www.facebook.com" },
+    { name: "Instagram", path: "https://www.instagram.com" },
+  ];
+
+  const linkStyles = {
+    textTransform: "uppercase",
+    fontFamily: theme.fonts.primary,
+    fontWeight: 400,
+    textAlign: "end",
+    fontSize: isMobile ? "2vw" : "1.2vw",
+    color: theme.palette.orange,
+    textDecoration: "none",
+    display: "block",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+
+    "&:hover": {
+      color: theme.palette.brown,
+      transform: "scale(1.05)",
+    },
+    mb: 1,
+  };
+
   return (
-    <div className="footer-container">
-      <footer
-        style={{
-          backgroundColor: theme.palette.orange,
-          color: theme.palette.beige,
-        }}
+    <Box
+      height={isMobile ? "auto" : "40vh"}
+      width="100%"
+      display="flex"
+      justifyContent="start"
+      alignItems="start"
+      flexDirection="column"
+      bgcolor={theme.palette.beige}
+      px={10}
+      py={4}
+    >
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="end"
+        width="100%"
+        gap={6}
+        height={30}
       >
-        <div className="logo">
-          <h2>The Works</h2>
-        </div>
-        <nav
-          className="navbar"
-          style={{ backgroundColor: theme.palette.beige }}
-        >
-          <ul className="nav-menu">
-            <li className="nav-item">
-              <a href="/" className="nav-link">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/about" className="nav-link">
-                About
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/services" className="nav-link">
-                Daily
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/services" className="nav-link">
-                Events
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/contact" className="nav-link">
-                Contact Us
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <div className="socials">
-          <a href="https://twitter.com" target="_blank" rel="noreferrer">
-            <img src={twitterLogo} alt="Twitter" />
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noreferrer">
-            <img src={instaLogo} alt="Instagram" />
-          </a>
-          <a href="https://facebook.com" target="_blank" rel="noreferrer">
-            <img src={facebookLogo} alt="Facebook" />
-          </a>
-          <a href="https://whatsapp.com" target="_blank" rel="noreferrer">
-            <img src={whatsappLogo} alt="WhatsApp" />
-          </a>
-        </div>
-        <hr />
-        <div className="copyrights">
-          <p>@2025 The Works. All rights reserved</p>
-        </div>
-      </footer>
-    </div>
+        {navLinks.map((link, index) => (
+          <Link key={index} to={link.path} sx={linkStyles}>
+            {link.name}
+          </Link>
+        ))}
+      </Stack>
+
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        width="100%"
+        height="100%"
+      >
+        <Stack direction="column">
+          <Typography
+            variant="h1"
+            color={theme.palette.orange}
+            fontFamily={theme.fonts.primary}
+            fontWeight={700}
+            textTransform="uppercase"
+          >
+            The Works
+          </Typography>
+          <Typography
+            variant="body1"
+            color={theme.palette.brown}
+            fontFamily={theme.fonts.primary}
+            fontSize="1.2vw"
+          >
+            Build What Moves You.
+          </Typography>
+        </Stack>
+
+        <Stack height="100%" justifyContent="end">
+          {socialLinks.map((link, index) => (
+            <Link key={index} href={link.path} sx={linkStyles}>
+              {link.name}
+            </Link>
+          ))}
+        </Stack>
+      </Stack>
+
+      <Divider
+        sx={{
+          width: "100%",
+          border: `1px solid ${theme.palette.brown}`,
+          mt: 4,
+          mb: 1,
+        }}
+      />
+      <Typography
+        variant="subtitle1"
+        color={theme.palette.orange}
+        textAlign="center"
+        width="100%"
+      >
+        @2025Theworks. All rights reserved
+      </Typography>
+    </Box>
   );
 };
 
