@@ -114,7 +114,6 @@
       }
     }
 
-    // Swiper Navigation
     .swiper-button-prev,
     .swiper-button-next {
       width: 35px;
@@ -129,7 +128,9 @@
     }
   }
 
-  @media (max-width: 500px) {
+  @media screen and (max-width: 768px) {
+    height: auto;
+
     .container {
       padding-top: 5rem;
 
@@ -138,7 +139,7 @@
       }
 
       .tabs {
-        gap: 4rem;
+        gap: 2rem;
         hr {
           display: none;
         }
@@ -147,8 +148,46 @@
       .events {
         .card {
           .circle-image {
-            width: 300px;
-            height: 300px;
+            width: 250px;
+            height: 250px;
+          }
+
+          h3 {
+            font-size: 1.2rem;
+          }
+
+          .cta-button {
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 500px) {
+    height: 100vh;
+
+    .container {
+      padding-top: 1rem;
+      padding-bottom: 3rem;
+
+      .heading h2 {
+        font-size: 8vw;
+      }
+
+      .tabs {
+        gap: 1rem;
+        hr {
+          display: none;
+        }
+      }
+
+      .events {
+        .card {
+          .circle-image {
+            width: 250px;
+            height: 250px;
           }
 
           h3 {
