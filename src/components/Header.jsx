@@ -10,6 +10,8 @@ import {
   Drawer,
 } from "@mui/material";
 
+import logo from "../assets/icons/beige_logo.png";
+
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -55,18 +57,26 @@ const Header = () => {
     <>
       <AppBar
         position="fixed"
+        elevation={0}
         sx={{
-          backgroundColor: theme.palette.beige,
+          bgcolor: "rgba(0, 0, 0, 0.3)",
+          backdropFilter: "blur(10px)",
           px: 5,
-          py: 1,
-          transition: "all 0.3s ease",
+          transition: "all 0.5s ease",
           transform: isScrolled ? "translateY(-110%)" : "translateY(0)",
         }}
       >
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6" color={theme.palette.orange}>
-            The Works
-          </Typography>
+          <Box width={80}>
+            <img
+              src={logo}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </Box>
 
           {isMobile ? (
             <Box
@@ -98,9 +108,20 @@ const Header = () => {
               {navItems.map((item) => (
                 <Typography
                   key={item.name}
+                  fontSize="1vw"
                   variant="body1"
-                  color={theme.palette.orange}
-                  sx={{ cursor: "pointer", mx: 2 }}
+                  fontWeight={600}
+                  textTransform="uppercase"
+                  color={theme.palette.beige}
+                  sx={{
+                    cursor: "pointer",
+                    mx: 2,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      color: theme.palette.orange,
+                      transform: "scale(1.1)",
+                    },
+                  }}
                   onClick={() => handleNavigation(item.path)}
                 >
                   {item.name}
@@ -108,13 +129,13 @@ const Header = () => {
               ))}
               <Button
                 variant="outlined"
-                color="inherit"
                 sx={{
-                  backgroundColor: theme.palette.brown,
+                  border: "none",
+                  backgroundColor: theme.palette.orange,
                   color: theme.palette.beige,
                   "&:hover": {
-                    backgroundColor: theme.palette.orange,
-                    color: theme.palette.beige,
+                    backgroundColor: theme.palette.beige,
+                    color: theme.palette.orange,
                   },
                 }}
                 onClick={() => handleNavigation("/contact")}

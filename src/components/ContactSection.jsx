@@ -20,7 +20,6 @@ const ContactSection = () => {
     comment: "",
   });
 
-  // Focus tracking for phone input adornment
   const [phoneFocused, setPhoneFocused] = useState(false);
 
   const handleChange = (e) => {
@@ -37,13 +36,14 @@ const ContactSection = () => {
 
   return (
     <Box
-      height="100vh"
+      minHeight="100vh"
       display="flex"
       justifyContent="center"
       alignItems="center"
       bgcolor={theme.palette.orange.main || theme.palette.orange}
       flexDirection={isMobile ? "column" : "row-reverse"}
       px={isMobile ? 2 : 0}
+      py={isMobile ? 4 : 0}
     >
       <Box
         width={isMobile ? "90vw" : "50vw"}
@@ -52,14 +52,16 @@ const ContactSection = () => {
         display="flex"
         flexDirection="column"
         justifyContent="center"
-        alignItems="start"
+        alignItems={isMobile ? "center" : "start"}
       >
         <Typography
           fontFamily={theme.fonts.primary}
-          variant="h3"
+          fontSize={isMobile ? "8vw" : "3vw"}
           fontWeight={700}
+          textAlign={isMobile ? "center" : "start"}
           color={theme.palette.beige}
-          mb={1}
+          mb={isMobile ? 0 : 1}
+          width={isMobile ? "100%" : "auto"}
           sx={{ letterSpacing: 1 }}
         >
           CONTACT US
@@ -70,6 +72,8 @@ const ContactSection = () => {
           color={theme.palette.beige}
           mb={4}
           sx={{ fontWeight: 500 }}
+          width={isMobile ? "100%" : "auto"}
+          textAlign={isMobile ? "center" : "start"}
         >
           Reach Out, Level Up!
         </Typography>
@@ -212,7 +216,7 @@ const ContactSection = () => {
             type="submit"
             variant="contained"
             sx={{
-              alignSelf: "flex-start",
+              alignSelf: isMobile ? "center" : "flex-start",
               backgroundColor: theme.palette.brown,
               color: theme.palette.beige,
               fontWeight: 700,

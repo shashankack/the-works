@@ -122,6 +122,7 @@ const TeamSection = () => {
         <Swiper
           modules={[Navigation]}
           slidesPerView={1}
+          loop={true}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={handleSlideChange}
           navigation={{
@@ -161,9 +162,10 @@ const TeamSection = () => {
             top: "50%",
             left: 8,
             transform: "translateY(-50%)",
-            color: "#fff",
-            bgcolor: "rgba(0,0,0,0.3)",
-            "&:hover": { bgcolor: "rgba(0,0,0,0.5)" },
+            color: theme.palette.orange,
+            bgcolor: "rgba(0,0,0,0)",
+            transition: "all 0.3s ease",
+            "&:hover": { bgcolor: "rgba(0,0,0,0.1)" },
             zIndex: 10,
           }}
           aria-label="previous"
@@ -178,9 +180,10 @@ const TeamSection = () => {
             top: "50%",
             right: 8,
             transform: "translateY(-50%)",
-            color: "#fff",
-            bgcolor: "rgba(0,0,0,0.3)",
-            "&:hover": { bgcolor: "rgba(0,0,0,0.5)" },
+            color: theme.palette.orange,
+            bgcolor: "rgba(0,0,0,0)",
+            transition: "all 0.3s ease",
+            "&:hover": { bgcolor: "rgba(0,0,0,0.1)" },
             zIndex: 10,
           }}
           aria-label="next"
@@ -189,7 +192,13 @@ const TeamSection = () => {
         </IconButton>
       </Box>
 
-      <Stack ml={isMobile ? 0 : 6} width={isMobile ? "100%" : "40vw"} gap={2}>
+      <Stack
+        ml={isMobile ? 0 : 6}
+        width={isMobile ? "100%" : "40vw"}
+        height={isMobile ? "auto" : "60vh"}
+        gap={2}
+        justifyContent="start"
+      >
         {!isMobile && (
           <Typography
             variant={isMobile ? "h5" : "h2"}

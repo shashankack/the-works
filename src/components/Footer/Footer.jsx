@@ -8,6 +8,8 @@ import {
   Divider,
 } from "@mui/material";
 
+import orangeLogo from "../../assets/icons/orange_logo.png";
+
 const Footer = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -31,7 +33,7 @@ const Footer = () => {
     fontFamily: theme.fonts.primary,
     fontWeight: 400,
     textAlign: "end",
-    fontSize: isMobile ? "2vw" : "1.2vw",
+    fontSize: isMobile ? "3vw" : "1.2vw",
     color: theme.palette.orange,
     textDecoration: "none",
     display: "block",
@@ -42,27 +44,25 @@ const Footer = () => {
       color: theme.palette.brown,
       transform: "scale(1.05)",
     },
-    mb: 1,
   };
 
   return (
-    <Box
+    <Stack
       height={isMobile ? "auto" : "40vh"}
       width="100%"
       display="flex"
       justifyContent="start"
       alignItems="start"
-      flexDirection="column"
       bgcolor={theme.palette.beige}
-      px={10}
-      py={4}
+      px={isMobile ? 2 : 10}
+      py={isMobile ? 2 : 4}
     >
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="end"
         width="100%"
-        gap={6}
+        gap={isMobile ? 2 : 6}
         height={30}
       >
         {navLinks.map((link, index) => (
@@ -79,26 +79,25 @@ const Footer = () => {
         height="100%"
       >
         <Stack direction="column">
+          <Box width={isMobile ? "26vw" : "12vw"} height="auto">
+            <Box component="img" src={orangeLogo} />
+          </Box>
           <Typography
-            variant="h1"
             color={theme.palette.orange}
             fontFamily={theme.fonts.primary}
-            fontWeight={700}
-            textTransform="uppercase"
-          >
-            The Works
-          </Typography>
-          <Typography
-            variant="body1"
-            color={theme.palette.brown}
-            fontFamily={theme.fonts.primary}
-            fontSize="1.2vw"
+            fontSize={isMobile ? "3vw" : "1.2vw"}
           >
             Build What Moves You.
           </Typography>
         </Stack>
 
-        <Stack height="100%" justifyContent="end">
+        <Stack
+          direction="column"
+          justifyContent="space-between"
+          alignItems="end"
+          mt={isMobile ? 0 : 4}
+          borderColor={theme.palette.brown}
+        >
           {socialLinks.map((link, index) => (
             <Link key={index} href={link.path} sx={linkStyles}>
               {link.name}
@@ -111,19 +110,20 @@ const Footer = () => {
         sx={{
           width: "100%",
           border: `1px solid ${theme.palette.brown}`,
-          mt: 4,
+          mt: isMobile ? 2 : 4,
           mb: 1,
         }}
       />
       <Typography
-        variant="subtitle1"
+        fontFamily={theme.fonts.primary}
+        fontSize={isMobile ? "3vw" : "1.2vw"}
         color={theme.palette.orange}
         textAlign="center"
         width="100%"
       >
         @2025Theworks. All rights reserved
       </Typography>
-    </Box>
+    </Stack>
   );
 };
 

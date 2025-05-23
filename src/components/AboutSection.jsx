@@ -1,4 +1,8 @@
 import { Box, Typography, useMediaQuery, useTheme, Stack } from "@mui/material";
+import { useRef, useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 import founderImg from "/images/founder.png";
 import founderImgMobile from "/images/founder_mobile.png";
@@ -24,6 +28,67 @@ const aboutData = [
 const AboutSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const stackRef = useRef(null);
+  const textContainerRef = useRef(null);
+  const titleRef = useRef(null);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        stackRef.current,
+        { yPercent: -150 },
+        {
+          yPercent: 0,
+          ease: "back",
+          delay: 0.5,
+          scrollTrigger: {
+            trigger: stackRef.current,
+            start: "top top",
+            end: "bottom center",
+            toggleActions: "play none none reverse", //
+          },
+        }
+      );
+    }, stackRef);
+
+    gsap.fromTo(
+      titleRef.current,
+      { yPercent: -100, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "back.out",
+        scrollTrigger: {
+          trigger: textContainerRef.current,
+          start: "top center",
+          end: "bottom center",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    gsap.fromTo(
+      textRef.current,
+      { opacity: 0, scale: 0 },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out",
+        scrollTrigger: {
+          trigger: textContainerRef.current,
+          start: "top center",
+          end: "bottom center",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+
+    return () => ctx.revert();
+  });
 
   return (
     <>
@@ -83,6 +148,8 @@ const AboutSection = () => {
       ) : (
         <Box>
           <Box
+            zIndex={10}
+            position="relative"
             height="100vh"
             bgcolor={theme.palette.orange}
             display="flex"
@@ -91,6 +158,7 @@ const AboutSection = () => {
             overflow="hidden"
           >
             <Box
+              ref={textContainerRef}
               ml="-15vw"
               position="relative"
               height={700}
@@ -102,17 +170,21 @@ const AboutSection = () => {
               textAlign="center"
               padding={20}
             >
+              <Box overflow="hidden">
+                <Typography
+                  ref={titleRef}
+                  variant="h2"
+                  fontSize="3.4vw"
+                  fontFamily={theme.fonts.primary}
+                  textTransform="uppercase"
+                  fontWeight={500}
+                  whiteSpace="nowrap"
+                >
+                  Meet our founder
+                </Typography>
+              </Box>
               <Typography
-                variant="h2"
-                fontSize="3.4vw"
-                fontFamily={theme.fonts.primary}
-                textTransform="uppercase"
-                fontWeight={500}
-                whiteSpace="nowrap"
-              >
-                Meet our founder
-              </Typography>
-              <Typography
+                ref={textRef}
                 fontFamily={theme.fonts.primary}
                 variant="body1"
                 fontSize="1.3vw"
@@ -152,6 +224,7 @@ const AboutSection = () => {
           </Box>
 
           <Stack
+            borderColor={theme.palette.orange}
             bgcolor={theme.palette.beige}
             height="70vh"
             direction="row"
@@ -159,40 +232,48 @@ const AboutSection = () => {
             p={10}
             justifyContent="space-evenly"
           >
-            {aboutData.map((item, index) => (
-              <Box
-                key={index}
-                bgcolor={theme.palette.orange}
-                width="100%"
-                maxWidth="20vw"
-                boxShadow="6px 6px 0 0 #4E2916"
-              >
-                <Typography
-                  variant="h6"
-                  fontSize="1.4vw"
-                  fontFamily={theme.fonts.primary}
-                  textTransform="uppercase"
-                  fontWeight={500}
-                  whiteSpace="nowrap"
-                  textAlign="center"
-                  mt={5}
+            <Stack
+              ref={stackRef}
+              direction="row"
+              gap={10}
+              width="100%"
+              justifyContent="space-evenly"
+            >
+              {aboutData.map((item, index) => (
+                <Box
+                  key={index}
+                  bgcolor={theme.palette.orange}
+                  width="100%"
+                  maxWidth="20vw"
+                  boxShadow="6px 6px 0 0 #4E2916"
                 >
-                  {item.title}
-                </Typography>
-                <Typography
-                  fontFamily={theme.fonts.primary}
-                  variant="body1"
-                  fontSize="1.4vw"
-                  fontWeight={400}
-                  mt={2}
-                  textAlign="start"
-                  width={"80%"}
-                  marginX="auto"
-                >
-                  {item.description}
-                </Typography>
-              </Box>
-            ))}
+                  <Typography
+                    variant="h6"
+                    fontSize="1.4vw"
+                    fontFamily={theme.fonts.primary}
+                    textTransform="uppercase"
+                    fontWeight={500}
+                    whiteSpace="nowrap"
+                    textAlign="center"
+                    mt={5}
+                  >
+                    {item.title}
+                  </Typography>
+                  <Typography
+                    fontFamily={theme.fonts.primary}
+                    variant="body1"
+                    fontSize="1.4vw"
+                    fontWeight={400}
+                    mt={2}
+                    textAlign="start"
+                    width={"80%"}
+                    marginX="auto"
+                  >
+                    {item.description}
+                  </Typography>
+                </Box>
+              ))}
+            </Stack>
           </Stack>
         </Box>
       )}
