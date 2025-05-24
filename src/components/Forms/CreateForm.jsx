@@ -30,12 +30,7 @@ import RichTextEditor from "react-rte";
 import AddIcon from "@mui/icons-material/Add";
 import ImageUploader from "../ImageUploader/ImageUploader";
 
-const StyledDialogContent = styled(DialogContent)({
-  height: "680px",
-  overflowY: "auto",
-});
-
-const CreateForm = ({ open, onClose, isClass = false }) => {
+const CreateForm = ({ open, onSave, onClose, isClass = false }) => {
   const [formData, setFormData] = useState({
     title: "",
     startDuration: "",
@@ -157,7 +152,7 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
       if (!res.data.success) throw new Error("Creation failed");
 
       setMessage(`${isClass ? "Class" : "Event"} created successfully!`);
-      onSave?.(res.data.class || res.data.event); // optional callback
+      onSave?.(res.data.class || res.data.event);
       onClose(); // ✅ Only close when it's truly successful
     } catch (err) {
       console.error(err);
@@ -195,11 +190,11 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
         </IconButton>
       </DialogTitle>
 
-      <StyledDialogContent>
+      <>
         <form onSubmit={handleSubmit}>
           <Stack spacing={3} p={4}>
             <Grid2 container spacing={2}>
-              <Grid2 size={{ md: 6, sm: 12 }}>
+              <Grid2 size={12}>
                 <TextField
                   fullWidth
                   label="Title"
@@ -208,25 +203,6 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
                   onChange={handleInputChange}
                   required
                 />
-              </Grid2>
-              <Grid2 size={{ md: 6, sm: 12 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Status</InputLabel>
-                  <Select
-                    name="eventStatus"
-                    value={formData.eventStatus}
-                    onChange={handleInputChange}
-                    label="Status"
-                  >
-                    {["UPCOMING", "ONGOING", "COMPLETED", "CANCELLED"].map(
-                      (status) => (
-                        <MenuItem key={status} value={status}>
-                          {status}
-                        </MenuItem>
-                      )
-                    )}
-                  </Select>
-                </FormControl>
               </Grid2>
 
               <Grid2 size={12} p={2}>
@@ -607,7 +583,7 @@ const CreateForm = ({ open, onClose, isClass = false }) => {
             <Divider />
           </Stack>
         </form>
-      </StyledDialogContent>
+      </>
 
       <DialogActions sx={{ p: 2 }}>
         {error && (

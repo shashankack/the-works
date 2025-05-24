@@ -16,7 +16,6 @@ import {
   Divider,
   Stack,
   IconButton,
-  Grid,
   Grid2,
   Card,
   CardContent,
@@ -128,6 +127,7 @@ const Details = ({ isClass }) => {
       .get(`/${isClass ? "classes" : "events"}/${id}`)
       .then((res) => {
         const fetchedItem = res.data.class || res.data.event;
+        console.log(fetchedItem);
 
         let images = [];
         if (fetchedItem.imageUrls) {
@@ -262,7 +262,13 @@ const Details = ({ isClass }) => {
   if (!data) return null;
 
   return (
-    <Box sx={{ bgcolor: theme.palette.beige, minHeight: "100vh" }}>
+    <Box
+      sx={{ bgcolor: theme.palette.beige, minHeight: "100vh" }}
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="stretch"
+    >
       <Box
         sx={{
           position: "relative",
@@ -380,7 +386,7 @@ const Details = ({ isClass }) => {
         </Box>
       </Box>
 
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Box sx={{ py: 4, px: { xs: 2, md: "14vw" } }}>
         <Grid2 container spacing={4}>
           <Grid2 size={{ xs: 12, md: 8 }}>
             <Card
@@ -406,10 +412,21 @@ const Details = ({ isClass }) => {
                   }}
                 />
                 <Box
-                  sx={{ color: theme.palette.beige, fontSize: "1rem" }}
+                  sx={{
+                    color: theme.palette.beige,
+                    fontSize: "1rem",
+                    "& p": { marginBottom: 1.5 }, // paragraphs spacing
+                    "& ul": { paddingLeft: 3, marginBottom: 1.5 },
+                    "& li": { marginBottom: 2 },
+                    "& strong": { fontWeight: 700 },
+                    "& a": {
+                      color: theme.palette.beige,
+                      textDecoration: "underline",
+                    },
+                  }}
                   dangerouslySetInnerHTML={{
                     __html:
-                      data.conceptNote || "<p>No description available</p>",
+                      data.conceptNote || "<p>No description available.</p>",
                   }}
                 />
               </CardContent>
@@ -434,10 +451,20 @@ const Details = ({ isClass }) => {
                   }}
                 />
                 <Box
-                  sx={{ color: theme.palette.beige, fontSize: "1rem" }}
+                  sx={{
+                    color: theme.palette.beige,
+                    fontSize: "1rem",
+                    "& ul": { paddingLeft: 3, marginBottom: 1.5 },
+                    "& li": { listStyleType: "disc" },
+                    "& strong": { fontWeight: 700 },
+                    "& a": {
+                      color: theme.palette.beige,
+                      textDecoration: "underline",
+                    },
+                  }}
                   dangerouslySetInnerHTML={{
                     __html:
-                      data.instructions || "<p>No instructions available</p>",
+                      data.instructions || "<p>No instructions available.</p>",
                   }}
                 />
               </CardContent>
@@ -880,7 +907,7 @@ const Details = ({ isClass }) => {
             </CardContent>
           </Card>
         )}
-      </Container>
+      </Box>
 
       {/* Registration Form Modal */}
       <RegisterForm

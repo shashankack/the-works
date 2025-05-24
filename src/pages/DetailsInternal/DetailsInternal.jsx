@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import EditForm from "../../components/Forms/EditForm";
-import "./DetailsInternal.scss";
 
 const DetailsInternal = ({ isClass }) => {
   const { id } = useParams();
@@ -41,9 +40,9 @@ const DetailsInternal = ({ isClass }) => {
         setError(err.response?.data?.error || "Not found");
         setLoading(false);
       });
+      console.log(fetchedItem)
   }, [id, isClass]);
 
-  // ✅ Handle Delete
   const handleDelete = async () => {
     if (
       !window.confirm(
@@ -65,7 +64,6 @@ const DetailsInternal = ({ isClass }) => {
     setDeleteLoading(false);
   };
 
-  // ✅ Handle Successful Edit
   const handleEditSuccess = (updatedItem) => {
     setItem(updatedItem);
     setShowEditModal(false);
@@ -100,6 +98,7 @@ const DetailsInternal = ({ isClass }) => {
               <img src={item.thumbnail} alt="Thumbnail" className="thumbnail" />
             </div>
           )}
+
           <h1>{item.title}</h1>
           <p>
             <strong>Status:</strong> {item.eventStatus}
@@ -108,21 +107,36 @@ const DetailsInternal = ({ isClass }) => {
             <strong>Location:</strong> {item.location}
           </p>
           <p>
-            <strong>Start Time:</strong> {item.startDuration}
+            <strong>Start Time:</strong> {item.startDuration || "N/A"}
           </p>
           <p>
-            <strong>End Time:</strong> {item.endDuration}
+            <strong>End Time:</strong> {item.endDuration || "N/A"}
           </p>
           <p>
             <strong>Recurrence:</strong> {item.recurrenceRule || "One-time"}
           </p>
-          <p>
-            <strong>Description:</strong>{" "}
-            {item.conceptNote || "No description available"}
-          </p>
+
+          {/* Concept Note rendered as HTML */}
+          <div>
+            <strong>Description:</strong>
+            <div
+              className="concept-note"
+              dangerouslySetInnerHTML={{ __html: item.conceptNote || "<p>No description available.</p>" }}
+            />
+          </div>
+
+          {/* Instructions rendered as HTML */}
+          <div>
+            <strong>Instructions:</strong>
+            <div
+              className="instructions"
+              dangerouslySetInnerHTML={{ __html: item.instructions || "<p>No instructions provided.</p>" }}
+              style={{ marginTop: "0.5rem", whiteSpace: "pre-line" }}
+            />
+          </div>
 
           {item.trainer && (
-            <div className="trainer-details">
+            <div className="trainer-details" style={{ marginTop: "1rem" }}>
               <h3>Trainer</h3>
               <p>
                 <strong>Name:</strong> {item.trainer.name}
@@ -137,17 +151,18 @@ const DetailsInternal = ({ isClass }) => {
             </div>
           )}
 
-          {/* ✅ Display Multiple Images */}
+          {/* Display Multiple Images */}
           {item.images.length > 0 && (
-            <div className="images-container">
+            <div className="images-container" style={{ marginTop: "1rem" }}>
               <h3>Images</h3>
-              <div className="image-grid">
+              <div className="image-grid" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                 {item.images.map((image, index) => (
                   <img
                     key={index}
                     src={image}
-                    alt={`Image ${index}`}
+                    alt={`Image ${index + 1}`}
                     className="image"
+                    style={{ width: 150, height: 150, objectFit: "cover", borderRadius: 4 }}
                   />
                 ))}
               </div>
@@ -158,14 +173,11 @@ const DetailsInternal = ({ isClass }) => {
         <p className="error">Not found</p>
       )}
 
-      {/* ✅ Edit Modal */}
+      {/* Edit Modal */}
       {showEditModal && (
         <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="close-btn"
-              onClick={() => setShowEditModal(false)}
-            >
+            <button className="close-btn" onClick={() => setShowEditModal(false)}>
               ✖
             </button>
             <EditForm

@@ -1,86 +1,74 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Button,
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   Chip,
+  Collapse,
+  IconButton,
+  LinearProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  LinearProgress,
-  MenuItem,
-  Select,
+  Button,
   Snackbar,
   Alert,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TextField,
-  TableRow,
-  Typography,
-  Paper,
+  useTheme,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axiosInstance from "../../utils/axiosInstance";
 
 const Bookings = () => {
-  const [bookings, setBookings] = useState([]);
+  const theme = useTheme();
+  const [eventsData, setEventsData] = useState([]);
+  const [classesData, setClassesData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState(null);
-  const [filterStatus, setFilterStatus] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedId, setExpandedId] = useState(null);
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     bookingId: null,
     action: null,
+    title: "",
   });
   const [savingText, setSavingText] = useState("");
+  const [alert, setAlert] = useState(null);
 
-  const fetchBookings = async () => {
-    setLoading(true);
-    try {
-      const res = await axiosInstance.get("/admin/bookings", {
-        params: filterStatus ? { status: filterStatus } : {},
-      });
-      setBookings(res.data);
-    } catch (err) {
-      setAlert({ message: "Failed to fetch bookings", severity: "error" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch both events and classes data
   useEffect(() => {
-    fetchBookings();
-  }, [filterStatus]);
-
-  const handleAction = async () => {
-    const { bookingId, action } = confirmDialog;
-    if (!bookingId || !action) return;
-
-    setSavingText(
-      action === "confirm" ? "Sending Confirmation Mail" : "Sending Cancellation Mail"
-    );
-    setLoading(true);
-    try {
-      const res = await axiosInstance.post(
-        `/admin/bookings/${action}/${bookingId}`
-      );
-      setAlert({ message: res.data.message, severity: "success" });
-      fetchBookings();
-    } catch (err) {
-      setAlert({ message: "Failed to update booking", severity: "error" });
-    } finally {
-      setConfirmDialog({ open: false, bookingId: null, action: null });
-      setSavingText("");
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [eventsRes, classesRes] = await Promise.all([
+          axiosInstance.get("/admin/bookings/events/with-bookings"),
+          axiosInstance.get("/admin/bookings/classes/with-bookings"),
+        ]);
+        setEventsData(eventsRes.data);
+        setClassesData(classesRes.data);
+      } catch (error) {
+        setAlert({ message: "Failed to fetch data", severity: "error" });
+        setEventsData([]);
+        setClassesData([]);
+      }
       setLoading(false);
-    }
+      setExpandedId(null);
+    };
+    fetchData();
+  }, []);
+
+  const toggleExpand = (id, type) => {
+    setExpandedId(expandedId === `${type}-${id}` ? null : `${type}-${id}`);
   };
 
-  const getColor = (status) => {
+  const getStatusColor = (status) => {
     switch (status) {
       case "PENDING":
         return "warning";
@@ -93,169 +81,385 @@ const Bookings = () => {
     }
   };
 
+  const handleAction = async () => {
+    const { bookingId, action } = confirmDialog;
+    if (!bookingId || !action) return;
+
+    setSavingText(
+      action === "confirm"
+        ? "Sending Confirmation Mail"
+        : action === "cancel"
+        ? "Sending Cancellation Mail"
+        : "Deleting Booking"
+    );
+    setLoading(true);
+    try {
+      let res;
+      if (action === "delete") {
+        res = await axiosInstance.delete(`/admin/bookings/${bookingId}`);
+      } else {
+        res = await axiosInstance.post(
+          `/admin/bookings/${action}/${bookingId}`
+        );
+      }
+
+      setAlert({ message: res.data.message, severity: "success" });
+
+      // Refresh both events and classes data
+      const [eventsRes, classesRes] = await Promise.all([
+        axiosInstance.get("/admin/bookings/events/with-bookings"),
+        axiosInstance.get("/admin/bookings/classes/with-bookings"),
+      ]);
+      setEventsData(eventsRes.data);
+      setClassesData(classesRes.data);
+    } catch (err) {
+      setAlert({
+        message: err.response?.data?.error || "Failed to process booking",
+        severity: "error",
+      });
+    } finally {
+      setConfirmDialog({
+        open: false,
+        bookingId: null,
+        action: null,
+        title: "",
+      });
+      setSavingText("");
+      setLoading(false);
+    }
+  };
+
+  const renderItemTable = (item, type) => {
+    const bookings = item.bookings || [];
+    const idKey = type === "event" ? "eventId" : "classId";
+    const titleKey = type === "event" ? "eventTitle" : "classTitle";
+
+    return (
+      <Paper
+        key={`${type}-${item[idKey]}`}
+        sx={{
+          mb: 4,
+          p: 3,
+          backgroundColor: theme.palette.beige,
+          border: `1px solid ${theme.palette.brown}`,
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          onClick={() => toggleExpand(item[idKey], type)}
+          sx={{ cursor: "pointer" }}
+        >
+          <Box display="flex" alignItems="center" gap={2}>
+            <Typography variant="h6" color={theme.palette.brown}>
+              {item[titleKey]}
+            </Typography>
+            {/* Show count of users registered */}
+            <Chip
+              label={`${bookings.length} Registered`}
+              sx={{
+                backgroundColor: theme.palette.orange,
+                color: theme.palette.beige,
+                fontWeight: "bold",
+              }}
+            />
+            <Chip
+              label={type.toUpperCase()}
+              sx={{
+                backgroundColor: theme.palette.orange,
+                color: theme.palette.beige,
+              }}
+            />
+            {item.eventStatus && (
+              <Chip
+                label={item.eventStatus}
+                sx={{
+                  border: `1px solid ${theme.palette.orange}`,
+                  backgroundColor: "transparent",
+                  color: theme.palette.orange,
+                }}
+              />
+            )}
+          </Box>
+          <IconButton>
+            {expandedId === `${type}-${item[idKey]}` ? (
+              <ExpandLessIcon color="brown" />
+            ) : (
+              <ExpandMoreIcon color="brown" />
+            )}
+          </IconButton>
+        </Box>
+
+        <Collapse
+          in={expandedId === `${type}-${item[idKey]}`}
+          timeout="auto"
+          unmountOnExit
+        >
+          {bookings.length === 0 ? (
+            <Typography sx={{ mt: 2 }} color={theme.palette.brown}>
+              No bookings found.
+            </Typography>
+          ) : (
+            <Table size="small" sx={{ mt: 2 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    sx={{ color: theme.palette.brown, fontWeight: "bold" }}
+                  >
+                    Name
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: theme.palette.brown, fontWeight: "bold" }}
+                  >
+                    Email
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: theme.palette.brown, fontWeight: "bold" }}
+                  >
+                    Phone
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: theme.palette.brown, fontWeight: "bold" }}
+                  >
+                    Status
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{ color: theme.palette.brown, fontWeight: "bold" }}
+                  >
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bookings.map((booking) => (
+                  <TableRow key={booking.id || booking.userId}>
+                    <TableCell sx={{ color: theme.palette.brown }}>
+                      {booking.name}
+                    </TableCell>
+                    <TableCell sx={{ color: theme.palette.brown }}>
+                      {booking.email}
+                    </TableCell>
+                    <TableCell sx={{ color: theme.palette.brown }}>
+                      {booking.phone}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        variant="filled"
+                        label={booking.bookingStatus}
+                        sx={{
+                          backgroundColor:
+                            booking.bookingStatus === "PENDING"
+                              ? theme.palette.orange
+                              : booking.bookingStatus === "CONFIRMED"
+                              ? theme.palette.brown
+                              : theme.palette.orange,
+                          color: theme.palette.beige,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Box display="flex" justifyContent="flex-end" gap={1}>
+                        {booking.bookingStatus === "PENDING" && (
+                          <>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              sx={{
+                                color: theme.palette.brown,
+                                borderColor: theme.palette.brown,
+                                "&:hover": {
+                                  backgroundColor: theme.palette.brown,
+                                  borderColor: theme.palette.brown,
+                                },
+                              }}
+                              onClick={() =>
+                                setConfirmDialog({
+                                  open: true,
+                                  bookingId: booking.id,
+                                  action: "confirm",
+                                  title: `Confirm booking for ${booking.name}?`,
+                                })
+                              }
+                            >
+                              Confirm
+                            </Button>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              sx={{
+                                color: theme.palette.orange,
+                                borderColor: theme.palette.orange,
+                                "&:hover": {
+                                  backgroundColor: theme.palette.orange,
+                                  borderColor: theme.palette.orange,
+                                },
+                              }}
+                              onClick={() =>
+                                setConfirmDialog({
+                                  open: true,
+                                  bookingId: booking.id,
+                                  action: "cancel",
+                                  title: `Cancel booking for ${booking.name}?`,
+                                })
+                              }
+                            >
+                              Cancel
+                            </Button>
+                          </>
+                        )}
+                        <IconButton
+                          size="small"
+                          sx={{
+                            color: theme.palette.orange,
+                            "&:hover": {
+                              color: theme.palette.orange,
+                              backgroundColor: theme.palette.orange,
+                            },
+                          }}
+                          onClick={() =>
+                            openDeleteDialog(booking.id, booking.name)
+                          }
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Collapse>
+      </Paper>
+    );
+  };
+
+  const openDeleteDialog = (bookingId, userName) => {
+    setConfirmDialog({
+      open: true,
+      bookingId,
+      action: "delete",
+      title: `Delete booking for ${userName}?`,
+    });
+  };
+
   return (
-    <Box p={4}>
+    <Box py={8} bgcolor={theme.palette.beige} minHeight="100vh" px={4}>
       {loading && (
         <Box>
-          <LinearProgress />
+          <LinearProgress
+            sx={{
+              backgroundColor: theme.palette.orange,
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: theme.palette.brown,
+              },
+            }}
+          />
           {savingText && (
-            <Typography variant="body2" mt={1} textAlign="center">
+            <Typography
+              variant="body2"
+              mt={1}
+              textAlign="center"
+              color={theme.palette.brown}
+            >
               {savingText}
             </Typography>
           )}
         </Box>
       )}
 
-      <Typography variant="h4" gutterBottom>
-        Bookings
+      <Typography variant="h4" gutterBottom color={theme.palette.brown}>
+        All Bookings
       </Typography>
 
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        gap={2}
-        alignItems="center"
-        justifyContent="space-between"
-        mb={2}
-      >
-        <Select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          displayEmpty
-          size="small"
-        >
-          <MenuItem value="">All Statuses</MenuItem>
-          <MenuItem value="PENDING">Pending</MenuItem>
-          <MenuItem value="CONFIRMED">Confirmed</MenuItem>
-          <MenuItem value="CANCELLED">Cancelled</MenuItem>
-        </Select>
+      {eventsData.length === 0 && classesData.length === 0 && !loading && (
+        <Typography color={theme.palette.brown}>No bookings found.</Typography>
+      )}
 
-        <Select
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value)}
-          displayEmpty
-          size="small"
-        >
-          <MenuItem value="all">All Types</MenuItem>
-          <MenuItem value="class">Class Bookings</MenuItem>
-          <MenuItem value="event">Event Bookings</MenuItem>
-        </Select>
+      {/* Events Section */}
+      {eventsData.length > 0 && (
+        <>
+          <Typography variant="h5" gutterBottom color={theme.palette.brown}>
+            Events
+          </Typography>
+          {eventsData.map((event) => renderItemTable(event, "event"))}
+        </>
+      )}
 
-        <TextField
-          size="small"
-          placeholder="Search by user name"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </Box>
+      {/* Classes Section */}
+      {classesData.length > 0 && (
+        <>
+          <Typography
+            variant="h5"
+            gutterBottom
+            sx={{ mt: 4 }}
+            color={theme.palette.brown}
+          >
+            Classes
+          </Typography>
+          {classesData.map((cls) => renderItemTable(cls, "class"))}
+        </>
+      )}
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Class</TableCell>
-              <TableCell>Event</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {bookings
-              .filter((booking) => {
-                if (filterType === "class") return booking.class;
-                if (filterType === "event") return booking.event;
-                return true;
-              })
-              .filter((booking) =>
-                booking.user?.name
-                  ?.toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-              )
-              .map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell>{booking.user?.name || "Unknown"}</TableCell>
-                  <TableCell>
-                    {booking.class ? booking.class.title : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    {booking.event ? booking.event.title : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={booking.bookingStatus}
-                      color={getColor(booking.bookingStatus)}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    {booking.bookingStatus === "PENDING" && (
-                      <>
-                        <Button
-                          color="success"
-                          onClick={() =>
-                            setConfirmDialog({
-                              open: true,
-                              bookingId: booking.id,
-                              action: "confirm",
-                            })
-                          }
-                        >
-                          Confirm
-                        </Button>
-                        <Button
-                          color="error"
-                          onClick={() =>
-                            setConfirmDialog({
-                              open: true,
-                              bookingId: booking.id,
-                              action: "cancel",
-                            })
-                          }
-                        >
-                          Cancel
-                        </Button>
-                      </>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            {bookings.length === 0 && !loading && (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  No bookings found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      {/* Confirm / Cancel Dialog */}
+      {/* Confirm Action Dialog */}
       <Dialog
         open={confirmDialog.open}
-        onClose={() => setConfirmDialog({ open: false })}
+        onClose={() => setConfirmDialog({ ...confirmDialog, open: false })}
+        PaperProps={{
+          sx: {
+            backgroundColor: theme.palette.beige,
+            border: `2px solid ${theme.palette.brown}`,
+          },
+        }}
       >
-        <DialogTitle>Confirm Action</DialogTitle>
+        <DialogTitle sx={{ color: theme.palette.brown }}>
+          {confirmDialog.action === "confirm"
+            ? "Confirm Booking"
+            : confirmDialog.action === "cancel"
+            ? "Cancel Booking"
+            : "Delete Booking"}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to{" "}
-            <strong>
-              {confirmDialog.action === "confirm" ? "confirm" : "cancel"}
-            </strong>{" "}
-            this booking?
+          <DialogContentText sx={{ color: theme.palette.brown }}>
+            {confirmDialog.title ||
+              `Are you sure you want to ${confirmDialog.action} this booking?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDialog({ open: false })}>
-            Cancel
+          <Button
+            onClick={() => setConfirmDialog({ ...confirmDialog, open: false })}
+            sx={{ color: theme.palette.brown }}
+          >
+            No
           </Button>
           <Button
             variant="contained"
-            color={confirmDialog.action === "confirm" ? "success" : "error"}
+            sx={{
+              backgroundColor:
+                confirmDialog.action === "confirm"
+                  ? theme.palette.brown
+                  : confirmDialog.action === "cancel"
+                  ? theme.palette.orange
+                  : theme.palette.orange,
+              color: theme.palette.beige,
+              "&:hover": {
+                backgroundColor:
+                  confirmDialog.action === "confirm"
+                    ? theme.palette.brown
+                    : confirmDialog.action === "cancel"
+                    ? theme.palette.orange
+                    : theme.palette.orange,
+              },
+            }}
             onClick={handleAction}
           >
-            {confirmDialog.action === "confirm" ? "Confirm" : "Cancel"}
+            {confirmDialog.action === "confirm"
+              ? "Confirm"
+              : confirmDialog.action === "cancel"
+              ? "Cancel"
+              : "Delete"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -271,7 +475,14 @@ const Bookings = () => {
           severity={alert?.severity}
           variant="filled"
           onClose={() => setAlert(null)}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            backgroundColor:
+              alert?.severity === "success"
+                ? theme.palette.brown
+                : theme.palette.orange,
+            color: theme.palette.beige,
+          }}
         >
           {alert?.message}
         </Alert>

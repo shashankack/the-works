@@ -92,7 +92,14 @@ const Dashboard = () => {
   );
 
   const renderTable = (items, isClass = false) => (
-    <Paper sx={{ mt: 2, maxHeight: 400, overflow: "auto" }}>
+    <Paper
+      sx={{
+        mt: 2,
+        maxHeight: 400,
+        overflow: "auto",
+        fontFamily: theme.fonts.primary,
+      }}
+    >
       <Table stickyHeader size="small">
         <TableHead>
           <TableRow>
@@ -123,7 +130,7 @@ const Dashboard = () => {
                   const rule = JSON.parse(item.recurrenceRule);
                   const day = Object.keys(rule)[0];
                   const time = rule[day];
-                  dateDisplay = `Every ${day}`;
+                  dateDisplay = `${day}`;
                   timeDisplay = `${time.start} - ${time.end}`;
                 } catch (err) {
                   console.error("Invalid recurrenceRule format", err);
@@ -181,7 +188,15 @@ const Dashboard = () => {
 
   return (
     <>
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 6, height: "100%" }}>
+      <Box
+        bgcolor={theme.palette.beige}
+        height="100vh"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="stretch"
+        px={20}
+      >
         {/* Events Section */}
         <Box>
           <Box
@@ -189,8 +204,10 @@ const Dashboard = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="h5">Events</Typography>
-            <Box display="flex" gap={2}>
+            <Typography variant="h5" color={theme.palette.orange}>
+              Events
+            </Typography>
+            <Box display="flex" gap={2} color={theme.palette.orange}>
               <Typography variant="h6">Total: {events.length}</Typography>
               <Button
                 variant="contained"
@@ -199,7 +216,7 @@ const Dashboard = () => {
                   setIsCreatingClass(false);
                 }}
               >
-                + Create Event
+                Create Event
               </Button>
             </Box>
           </Box>
@@ -231,8 +248,10 @@ const Dashboard = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="h5">Classes</Typography>
-            <Box display="flex" gap={2}>
+            <Typography variant="h5" color={theme.palette.orange}>
+              Classes
+            </Typography>
+            <Box display="flex" gap={2} color={theme.palette.orange}>
               <Typography variant="h6">Total: {classes.length}</Typography>
               <Button
                 variant="contained"
@@ -241,7 +260,7 @@ const Dashboard = () => {
                   setIsCreatingClass(true);
                 }}
               >
-                + Create Class
+                Create Class
               </Button>
             </Box>
           </Box>
@@ -263,7 +282,7 @@ const Dashboard = () => {
 
           {renderTable(filteredClasses, true)}
         </Box>
-      </Container>
+      </Box>
 
       {/* Modal */}
       <CreateForm

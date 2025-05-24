@@ -29,11 +29,6 @@ import RecurrencePopup from "../ReccurencePopup/ReccurencePopup";
 import RichTextEditor from "react-rte";
 import ImageUploader from "../ImageUploader/ImageUploader";
 
-const StyledDialogContent = styled(DialogContent)({
-  height: "680px",
-  overflowY: "auto",
-});
-
 const EditForm = ({ open, onClose, initialData, isClass = false, onSave }) => {
   const [formData, setFormData] = useState({
     title: "",
@@ -223,7 +218,9 @@ const EditForm = ({ open, onClose, initialData, isClass = false, onSave }) => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (!response.data.success) throw new Error("Update failed");
+      if (response.status !== 200 || !response.data) {
+        throw new Error("Update failed");
+      }
       onSave(response.data.class || response.data.event);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to update.");
@@ -253,7 +250,7 @@ const EditForm = ({ open, onClose, initialData, isClass = false, onSave }) => {
         </IconButton>
       </DialogTitle>
 
-      <StyledDialogContent>
+      <>
         <Stack spacing={3} p={4}>
           <Grid2 container spacing={2}>
             <Grid2 size={{ xs: 12, md: 6 }}>
@@ -597,7 +594,7 @@ const EditForm = ({ open, onClose, initialData, isClass = false, onSave }) => {
 
           <Divider />
         </Stack>
-      </StyledDialogContent>
+      </>
 
       <DialogActions sx={{ p: 2 }}>
         {error && (
