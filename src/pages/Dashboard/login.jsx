@@ -1,18 +1,34 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./login.scss";
+import {
+  Box,
+  TextField,
+  Button,
+  CircularProgress,
+  Paper,
+  Alert,
+  IconButton,
+  InputAdornment,
+  useTheme,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axiosInstance from "../../utils/axiosInstance";
 import { setToken } from "../../utils/auth";
+import logo from "../../assets/icons/orange_logo.png";
 
 const Login = () => {
-  const nav = useNavigate();
+  const theme = useTheme();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Admin Login | The Works";
-  });
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,46 +40,167 @@ const Login = () => {
     }
 
     try {
+      setLoading(true);
       const response = await axiosInstance.post("/auth/login", {
         email,
         password,
       });
 
       setToken(response.data.token);
-      nav("/admin/dashboard");
-    } catch (error) {
-      setError(error.response.data.message);
+      navigate("/admin/dashboard");
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="admin-login">
-      <div className="login-box">
-        <h2>Admin Login</h2>
-        {error && <p className="error">{error}</p>}
+    <Box
+      height="100vh"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      bgcolor={theme.palette.beige}
+    >
+      <Button
+        variant="outlined"
+        onClick={() => navigate("/")}
+        sx={{
+          position: "fixed",
+          top: 20,
+          right: 20,
+          mb: 2,
+          color: theme.palette.orange,
+          borderColor: theme.palette.orange,
+          fontWeight: "bold",
+          textTransform: "none",
+          "&:hover": {
+            borderColor: theme.palette.brown,
+            color: theme.palette.brown,
+            backgroundColor: theme.palette.beige,
+          },
+        }}
+      >
+        ← Go Back
+      </Button>
+
+      <Paper
+        elevation={3}
+        sx={{
+          m: 1,
+          p: 4,
+          maxWidth: 500,
+          width: "100%",
+          bgcolor: theme.palette.beige,
+          border: `2px solid ${theme.palette.orange}`,
+          borderRadius: 3,
+          textAlign: "center",
+        }}
+      >
+        <Box mb={2} display="flex" justifyContent="center">
+          <Box
+            component="img"
+            src={logo}
+            alt="The Works Logo"
+            sx={{ height: 150, objectFit: "contain" }}
+          />
+        </Box>
+
+        {error && (
+          <Alert
+            severity="error"
+            sx={{
+              mb: 2,
+              bgcolor: theme.palette.beige,
+              color: theme.palette.orange,
+              border: `1px solid ${theme.palette.orange}`,
+            }}
+          >
+            {error}
+          </Alert>
+        )}
+
         <form onSubmit={handleLogin}>
-          <div className="input-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="input-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit">Login</button>
+          <TextField
+            label="Email"
+            type="email"
+            value={email}
+            autoComplete="off"
+            fullWidth
+            onChange={(e) => setEmail(e.target.value)}
+            margin="normal"
+            required
+            sx={{
+              input: { color: theme.palette.orange },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: theme.palette.orange },
+                "&:hover fieldset": { borderColor: theme.palette.brown },
+                "&.Mui-focused fieldset": { borderColor: theme.palette.orange },
+              },
+              "& label.Mui-focused": { color: theme.palette.orange },
+            }}
+          />
+
+          <TextField
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            fullWidth
+            onChange={(e) => setPassword(e.target.value)}
+            margin="normal"
+            required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                    sx={{ color: theme.palette.orange }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              input: { color: theme.palette.orange },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: theme.palette.orange },
+                "&:hover fieldset": { borderColor: theme.palette.brown },
+                "&.Mui-focused fieldset": { borderColor: theme.palette.orange },
+              },
+              "& label.Mui-focused": { color: theme.palette.orange },
+            }}
+          />
+
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            disabled={loading}
+            sx={{
+              mt: 3,
+              bgcolor: theme.palette.orange,
+              color: theme.palette.beige,
+              fontWeight: "bold",
+              "&:hover": {
+                bgcolor: theme.palette.brown,
+              },
+            }}
+          >
+            {loading ? (
+              <CircularProgress
+                size={24}
+                sx={{ color: theme.palette.orange }}
+              />
+            ) : (
+              "Login"
+            )}
+          </Button>
         </form>
-      </div>
-    </div>
+      </Paper>
+    </Box>
   );
 };
 

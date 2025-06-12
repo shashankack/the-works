@@ -11,6 +11,7 @@ import {
   useMediaQuery,
   useTheme,
   Badge,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -49,6 +50,62 @@ const Appbar = () => {
     localStorage.removeItem("token");
     window.location.href = "/admin/login";
   };
+
+  const NavLinks = (
+    <>
+      <Button
+        component={RouterLink}
+        to="/admin/dashboard"
+        sx={{ color: theme.palette.beige }}
+      >
+        Home
+      </Button>
+      <Button
+        component={RouterLink}
+        to="/admin/trainers"
+        sx={{ color: theme.palette.beige }}
+      >
+        Manage Trainers
+      </Button>
+      <Button
+        component={RouterLink}
+        to="/admin/bookings"
+        sx={{ color: theme.palette.beige }}
+      >
+        <Badge
+          badgeContent={pendingCount}
+          color="error"
+          sx={{
+            "& .MuiBadge-badge": {
+              fontSize: "0.75rem",
+              minWidth: 20,
+              height: 20,
+              padding: "0 6px",
+              animation: pendingCount > 0 ? "pulse 1.5s infinite" : "none",
+            },
+            "@keyframes pulse": {
+              "0%": { transform: "scale(1)" },
+              "50%": { transform: "scale(1.15)" },
+              "100%": { transform: "scale(1)" },
+            },
+          }}
+        >
+          <NotificationsIcon color="inherit" sx={{ mr: 1 }} />
+        </Badge>
+        Manage Bookings
+      </Button>
+
+      <Button
+        component={RouterLink}
+        to="/admin/enquiries"
+        sx={{
+          color: theme.palette.beige,
+        }}
+      >
+        Enquiries
+      </Button>
+    </>
+  );
 
   const drawerContent = (
     <Box>
@@ -103,35 +160,50 @@ const Appbar = () => {
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <IconButton color="inherit" onClick={toggleDrawer} edge="start">
-            <MenuIcon />
-          </IconButton>
-          <Typography color={theme.palette.beige}>Admin Dashboard</Typography>
-          <Box>
-            <IconButton color="inherit" onClick={logout}>
-              Logout
+          {isMobile ? (
+            <IconButton color="inherit" onClick={toggleDrawer} edge="start">
+              <MenuIcon />
             </IconButton>
-          </Box>
+          ) : (
+            <Typography
+              variant="h6"
+              sx={{ color: theme.palette.beige, fontWeight: "bold" }}
+            >
+              The Works
+            </Typography>
+          )}
+
+          {!isMobile && (
+            <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+              {NavLinks}
+            </Box>
+          )}
+
+          <IconButton color="inherit" onClick={logout}>
+            Logout
+          </IconButton>
         </Toolbar>
       </AppBar>
 
-      <Drawer
-        variant="persistent"
-        open={mobileOpen}
-        onClose={toggleDrawer}
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
+      {isMobile && (
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={toggleDrawer}
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-            borderColor: theme.palette.brown,
-            backgroundColor: theme.palette.beige,
-          },
-        }}
-      >
-        {drawerContent}
-      </Drawer>
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              borderColor: theme.palette.brown,
+              backgroundColor: theme.palette.beige,
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
+      )}
     </>
   );
 };
